@@ -5,3 +5,9 @@
   min-height: 200px;
   border-bottom-color: blue;
 }
+.num-bx {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+}

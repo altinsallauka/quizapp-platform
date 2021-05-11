@@ -22,7 +22,7 @@ function App() {
               </Link>
             </li>
             <li className="nav-item">
-              <Link to={"/question"} className="nav-link">
+              <Link to={"/create-question"} className="nav-link">
                 Create question
               </Link>
             </li>
@@ -38,7 +38,7 @@ function App() {
       <div className="container mt-3">
         <Switch>
           <Route exact path={["/", "/login"]} component={LoginComponent} />
-          <Route exact path="/question" component={PostQuestion} />
+          <Route exact path="/create-question" component={PostQuestion} />
           <Route exact path="/questions" component={QuestionsList} />
           <Route exact path="/home" component={DashboardComponent} />
         </Switch>
