@@ -1,36 +1,46 @@
 import React from "react";
-import { BrowserRouter as Router, Switch, Link } from "react-router-dom";
+import { BrowserRouter as Router, Route, Switch, Link } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
-import "./App.css";
-import PostQuestion from "./components/PostQuestion.jsx";
+import "./App.scss";
+import PostQuestion from "./components/dashboard/create-question/PostQuestion.jsx";
+import DashboardComponent from "./components/dashboard/Dashboard.jsx";
+import QuestionsList from "./components/dashboard/questions/QuestionsList";
+import LoginComponent from "./components/login/Login";
 
 function App() {
   return (
     <Router>
       <nav className="navbar navbar-expand navbar-dark bg-dark">
-        <a href="/tutorials" className="navbar-brand">
-          asQuiz-app
-        </a>
-        <div className="navbar-nav mr-auto">
-          <li className="nav-item">
-            <Link to={"/tutorials"} className="nav-link">
-              Quiz
-            </Link>
-          </li>
-          <li className="nav-item">
-            <Link to={"/add"} className="nav-link">
-              Add
-            </Link>
-          </li>
+        <div className="container">
+          <a href="/home" className="navbar-brand">
+            .Quest
+          </a>
+          <div className="navbar-nav mr-auto">
+            <li className="nav-item">
+              <Link to={"/questions"} className="nav-link">
+                Questions
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link to={"/question"} className="nav-link">
+                Create question
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link to={"/login"} className="nav-link">
+                Login
+              </Link>
+            </li>
+          </div>
         </div>
       </nav>
 
       <div className="container mt-3">
         <Switch>
-          {/* <Route exact path={["/", "/tutorials"]} component={} />
-          <Route exact path="/" component={} />
-          <Route path="/" component={} /> */}
-          <PostQuestion />
+          <Route exact path={["/", "/login"]} component={LoginComponent} />
+          <Route exact path="/question" component={PostQuestion} />
+          <Route exact path="/questions" component={QuestionsList} />
+          <Route exact path="/home" component={DashboardComponent} />
         </Switch>
       </div>
     </Router>

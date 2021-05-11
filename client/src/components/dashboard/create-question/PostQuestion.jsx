@@ -46,6 +46,7 @@ export default class PostQuestion extends React.Component {
     return (
       <div className="row">
         <div className="col-md-6">
+          <h1>Create question</h1>
           <form onSubmit={this.handleSubmit}>
             <label className="d-flex flex-column align-items-start">
               Description:
