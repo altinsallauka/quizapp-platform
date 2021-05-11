@@ -1,6 +1,6 @@
 import React from "react";
 import axios from "axios";
-
+import "./PostQuestion.scss";
 export default class PostQuestion extends React.Component {
   constructor(props) {
     super(props);
@@ -53,6 +53,7 @@ export default class PostQuestion extends React.Component {
               <input
                 type="text"
                 name="description"
+                className="form-control"
                 onChange={this.handleChange}
               />
             </label>
@@ -62,6 +63,7 @@ export default class PostQuestion extends React.Component {
                 <input
                   type="text"
                   name="option_one"
+                  className="form-control"
                   onChange={this.handleChange}
                 />
               </label>
@@ -69,6 +71,7 @@ export default class PostQuestion extends React.Component {
                 type="radio"
                 name="correct"
                 value="0"
+                className="form-check-input"
                 onChange={this.handleChange}
               />
             </div>
@@ -78,6 +81,7 @@ export default class PostQuestion extends React.Component {
                 <input
                   type="text"
                   name="option_two"
+                  className="form-control"
                   onChange={this.handleChange}
                 />
               </label>
@@ -85,6 +89,7 @@ export default class PostQuestion extends React.Component {
                 type="radio"
                 name="correct"
                 value="1"
+                className="form-check-input"
                 onChange={this.handleChange}
               />
             </div>
@@ -94,6 +99,7 @@ export default class PostQuestion extends React.Component {
                 <input
                   type="text"
                   name="option_three"
+                  className="form-control"
                   onChange={this.handleChange}
                 />
               </label>
@@ -101,6 +107,7 @@ export default class PostQuestion extends React.Component {
                 type="radio"
                 name="correct"
                 value="2"
+                className="form-check-input"
                 onChange={this.handleChange}
               />
             </div>
@@ -110,6 +117,7 @@ export default class PostQuestion extends React.Component {
                 <input
                   type="text"
                   name="option_four"
+                  className="form-control"
                   onChange={this.handleChange}
                 />
               </label>
@@ -117,10 +125,15 @@ export default class PostQuestion extends React.Component {
                 type="radio"
                 name="correct"
                 value="3"
+                className="form-check-input"
                 onChange={this.handleChange}
               />
             </div>
-            <input type="submit" value="Submit" />
+            <input
+              type="submit"
+              className="btn btn-primary mt-2"
+              value="Submit"
+            />
           </form>
         </div>
       </div>
