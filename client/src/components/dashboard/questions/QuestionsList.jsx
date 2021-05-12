@@ -1,44 +1,97 @@
+import React from "react";
+import axios from "axios";
 import "./QuestionsList.scss";
 import { Link } from "react-router-dom";
-
-const QuestionsList = () => {
-  return (
-    <div>
-      <h1 className="mt-4">Questions List</h1>
-      <div className="row mt-4">
-        <div className="col">
-          <div className="row bd-box shadow-sm">
-            <div className="col-md-8">
-              <h2>Number of questions</h2>
+import editImageSrc from "../../../assets/edit.png";
+import deleteImageSrc from "../../../assets/delete.png";
+export default class QuestionsList extends React.Component {
+  state = {
+    questions: [],
+  };
+  componentDidMount() {
+    axios.get(`http://localhost:3001/questions`).then((res) => {
+      const questions = res.data;
+      this.setState({ questions });
+    });
+  }
+  render() {
+    return (
+      <div>
+        <h1 className="mt-4"></h1>
+        <div className="row mt-4">
+          <div className="col">
+            <div className="row bd-box shadow-sm">
+              <div className="col-md-8">
+                <h2>Number of questions</h2>
+              </div>
+              <div className="col-md-4 num-bx">
+                <h1>20</h1>
+                <span>
+                  <Link to={"/create-question"} className="nav-link">
+                    Create question
+                  </Link>
+                </span>
+              </div>
             </div>
-            <div className="col-md-4 num-bx">
-              <h1>20</h1>
-              <span>
-                <Link to={"/create-question"} className="nav-link">
-                  Create question
-                </Link>
-              </span>
+          </div>
+          <div className="col">
+            <div className="row bd-box shadow-sm">
+              <div className="col-md-8">
+                <h2>Number of categories</h2>
+              </div>
+              <div className="col-md-4 num-bx">
+                <h1>4</h1>
+                <span>
+                  <Link to={"/create-question"} className="nav-link">
+                    Create category
+                  </Link>
+                </span>
+              </div>
             </div>
           </div>
         </div>
-        <div className="col">
-          <div className="row bd-box shadow-sm">
-            <div className="col-md-8">
-              <h2>Number of categories</h2>
-            </div>
-            <div className="col-md-4 num-bx">
-              <h1>4</h1>
-              <span>
-                <Link to={"/create-question"} className="nav-link">
-                  Create category
-                </Link>
-              </span>
-            </div>
-          </div>
+        <div className="container">
+          <table className="table caption-top">
+            <caption>List of questions</caption>
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Question</th>
+                <th scope="col">Delete</th>
+                <th scope="col">Update Question</th>
+              </tr>
+            </thead>
+            <tbody>
+              {/* <th scope="row">1</th> */}
+              {this.state.questions.map((question) => (
+                <tr>
+                  <td>{question._id}</td>
+                  <td key="question._id">{question.description}</td>
+                  <td>
+                    <button>
+                      <img src={deleteImageSrc} className="action-icon" />
+                    </button>
+                  </td>
+                  <td>
+                    <button>
+                      <img src={editImageSrc} className="action-icon" />
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       </div>
-    </div>
-  );
-};
+    );
+  }
+}
 
-export default QuestionsList;
+// export default QuestionsList;
+// const QuestionsList = () => {
+//   return (
+
+//   );
+// };
+
+// export default QuestionsList;
