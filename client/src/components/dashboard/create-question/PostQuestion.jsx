@@ -40,6 +40,7 @@ export default class PostQuestion extends React.Component {
       option_four,
     });
     console.log(data.data);
+    this.props.history.push("/questions");
   }
 
   render() {

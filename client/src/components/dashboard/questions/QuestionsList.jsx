@@ -19,6 +19,21 @@ export default class QuestionsList extends React.Component {
       // },
       { dataField: "description", text: "Question" },
       {
+        dataField: "update",
+        text: "Update",
+        editable: false,
+        formatter: (cellContent, row) => {
+          return (
+            <button
+              className="btn btn-primary btn-xs"
+              onClick={() => console.log("updated", row._id)}
+            >
+              Edit
+            </button>
+          );
+        },
+      },
+      {
         dataField: "delete",
         text: "Delete",
         editable: false,
