@@ -59,8 +59,6 @@ export default class QuestionsList extends React.Component {
       const numberOfQuestions = res.data;
       this.setState({ numberOfQuestions });
     });
-
-    // const columns = [{ dataField: "description", text: "Question" }];
   }
 
   render() {
@@ -99,7 +97,7 @@ export default class QuestionsList extends React.Component {
             </div>
           </div>
         </div>
-        <div className="container">
+        <div className="row mt-3">
           {/* <table className="table caption-top">
             <caption>List of questions</caption>
             <thead>
@@ -127,6 +125,7 @@ export default class QuestionsList extends React.Component {
               ))}
             </tbody>
           </table> */}
+          <caption>List of questions</caption>
           <BootstrapTable
             keyField="_id"
             data={this.state.questions}
