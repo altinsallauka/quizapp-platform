@@ -4,10 +4,36 @@ import "./QuestionsList.scss";
 import { Link } from "react-router-dom";
 import editImageSrc from "../../../assets/edit.png";
 import deleteImageSrc from "../../../assets/delete.png";
+import BootstrapTable from "react-bootstrap-table-next";
+import paginationFactory from "react-bootstrap-table2-paginator";
+import * as ReactBootStrap from "react-bootstrap";
+
 export default class QuestionsList extends React.Component {
   state = {
     questions: [],
     numberOfQuestions: "",
+    columns: [
+      // {
+      //   dataField: "_id",
+      //   text: "ID",
+      // },
+      { dataField: "description", text: "Question" },
+      {
+        dataField: "delete",
+        text: "Delete",
+        editable: false,
+        formatter: (cellContent, row) => {
+          return (
+            <button
+              className="btn btn-danger btn-xs"
+              onClick={() => console.log("deleted", row._id)}
+            >
+              Delete
+            </button>
+          );
+        },
+      },
+    ],
   };
   componentDidMount() {
     axios.get(`http://localhost:3001/questions`).then((res) => {
@@ -18,7 +44,10 @@ export default class QuestionsList extends React.Component {
       const numberOfQuestions = res.data;
       this.setState({ numberOfQuestions });
     });
+
+    // const columns = [{ dataField: "description", text: "Question" }];
   }
+
   render() {
     return (
       <div>
@@ -56,21 +85,18 @@ export default class QuestionsList extends React.Component {
           </div>
         </div>
         <div className="container">
-          <table className="table caption-top">
+          {/* <table className="table caption-top">
             <caption>List of questions</caption>
             <thead>
               <tr>
-                {/* <th scope="col">#</th> */}
                 <th scope="col">Question</th>
                 <th scope="col">Update</th>
                 <th scope="col">Delete</th>
               </tr>
             </thead>
             <tbody>
-              {/* <th scope="row">1</th> */}
               {this.state.questions.map((question) => (
                 <tr>
-                  {/* <td>{question._id}</td> */}
                   <td key="question._id">{question.description}</td>
                   <td>
                     <button>
@@ -85,7 +111,13 @@ export default class QuestionsList extends React.Component {
                 </tr>
               ))}
             </tbody>
-          </table>
+          </table> */}
+          <BootstrapTable
+            keyField="_id"
+            data={this.state.questions}
+            columns={this.state.columns}
+            pagination={paginationFactory()}
+          />
         </div>
       </div>
     );
