@@ -10,7 +10,7 @@ import LoginComponent from "./components/login/Login";
 function App() {
   return (
     <Router>
-      <nav className="navbar navbar-expand navbar-dark bg-dark">
+      <nav className="navbar navbar-expand navbar-dark bg-primary">
         <div className="container">
           <a href="/home" className="navbar-brand">
             .Quest

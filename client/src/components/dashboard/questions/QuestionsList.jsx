@@ -60,26 +60,26 @@ export default class QuestionsList extends React.Component {
             <caption>List of questions</caption>
             <thead>
               <tr>
-                <th scope="col">#</th>
+                {/* <th scope="col">#</th> */}
                 <th scope="col">Question</th>
-                <th scope="col">Delete</th>
                 <th scope="col">Update</th>
+                <th scope="col">Delete</th>
               </tr>
             </thead>
             <tbody>
               {/* <th scope="row">1</th> */}
               {this.state.questions.map((question) => (
                 <tr>
-                  <td>{question._id}</td>
+                  {/* <td>{question._id}</td> */}
                   <td key="question._id">{question.description}</td>
                   <td>
                     <button>
-                      <img src={deleteImageSrc} className="action-icon" />
+                      <img src={editImageSrc} className="action-icon" />
                     </button>
                   </td>
                   <td>
                     <button>
-                      <img src={editImageSrc} className="action-icon" />
+                      <img src={deleteImageSrc} className="action-icon" />
                     </button>
                   </td>
                 </tr>
