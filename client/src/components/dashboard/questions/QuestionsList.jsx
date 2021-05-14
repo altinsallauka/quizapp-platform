@@ -7,11 +7,16 @@ import deleteImageSrc from "../../../assets/delete.png";
 export default class QuestionsList extends React.Component {
   state = {
     questions: [],
+    numberOfQuestions: "",
   };
   componentDidMount() {
     axios.get(`http://localhost:3001/questions`).then((res) => {
       const questions = res.data;
       this.setState({ questions });
+    });
+    axios.get(`http://localhost:3001/numberOfQuestions`).then((res) => {
+      const numberOfQuestions = res.data;
+      this.setState({ numberOfQuestions });
     });
   }
   render() {
@@ -25,7 +30,7 @@ export default class QuestionsList extends React.Component {
                 <h2>Number of questions</h2>
               </div>
               <div className="col-md-4 num-bx">
-                <h1>20</h1>
+                <h1>{this.state.numberOfQuestions}</h1>
                 <span>
                   <Link to={"/create-question"} className="nav-link">
                     Create question
@@ -58,7 +63,7 @@ export default class QuestionsList extends React.Component {
                 <th scope="col">#</th>
                 <th scope="col">Question</th>
                 <th scope="col">Delete</th>
-                <th scope="col">Update Question</th>
+                <th scope="col">Update</th>
               </tr>
             </thead>
             <tbody>
@@ -86,12 +91,3 @@ export default class QuestionsList extends React.Component {
     );
   }
 }
-
-// export default QuestionsList;
-// const QuestionsList = () => {
-//   return (
-
-//   );
-// };
-
-// export default QuestionsList;

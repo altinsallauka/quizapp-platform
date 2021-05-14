@@ -100,4 +100,14 @@ router.delete("/questions/:id", async (req, res) => {
   }
 });
 
+// get number of questions
+router.get("/numberOfQuestions", async (req, res) => {
+  try {
+    const questions = await Question.countDocuments();
+    return res.status(200).json(questions);
+  } catch (error) {
+    return res.status(500).json({ error: error });
+  }
+});
+
 module.exports = router;
