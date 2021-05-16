@@ -26,10 +26,12 @@ export default class QuestionsList extends React.Component {
           text: "Update",
           editable: false,
           formatter: (cellContent, row) => {
+            this.setState({ rowId: row._id });
             return (
               <button
                 className="btn btn-primary btn-xs"
-                onClick={() => console.log("updated", row._id)}
+                // onClick={() => console.log("updated", row._id)}
+                onClick={() => this.handleModalUpdate()}
               >
                 Edit
               </button>
@@ -55,10 +57,14 @@ export default class QuestionsList extends React.Component {
         },
       ],
       showHideDelete: false,
+      showHideUpdate: false,
     };
   }
   handleModalDelete() {
     this.setState({ showHideDelete: !this.state.showHideDelete });
+  }
+  handleModalUpdate() {
+    this.setState({ showHideUpdate: !this.state.showHideUpdate });
   }
   componentDidMount() {
     this.getQuestions();
@@ -153,7 +159,7 @@ export default class QuestionsList extends React.Component {
             columns={this.state.columns}
             pagination={paginationFactory()}
           />
-
+          {/* Delete */}
           <Modal show={this.state.showHideDelete}>
             <Modal.Header closeButton onClick={() => this.handleModalDelete()}>
               <Modal.Title>Are you sure?</Modal.Title>
@@ -174,6 +180,31 @@ export default class QuestionsList extends React.Component {
                 onClick={() => this.deleteRow(this.state.rowId)}
               >
                 Delete
+              </Button>
+            </Modal.Footer>
+          </Modal>
+
+          {/* Update */}
+          <Modal show={this.state.showHideUpdate}>
+            <Modal.Header closeButton onClick={() => this.handleModalUpdate()}>
+              <Modal.Title>Edit question</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              Do you really want to delete this question? This process cannot be
+              undone.
+            </Modal.Body>
+            <Modal.Footer>
+              <Button
+                variant="secondary"
+                onClick={() => this.handleModalUpdate()}
+              >
+                Cancel
+              </Button>
+              <Button
+                variant="primary"
+                onClick={() => this.deleteRow(this.state.rowId)}
+              >
+                Update
               </Button>
             </Modal.Footer>
           </Modal>
