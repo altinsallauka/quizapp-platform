@@ -2,62 +2,83 @@ import React from "react";
 import axios from "axios";
 import "./QuestionsList.scss";
 import { Link } from "react-router-dom";
-import editImageSrc from "../../../assets/edit.png";
-import deleteImageSrc from "../../../assets/delete.png";
+// import editImageSrc from "../../../assets/edit.png";
+// import deleteImageSrc from "../../../assets/delete.png";
 import BootstrapTable from "react-bootstrap-table-next";
 import paginationFactory from "react-bootstrap-table2-paginator";
 import * as ReactBootStrap from "react-bootstrap";
-
+import { Button, Modal } from "react-bootstrap";
 export default class QuestionsList extends React.Component {
-  state = {
-    questions: [],
-    numberOfQuestions: "",
-    columns: [
-      // {
-      //   dataField: "_id",
-      //   text: "ID",
-      // },
-      { dataField: "description", text: "Question" },
-      {
-        dataField: "update",
-        text: "Update",
-        editable: false,
-        formatter: (cellContent, row) => {
-          return (
-            <button
-              className="btn btn-primary btn-xs"
-              onClick={() => console.log("updated", row._id)}
-            >
-              Edit
-            </button>
-          );
+  constructor() {
+    super();
+    this.state = {
+      rowId: "",
+      questions: [],
+      numberOfQuestions: "",
+      columns: [
+        // {
+        //   dataField: "_id",
+        //   text: "ID",
+        // },
+        { dataField: "description", text: "Question" },
+        {
+          dataField: "update",
+          text: "Update",
+          editable: false,
+          formatter: (cellContent, row) => {
+            return (
+              <button
+                className="btn btn-primary btn-xs"
+                onClick={() => console.log("updated", row._id)}
+              >
+                Edit
+              </button>
+            );
+          },
         },
-      },
-      {
-        dataField: "delete",
-        text: "Delete",
-        editable: false,
-        formatter: (cellContent, row) => {
-          return (
-            <button
-              className="btn btn-danger btn-xs"
-              onClick={() => console.log("deleted", row._id)}
-            >
-              Delete
-            </button>
-          );
+        {
+          dataField: "delete",
+          text: "Delete",
+          editable: false,
+          formatter: (cellContent, row) => {
+            this.setState({ rowId: row._id });
+            return (
+              <button
+                className="btn btn-danger btn-xs"
+                // onClick={() => console.log("deleted", row._id)}
+                onClick={() => this.handleModalDelete()}
+              >
+                Delete
+              </button>
+            );
+          },
         },
-      },
-    ],
-  };
+      ],
+      showHideDelete: false,
+    };
+  }
+  handleModalDelete() {
+    this.setState({ showHideDelete: !this.state.showHideDelete });
+  }
   componentDidMount() {
+    this.getQuestions();
+  }
+  getQuestions() {
     axios.get(`http://localhost:3001/questions`).then((res) => {
       const questions = res.data;
       this.setState({ questions });
-    });
-    axios.get(`http://localhost:3001/numberOfQuestions`).then((res) => {
-      const numberOfQuestions = res.data;
+      const numberOfQuestions = res.data.length;
       this.setState({ numberOfQuestions });
+    });
+    // axios.get(`http://localhost:3001/numberOfQuestions`).then((res) => {
+    //   const numberOfQuestions = res.data;
+    //   this.setState({ numberOfQuestions });
+    // });
+  }
+  deleteRow(id) {
+    axios.delete(`http://localhost:3001/questions/${id}`).then((res) => {
+      this.handleModalDelete();
+      this.getQuestions();
     });
   }
 
@@ -132,6 +153,30 @@ export default class QuestionsList extends React.Component {
             columns={this.state.columns}
             pagination={paginationFactory()}
           />
+
+          <Modal show={this.state.showHideDelete}>
+            <Modal.Header closeButton onClick={() => this.handleModalDelete()}>
+              <Modal.Title>Are you sure?</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              Do you really want to delete this question? This process cannot be
+              undone.
+            </Modal.Body>
+            <Modal.Footer>
+              <Button
+                variant="secondary"
+                onClick={() => this.handleModalDelete()}
+              >
+                Cancel
+              </Button>
+              <Button
+                variant="danger"
+                onClick={() => this.deleteRow(this.state.rowId)}
+              >
+                Delete
+              </Button>
+            </Modal.Footer>
+          </Modal>
         </div>
       </div>
     );
