@@ -58,16 +58,50 @@ export default class QuestionsList extends React.Component {
       ],
       showHideDelete: false,
       showHideUpdate: false,
+      toUpdate: [],
     };
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
+  handleChange(event) {
+    this.setState({ [event.target.name]: event.target.value });
+  }
+
+  async handleSubmit(event) {
+    event.preventDefault();
+    const {
+      description,
+      correct,
+      option_one,
+      option_two,
+      option_three,
+      option_four,
+    } = this.state;
+    const { data } = await axios.put(
+      `http://localhost:3001/questions/${this.state.rowId}`,
+      {
+        description,
+        correct,
+        option_one,
+        option_two,
+        option_three,
+        option_four,
+      }
+    );
+    console.log(data.data);
+    this.props.history.push("/questions");
   }
   handleModalDelete() {
     this.setState({ showHideDelete: !this.state.showHideDelete });
   }
   handleModalUpdate() {
     this.setState({ showHideUpdate: !this.state.showHideUpdate });
-  }
-  componentDidMount() {
-    this.getQuestions();
+    // axios
+    //   .get(`http://localhost:3001/questions/${this.state.rowId}`)
+    //   .then((res) => {
+    //     console.log("question", res.data);
+    //     this.setState({ toUpdate: res.data });
+    //   });
   }
   getQuestions() {
     axios.get(`http://localhost:3001/questions`).then((res) => {
@@ -86,6 +120,9 @@ export default class QuestionsList extends React.Component {
       this.handleModalDelete();
       this.getQuestions();
     });
+  }
+  componentDidMount() {
+    this.getQuestions();
   }
 
   render() {
@@ -125,33 +162,6 @@ export default class QuestionsList extends React.Component {
           </div>
         </div>
         <div className="row mt-3">
-          {/* <table className="table caption-top">
-            <caption>List of questions</caption>
-            <thead>
-              <tr>
-                <th scope="col">Question</th>
-                <th scope="col">Update</th>
-                <th scope="col">Delete</th>
-              </tr>
-            </thead>
-            <tbody>
-              {this.state.questions.map((question) => (
-                <tr>
-                  <td key="question._id">{question.description}</td>
-                  <td>
-                    <button>
-                      <img src={editImageSrc} className="action-icon" />
-                    </button>
-                  </td>
-                  <td>
-                    <button>
-                      <img src={deleteImageSrc} className="action-icon" />
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table> */}
           <caption>List of questions</caption>
           <BootstrapTable
             keyField="_id"
@@ -186,27 +196,114 @@ export default class QuestionsList extends React.Component {
 
           {/* Update */}
           <Modal show={this.state.showHideUpdate}>
-            <Modal.Header closeButton onClick={() => this.handleModalUpdate()}>
-              <Modal.Title>Edit question</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-              Do you really want to delete this question? This process cannot be
-              undone.
-            </Modal.Body>
-            <Modal.Footer>
-              <Button
-                variant="secondary"
+            <form onSubmit={this.handleSubmit}>
+              <Modal.Header
+                closeButton
                 onClick={() => this.handleModalUpdate()}
               >
-                Cancel
-              </Button>
-              <Button
-                variant="primary"
-                onClick={() => this.deleteRow(this.state.rowId)}
-              >
-                Update
-              </Button>
-            </Modal.Footer>
+                <Modal.Title>Edit question</Modal.Title>
+              </Modal.Header>
+              <Modal.Body>
+                <label className="d-flex flex-column align-items-start">
+                  Description:
+                  <input
+                    type="text"
+                    name="description"
+                    className="form-control"
+                    onChange={this.handleChange}
+                  />
+                </label>
+                <div className="d-flex align-items-center">
+                  <label className="d-flex flex-column align-items-start">
+                    First option:
+                    <input
+                      type="text"
+                      name="option_one"
+                      className="form-control"
+                      onChange={this.handleChange}
+                    />
+                  </label>
+                  <input
+                    type="radio"
+                    name="correct"
+                    value="0"
+                    className="form-check-input"
+                    onChange={this.handleChange}
+                  />
+                </div>
+                <div className="d-flex align-items-center">
+                  <label className="d-flex flex-column align-items-start">
+                    Second option:
+                    <input
+                      type="text"
+                      name="option_two"
+                      className="form-control"
+                      onChange={this.handleChange}
+                    />
+                  </label>
+                  <input
+                    type="radio"
+                    name="correct"
+                    value="1"
+                    className="form-check-input"
+                    onChange={this.handleChange}
+                  />
+                </div>
+                <div className="d-flex align-items-center">
+                  <label className="d-flex flex-column align-items-start">
+                    Third option:
+                    <input
+                      type="text"
+                      name="option_three"
+                      className="form-control"
+                      onChange={this.handleChange}
+                    />
+                  </label>
+                  <input
+                    type="radio"
+                    name="correct"
+                    value="2"
+                    className="form-check-input"
+                    onChange={this.handleChange}
+                  />
+                </div>
+                <div className="d-flex align-items-center">
+                  <label className="d-flex flex-column align-items-start">
+                    Forth option:
+                    <input
+                      type="text"
+                      name="option_four"
+                      className="form-control"
+                      onChange={this.handleChange}
+                    />
+                  </label>
+                  <input
+                    type="radio"
+                    name="correct"
+                    value="3"
+                    className="form-check-input"
+                    onChange={this.handleChange}
+                  />
+                </div>
+              </Modal.Body>
+              <Modal.Footer>
+                <Button
+                  variant="secondary"
+                  onClick={() => this.handleModalUpdate()}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  type="submit"
+                  value="submit"
+                  variant="primary"
+                  // onClick={() => this.deleteRow(this.state.rowId)}
+                  onClick={() => this.handleSubmit()}
+                >
+                  Update
+                </Button>
+              </Modal.Footer>
+            </form>
           </Modal>
         </div>
       </div>

@@ -65,3 +65,7 @@ button:active {
   // justify-content: center;
   padding-left: 14px !important;
 }
+.form-check-input[type="radio"] {
+  position: absolute;
+  right: 50%;
+}

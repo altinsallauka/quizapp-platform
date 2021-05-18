@@ -72,7 +72,7 @@ export default class PostQuestion extends React.Component {
                 type="radio"
                 name="correct"
                 value="0"
-                className="form-check-input"
+                className="form-check-input post-r-input"
                 onChange={this.handleChange}
               />
             </div>
@@ -90,7 +90,7 @@ export default class PostQuestion extends React.Component {
                 type="radio"
                 name="correct"
                 value="1"
-                className="form-check-input"
+                className="form-check-input post-r-input"
                 onChange={this.handleChange}
               />
             </div>
@@ -108,7 +108,7 @@ export default class PostQuestion extends React.Component {
                 type="radio"
                 name="correct"
                 value="2"
-                className="form-check-input"
+                className="form-check-input post-r-input"
                 onChange={this.handleChange}
               />
             </div>
@@ -126,7 +126,7 @@ export default class PostQuestion extends React.Component {
                 type="radio"
                 name="correct"
                 value="3"
-                className="form-check-input"
+                className="form-check-input post-r-input"
                 onChange={this.handleChange}
               />
             </div>

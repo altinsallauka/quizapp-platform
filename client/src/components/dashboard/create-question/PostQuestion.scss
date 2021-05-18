@@ -3,3 +3,17 @@
   margin-left: 10px;
   margin-top: 20px;
 }
+.post-r-input[type="radio"] {
+  position: absolute;
+  right: 63% !important;
+}
+@media (max-width: 768px) {
+  .post-r-input[type="radio"] {
+    border-radius: 50%;
+    margin-left: 10px;
+    margin-top: 20px;
+    /* float: right; */
+    position: absolute;
+    right: 51% !important;
+  }
+}
