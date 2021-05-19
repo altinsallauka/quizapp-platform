@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
-const Question = require("./models/Question"); // includes our model
-
+const Question = require("./models/Question"); // includes our question model
+const Categories = require("./models/Categories"); // category model
 // get all quiz questions
 router.get("/questions", async (req, res) => {
   try {
@@ -105,6 +105,30 @@ router.get("/numberOfQuestions", async (req, res) => {
   try {
     const questions = await Question.countDocuments();
     return res.status(200).json(questions);
+  } catch (error) {
+    return res.status(500).json({ error: error });
+  }
+});
+
+// get all categories
+router.get("/categories", async (req, res) => {
+  try {
+    const ctg = await Categories.find();
+    return res.status(200).json(ctg);
+  } catch (error) {
+    return res.status(500).json({ error: error });
+  }
+});
+// create category
+router.post("/categories", async (req, res) => {
+  try {
+    const { categoryName } = req.body;
+
+    const ctg = await Categories.create({
+      categoryName,
+    });
+
+    return res.json(ctg);
   } catch (error) {
     return res.status(500).json({ error: error });
   }

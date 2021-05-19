@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 // import deleteImageSrc from "../../../assets/delete.png";
 import BootstrapTable from "react-bootstrap-table-next";
 import paginationFactory from "react-bootstrap-table2-paginator";
-import * as ReactBootStrap from "react-bootstrap";
+// import * as ReactBootStrap from "react-bootstrap";
 import { Button, Modal } from "react-bootstrap";
 export default class QuestionsList extends React.Component {
   constructor() {
@@ -138,7 +138,7 @@ export default class QuestionsList extends React.Component {
               <div className="col-md-4 num-bx">
                 <h1>{this.state.numberOfQuestions}</h1>
                 <span>
-                  <Link to={"/create-question"} className="nav-link">
+                  <Link to={"/create-category"} className="nav-link">
                     Create question
                   </Link>
                 </span>
