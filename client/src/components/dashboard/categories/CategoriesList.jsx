@@ -5,6 +5,7 @@ import "./CategoriesList.scss";
 import editImageSrc from "../../../assets/edit.png";
 import deleteImageSrc from "../../../assets/delete.png";
 import { Button, Modal } from "react-bootstrap";
+import { Link } from "react-router-dom";
 export default class CategoriesList extends React.Component {
   state = {
     categories: [],
@@ -54,7 +55,11 @@ export default class CategoriesList extends React.Component {
         <div className="row">
           <div className="title-container">
             <h1>Categories</h1>
-            <h1>+</h1>
+            <h1>
+              <Link to={"/create-Category"} className="nav-link">
+                +
+              </Link>
+            </h1>
           </div>
         </div>
         <div className="row">

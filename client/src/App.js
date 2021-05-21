@@ -9,6 +9,7 @@ import LoginComponent from "./components/login/Login";
 import "react-bootstrap-table-next/dist/react-bootstrap-table2.min.css";
 import "react-bootstrap-table2-paginator/dist/react-bootstrap-table2-paginator.min.css";
 import CategoriesList from "./components/dashboard/categories/CategoriesList";
+import PostCategory from "./components/dashboard/create-category/PostCategory";
 function App() {
   return (
     <Router>
@@ -25,8 +26,8 @@ function App() {
               </Link>
             </li>
             <li className="nav-item">
-              <Link to={"/create-question"} className="nav-link">
-                Create question
+              <Link to={"/categories"} className="nav-link">
+                Categories
               </Link>
             </li>
             <li className="nav-item">
@@ -44,6 +45,7 @@ function App() {
           <Route exact path="/create-question" component={PostQuestion} />
           <Route exact path="/questions" component={QuestionsList} />
           <Route exact path="/categories" component={CategoriesList} />
+          <Route exact path="/create-category" component={PostCategory} />
           <Route exact path="/home" component={DashboardComponent} />
         </Switch>
       </div>

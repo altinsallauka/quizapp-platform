@@ -69,3 +69,6 @@ button:active {
   position: absolute;
   right: 50%;
 }
+.table > :not(:last-child) > :last-child > * {
+  border-bottom-color: #0084ff !important;
+}
