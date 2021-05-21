@@ -138,7 +138,7 @@ export default class QuestionsList extends React.Component {
               <div className="col-md-4 num-bx">
                 <h1>{this.state.numberOfQuestions}</h1>
                 <span>
-                  <Link to={"/create-category"} className="nav-link">
+                  <Link to={"/create-question"} className="nav-link">
                     Create question
                   </Link>
                 </span>
@@ -153,8 +153,8 @@ export default class QuestionsList extends React.Component {
               <div className="col-md-4 num-bx">
                 <h1>4</h1>
                 <span>
-                  <Link to={"/create-question"} className="nav-link">
-                    Create category
+                  <Link to={"/categories"} className="nav-link">
+                    Categories
                   </Link>
                 </span>
               </div>
