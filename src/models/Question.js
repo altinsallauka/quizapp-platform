@@ -15,6 +15,7 @@ const QuestionSchema = new mongoose.Schema({
       },
     },
   ],
+  categoryId: String,
 });
 
 module.exports = mongoose.model("Question", QuestionSchema);

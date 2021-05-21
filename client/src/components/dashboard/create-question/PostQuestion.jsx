@@ -11,6 +11,8 @@ export default class PostQuestion extends React.Component {
       option_three: "",
       option_four: "",
       correct: "",
+      categoryId: "",
+      categories: [],
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -30,6 +32,7 @@ export default class PostQuestion extends React.Component {
       option_two,
       option_three,
       option_four,
+      categoryId,
     } = this.state;
     const { data } = await axios.post("http://localhost:3001/questions", {
       description,
@@ -38,11 +41,19 @@ export default class PostQuestion extends React.Component {
       option_two,
       option_three,
       option_four,
+      categoryId,
     });
     console.log(data.data);
     this.props.history.push("/questions");
   }
-
+  getCategories() {
+    axios.get("http://localhost:3001/categories").then((res) => {
+      this.setState({ categories: res.data });
+    });
+  }
+  componentDidMount() {
+    this.getCategories();
+  }
   render() {
     return (
       <div className="row">
@@ -129,6 +140,23 @@ export default class PostQuestion extends React.Component {
                 className="form-check-input post-r-input"
                 onChange={this.handleChange}
               />
+            </div>
+            <div className="d-flex align-items-center">
+              <label className="d-flex flex-column align-items-start">
+                Category:
+                <select
+                  className="form-select"
+                  name="categoryId"
+                  aria-label="Default select example"
+                  onChange={this.handleChange}
+                >
+                  {this.state.categories.map((ctg) => (
+                    <option value={ctg._id} key={ctg._id}>
+                      {ctg.categoryName}
+                    </option>
+                  ))}
+                </select>
+              </label>
             </div>
             <input
               type="submit"

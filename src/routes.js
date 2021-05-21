@@ -38,6 +38,7 @@ router.post("/questions", async (req, res) => {
       option_two,
       option_three,
       option_four,
+      categoryId,
     } = req.body;
 
     const alternatives = [
@@ -50,6 +51,7 @@ router.post("/questions", async (req, res) => {
     const question = await Question.create({
       description,
       alternatives,
+      categoryId,
     });
 
     return res.json(question);
@@ -70,11 +72,13 @@ router.put("/questions/:id", async (req, res) => {
       question = await Question.create({
         description,
         alternatives,
+        categoryId,
       });
       return res.status(201).json(question);
     } else {
       question.description = description;
       question.alternatives = alternatives;
+      question.categoryId = categoryId;
       await question.save();
       return res.status(200).json(question);
     }
