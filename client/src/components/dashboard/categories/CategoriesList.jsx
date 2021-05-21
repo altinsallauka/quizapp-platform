@@ -42,7 +42,7 @@ export default class CategoriesList extends React.Component {
   createCategory(ctgParameter) {
     axios
       .post("http://localhost:3001/categories", {
-        categoryName: ctgParameter,
+        categoryName: "123sasdasdasdasdd4",
       })
       .then(function (response) {
         console.log(response);

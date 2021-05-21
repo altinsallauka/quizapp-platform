@@ -15,6 +15,7 @@ export default class QuestionsList extends React.Component {
       rowId: "",
       questions: [],
       numberOfQuestions: "",
+      numberOfCategories: "",
       columns: [
         // {
         //   dataField: "_id",
@@ -123,6 +124,10 @@ export default class QuestionsList extends React.Component {
   }
   componentDidMount() {
     this.getQuestions();
+    axios.get(`http://localhost:3001/categories`).then((res) => {
+      const numberOfCategories = res.data.length;
+      this.setState({ numberOfCategories });
+    });
   }
 
   render() {
@@ -151,7 +156,7 @@ export default class QuestionsList extends React.Component {
                 <h2>Number of categories</h2>
               </div>
               <div className="col-md-4 num-bx">
-                <h1>4</h1>
+                <h1>{this.state.numberOfCategories}</h1>
                 <span>
                   <Link to={"/categories"} className="nav-link">
                     Categories
