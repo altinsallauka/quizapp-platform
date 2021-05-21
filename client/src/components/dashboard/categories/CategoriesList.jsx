@@ -25,6 +25,16 @@ export default class CategoriesList extends React.Component {
     return (
       <div>
         <h1>Categories</h1>
+        <div className="row">
+          <caption>List of categories</caption>
+          <div className="container ctg">
+            {this.state.categories.map((ctg) => (
+              <div className="categoryBox shadow-sm p-3 mb-5 bg-body rounded">
+                <span>{ctg.categoryName}</span>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
     );
   }
