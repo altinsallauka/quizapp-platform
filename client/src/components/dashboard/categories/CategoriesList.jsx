@@ -3,6 +3,8 @@ import axios from "axios";
 import "./CategoriesList.scss";
 // import * as ReactBootStrap from "react-bootstrap";
 // import { Button, Modal } from "react-bootstrap";
+import editImageSrc from "../../../assets/edit.png";
+import deleteImageSrc from "../../../assets/delete.png";
 export default class CategoriesList extends React.Component {
   state = {
     categories: [],
@@ -31,6 +33,10 @@ export default class CategoriesList extends React.Component {
             {this.state.categories.map((ctg) => (
               <div className="categoryBox shadow-sm p-3 mb-5 bg-body rounded">
                 <span>{ctg.categoryName}</span>
+                <div className="ctgIcons">
+                  <img src={editImageSrc} alt="Edit Icon" />
+                  <img src={deleteImageSrc} alt="Delete Icon" />
+                </div>
               </div>
             ))}
           </div>

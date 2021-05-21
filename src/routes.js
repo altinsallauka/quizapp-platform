@@ -133,5 +133,42 @@ router.post("/categories", async (req, res) => {
     return res.status(500).json({ error: error });
   }
 });
+// update a category
+router.put("/categories/:id", async (req, res) => {
+  try {
+    const _id = req.params.id;
+    const { categoryName } = req.body;
 
+    let ctg = await Categories.findOne({ _id });
+
+    if (!ctg) {
+      ctg = await Question.create({
+        categoryName,
+      });
+      return res.status(201).json(ctg);
+    } else {
+      ctg.categoryName = categoryName;
+      await ctg.save();
+      return res.status(200).json(ctg);
+    }
+  } catch (error) {
+    return res.status(500).json({ error: error });
+  }
+});
+// delete one category
+router.delete("/categories/:id", async (req, res) => {
+  try {
+    const _id = req.params.id;
+
+    const ctg = await Categories.deleteOne({ _id });
+
+    if (ctg.deletedCount === 0) {
+      return res.status(404).json();
+    } else {
+      return res.status(204).json();
+    }
+  } catch (error) {
+    return res.status(500).json({ error: error });
+  }
+});
 module.exports = router;

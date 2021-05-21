@@ -1,8 +1,19 @@
 .ctg {
   display: flex;
+  flex-wrap: wrap;
   .categoryBox {
     width: 200px;
     height: 140px;
     margin: 5px;
+    position: relative;
+    .ctgIcons {
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      img {
+        max-width: 20px;
+        margin: 4px;
+      }
+    }
   }
 }
