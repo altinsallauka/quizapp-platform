@@ -51,7 +51,12 @@ export default class CategoriesList extends React.Component {
   render() {
     return (
       <div>
-        <h1>Categories</h1>
+        <div className="row">
+          <div className="title-container">
+            <h1>Categories</h1>
+            <h1>+</h1>
+          </div>
+        </div>
         <div className="row">
           <caption>List of categories</caption>
           <div className="container ctg">
@@ -106,11 +111,11 @@ export default class CategoriesList extends React.Component {
         <Modal show={this.state.showHideUpdate}>
           <form onSubmit={this.handleSubmit}>
             <Modal.Header closeButton onClick={() => this.handleModalUpdate()}>
-              <Modal.Title>Edit question</Modal.Title>
+              <Modal.Title>Edit category</Modal.Title>
             </Modal.Header>
             <Modal.Body>
               <label className="d-flex flex-column align-items-start">
-                Description:
+                Name:
                 <input
                   type="text"
                   name="description"
@@ -118,78 +123,6 @@ export default class CategoriesList extends React.Component {
                   onChange={this.handleChange}
                 />
               </label>
-              <div className="d-flex align-items-center">
-                <label className="d-flex flex-column align-items-start">
-                  First option:
-                  <input
-                    type="text"
-                    name="option_one"
-                    className="form-control"
-                    onChange={this.handleChange}
-                  />
-                </label>
-                <input
-                  type="radio"
-                  name="correct"
-                  value="0"
-                  className="form-check-input"
-                  onChange={this.handleChange}
-                />
-              </div>
-              <div className="d-flex align-items-center">
-                <label className="d-flex flex-column align-items-start">
-                  Second option:
-                  <input
-                    type="text"
-                    name="option_two"
-                    className="form-control"
-                    onChange={this.handleChange}
-                  />
-                </label>
-                <input
-                  type="radio"
-                  name="correct"
-                  value="1"
-                  className="form-check-input"
-                  onChange={this.handleChange}
-                />
-              </div>
-              <div className="d-flex align-items-center">
-                <label className="d-flex flex-column align-items-start">
-                  Third option:
-                  <input
-                    type="text"
-                    name="option_three"
-                    className="form-control"
-                    onChange={this.handleChange}
-                  />
-                </label>
-                <input
-                  type="radio"
-                  name="correct"
-                  value="2"
-                  className="form-check-input"
-                  onChange={this.handleChange}
-                />
-              </div>
-              <div className="d-flex align-items-center">
-                <label className="d-flex flex-column align-items-start">
-                  Forth option:
-                  <input
-                    type="text"
-                    name="option_four"
-                    className="form-control"
-                    onChange={this.handleChange}
-                  />
-                </label>
-                <input
-                  type="radio"
-                  name="correct"
-                  value="3"
-                  className="form-check-input"
-                  onChange={this.handleChange}
-                />
-              </div>
             </Modal.Body>
             <Modal.Footer>
               <Button
