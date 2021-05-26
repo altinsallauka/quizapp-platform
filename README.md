@@ -1,8 +1,6 @@
-# Quiz API
+# Quiz
 
 Quiz API built with NodeJS, ExpressJS and Mongoose.
-
-# Front End
 
 ReactJS
 
@@ -15,4 +13,4 @@ Then you can install all its dependencies and run it.
 
 ## Running
 
-`npm run dev`
+`npm run dev` for both MERN App
