@@ -1,7 +1,6 @@
 import React from "react";
 import "./NavBar.scss";
 import { Link } from "react-router-dom";
-import axios from "axios";
 export default class NavBar extends React.Component {
   state = {};
   render() {
