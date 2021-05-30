@@ -1,0 +1,4 @@
+{
+  "connectionString": "mongodb+srv://altin:safemoon@cluster0.5rfuq.mongodb.net/myFirstDatabase?retryWrites=true",
+  "secret": "Saf3mo0NdB"
+}
