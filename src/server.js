@@ -41,3 +41,8 @@ app.use(errorHandler);
 app.listen(3001, () => {
   console.log("The api is running...");
 });
+mongoose.Promise = global.Promise;
+
+module.exports = {
+  User: require("./users/user.model"),
+};
