@@ -12,6 +12,7 @@ import PostQuestion from "./create-question/PostQuestion";
 import QuestionsList from "./questions/QuestionsList";
 import PostCategory from "./create-category/PostCategory";
 import NavBar from "./nav-bar/NavBar";
+import UsersList from "./users/UsersList";
 function DashboardComponent() {
   return (
     <Router>
@@ -28,6 +29,7 @@ function DashboardComponent() {
           <Route exact path="/create-question" component={PostQuestion} />
           {/* <Route exact path="/questions" component={QuestionsList} /> */}
           <Route exact path="/categories" component={CategoriesList} />
+          <Route exact path="/users" component={UsersList} />
           <Route exact path="/create-category" component={PostCategory} />
         </Switch>
       </div>

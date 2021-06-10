@@ -11,6 +11,7 @@ import CategoriesList from "./components/dashboard/categories/CategoriesList";
 import PostCategory from "./components/dashboard/create-category/PostCategory";
 import RolePage from "./components/role-page/RolePage";
 import DashboardComponent from "./components/dashboard/Dashboard";
+import UsersList from "./components/dashboard/users/UsersList";
 function App() {
   return (
     <Router>
@@ -21,6 +22,7 @@ function App() {
           <Route exact path="/home" component={DashboardComponent} />
           <Route exact path="/create-question" component={PostQuestion} />
           <Route exact path="/questions" component={QuestionsList} />
+          {/* <Route exact path="/users" component={UsersList} /> */}
           <Route exact path="/categories" component={CategoriesList} />
           <Route exact path="/create-category" component={PostCategory} />
         </Switch>
