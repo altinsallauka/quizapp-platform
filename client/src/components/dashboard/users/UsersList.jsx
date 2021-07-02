@@ -106,8 +106,6 @@ export default class UsersList extends React.Component {
     axios.get(`http://localhost:3001/users`).then((res) => {
       const users = res.data;
       this.setState({ users });
-      const numberOfusers = res.data.length;
-      this.setState({ numberOfusers });
     });
   }
   deleteRow(id) {
