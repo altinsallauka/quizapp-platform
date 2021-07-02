@@ -8,9 +8,14 @@ Front End built with ReactJS.
 
 git clone this repository.
 
-Then you can install all its dependencies and run it.  
-`npm install`
+Then you can install all its dependencies and run it.
+
+```Installing
+npm install
+```
 
 ## Running
 
-`npm run dev` for both MERN App
+```Running
+npm run dev
+```
