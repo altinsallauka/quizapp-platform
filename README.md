@@ -1,8 +1,6 @@
 # Quiz
 
-Quiz API built with NodeJS, ExpressJS and Mongoose.
-
-Front End built with ReactJS.
+Quiz API built with NodeJS, ExpressJS and Mongoose. Front End built with ReactJS.
 
 ## Installing
 
