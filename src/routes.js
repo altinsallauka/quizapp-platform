@@ -63,8 +63,8 @@ router.post("/questions", async (req, res) => {
 // update one quiz question
 router.put("/questions/:id", async (req, res) => {
   try {
-    const _id = req.params.id;
-    const { description, alternatives } = req.body;
+    // const _id = req.params.id;
+    const { description, alternatives, _id, categoryId } = req.body;
 
     let question = await Question.findOne({ _id });
 
@@ -80,6 +80,7 @@ router.put("/questions/:id", async (req, res) => {
       question.alternatives = alternatives;
       question.categoryId = categoryId;
       await question.save();
+
       return res.status(200).json(question);
     }
   } catch (error) {

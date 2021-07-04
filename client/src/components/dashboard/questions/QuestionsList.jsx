@@ -32,7 +32,7 @@ export default class QuestionsList extends React.Component {
               <button
                 className="btn btn-primary btn-xs"
                 // onClick={() => console.log("updated", row._id)}
-                onClick={() => this.handleModalUpdate()}
+                onClick={() => this.handleModalUpdate(row._id)}
               >
                 Edit
               </button>
@@ -59,50 +59,89 @@ export default class QuestionsList extends React.Component {
       ],
       showHideDelete: false,
       showHideUpdate: false,
-      toUpdate: [],
+      toUpdate: {
+        _id: "",
+        categoryId: "",
+        option_one: "",
+        correct: -1,
+        option_two: "",
+        option_three: "",
+        option_four: "",
+        description: "",
+      },
     };
     this.handleChange = this.handleChange.bind(this);
+    this.handleChange2 = this.handleChange2.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
   handleChange(event) {
     this.setState({ [event.target.name]: event.target.value });
   }
+  handleChange2(event) {
+    this.setState({
+      toUpdate: {
+        ...this.state.toUpdate,
+        [event.target.name]: event.target.value,
+      },
+    });
+  }
 
   async handleSubmit(event) {
     event.preventDefault();
     const {
-      description,
-      correct,
-      option_one,
-      option_two,
-      option_three,
-      option_four,
-    } = this.state;
-    const { data } = await axios.put(
-      `http://localhost:3001/questions/${this.state.rowId}`,
-      {
-        description,
-        correct,
+      toUpdate: {
         option_one,
+        correct,
         option_two,
         option_three,
         option_four,
-      }
+        description,
+        _id,
+        categoryId,
+      },
+    } = this.state;
+
+    const valuesTochange = {
+      description,
+      alternatives: [
+        { text: option_one, isCorrect: false },
+        { text: option_two, isCorrect: false },
+        { text: option_three, isCorrect: false },
+        { text: option_four, isCorrect: false },
+      ],
+      _id,
+      categoryId,
+    };
+    valuesTochange.alternatives[correct].isCorrect = true;
+    const { data } = await axios.put(
+      `http://localhost:3001/questions/${this.state.rowId}`,
+      valuesTochange
     );
+    this.getQuestions();
+    this.setState({ showHideUpdate: !this.state.showHideUpdate });
     console.log(data.data);
-    this.props.history.push("/questions");
+    // this.props.history.push("/questions");
   }
   handleModalDelete() {
     this.setState({ showHideDelete: !this.state.showHideDelete });
   }
-  handleModalUpdate() {
+  handleModalUpdate(id) {
     this.setState({ showHideUpdate: !this.state.showHideUpdate });
-    // axios
-    //   .get(`http://localhost:3001/questions/${this.state.rowId}`)
-    //   .then((res) => {
-    //     console.log("question", res.data);
-    //     this.setState({ toUpdate: res.data });
-    //   });
+    axios.get(`http://localhost:3001/questions/${id}`).then((res) => {
+      const { description, categoryId, alternatives } = res.data;
+      this.setState({
+        toUpdate: {
+          description,
+          option_one: alternatives[0].text,
+          correct: alternatives.findIndex((item) => item.isCorrect),
+          option_two: alternatives[1].text,
+          option_three: alternatives[2].text,
+          option_four: alternatives[3].text,
+          _id: id,
+          categoryId,
+        },
+      });
+    });
   }
   getQuestions() {
     axios.get(`http://localhost:3001/questions`).then((res) => {
@@ -131,10 +170,10 @@ export default class QuestionsList extends React.Component {
   }
 
   render() {
+    console.log(this.state.toUpdate.correct);
     return (
       <div>
-        <h1 className="mt-4"></h1>
-        <div className="row mt-4">
+        <div className="row mt-4 pt-4">
           <div className="col">
             <div className="row bd-box shadow-sm">
               <div className="col-md-8">
@@ -167,7 +206,7 @@ export default class QuestionsList extends React.Component {
           </div>
         </div>
         <div className="row mt-3">
-          <caption>List of questions</caption>
+          <h3>List of questions</h3>
           <BootstrapTable
             keyField="_id"
             data={this.state.questions}
@@ -201,7 +240,7 @@ export default class QuestionsList extends React.Component {
 
           {/* Update */}
           <Modal show={this.state.showHideUpdate}>
-            <form onSubmit={this.handleSubmit}>
+            <form onSubmit={(e) => this.handleSubmit(e)}>
               <Modal.Header
                 closeButton
                 onClick={() => this.handleModalUpdate()}
@@ -214,8 +253,9 @@ export default class QuestionsList extends React.Component {
                   <input
                     type="text"
                     name="description"
+                    value={this.state.toUpdate.description}
                     className="form-control"
-                    onChange={this.handleChange}
+                    onChange={this.handleChange2}
                   />
                 </label>
                 <div className="d-flex align-items-center">
@@ -224,16 +264,18 @@ export default class QuestionsList extends React.Component {
                     <input
                       type="text"
                       name="option_one"
+                      value={this.state.toUpdate.option_one}
                       className="form-control"
-                      onChange={this.handleChange}
+                      onChange={this.handleChange2}
                     />
                   </label>
                   <input
                     type="radio"
                     name="correct"
                     value="0"
+                    checked={+this.state.toUpdate.correct === 0}
                     className="form-check-input"
-                    onChange={this.handleChange}
+                    onChange={this.handleChange2}
                   />
                 </div>
                 <div className="d-flex align-items-center">
@@ -242,16 +284,18 @@ export default class QuestionsList extends React.Component {
                     <input
                       type="text"
                       name="option_two"
+                      value={this.state.toUpdate.option_two}
                       className="form-control"
-                      onChange={this.handleChange}
+                      onChange={this.handleChange2}
                     />
                   </label>
                   <input
                     type="radio"
                     name="correct"
                     value="1"
+                    checked={+this.state.toUpdate.correct === 1}
                     className="form-check-input"
-                    onChange={this.handleChange}
+                    onChange={this.handleChange2}
                   />
                 </div>
                 <div className="d-flex align-items-center">
@@ -260,16 +304,18 @@ export default class QuestionsList extends React.Component {
                     <input
                       type="text"
                       name="option_three"
+                      value={this.state.toUpdate.option_three}
                       className="form-control"
-                      onChange={this.handleChange}
+                      onChange={this.handleChange2}
                     />
                   </label>
                   <input
                     type="radio"
                     name="correct"
                     value="2"
+                    checked={+this.state.toUpdate.correct === 2}
                     className="form-check-input"
-                    onChange={this.handleChange}
+                    onChange={this.handleChange2}
                   />
                 </div>
                 <div className="d-flex align-items-center">
@@ -278,16 +324,18 @@ export default class QuestionsList extends React.Component {
                     <input
                       type="text"
                       name="option_four"
+                      value={this.state.toUpdate.option_four}
                       className="form-control"
-                      onChange={this.handleChange}
+                      onChange={this.handleChange2}
                     />
                   </label>
                   <input
                     type="radio"
                     name="correct"
                     value="3"
+                    checked={+this.state.toUpdate.correct === 3}
                     className="form-check-input"
-                    onChange={this.handleChange}
+                    onChange={this.handleChange2}
                   />
                 </div>
               </Modal.Body>
@@ -298,13 +346,7 @@ export default class QuestionsList extends React.Component {
                 >
                   Cancel
                 </Button>
-                <Button
-                  type="submit"
-                  value="submit"
-                  variant="primary"
-                  // onClick={() => this.deleteRow(this.state.rowId)}
-                  onClick={() => this.handleSubmit()}
-                >
+                <Button type="submit" value="submit" variant="primary">
                   Update
                 </Button>
               </Modal.Footer>

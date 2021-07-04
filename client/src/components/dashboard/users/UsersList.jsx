@@ -121,8 +121,7 @@ export default class UsersList extends React.Component {
   render() {
     return (
       <div>
-        <h1 className="mt-4"></h1>
-        <div className="row mt-3">
+        <div className="row mt-3 pt-4">
           <caption>List of users</caption>
           <BootstrapTable
             keyField="_id"
