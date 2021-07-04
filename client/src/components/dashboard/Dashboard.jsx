@@ -11,12 +11,10 @@ import LoginComponent from "./../login/Login";
 import PostQuestion from "./create-question/PostQuestion";
 import QuestionsList from "./questions/QuestionsList";
 import PostCategory from "./create-category/PostCategory";
-import NavBar from "./nav-bar/NavBar";
 import UsersList from "./users/UsersList";
 function DashboardComponent() {
   return (
     <Router>
-      <NavBar />
       <div className="container">
         <Switch>
           <Route
