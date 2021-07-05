@@ -7,16 +7,24 @@ import deleteImageSrc from "../../../assets/delete.png";
 import { Button, Modal } from "react-bootstrap";
 import { Link } from "react-router-dom";
 export default class CategoriesList extends React.Component {
-  state = {
-    categories: [],
-    categoryId: "",
-    showHideDelete: false,
-    showHideUpdate: false,
-  };
+  constructor() {
+    super();
+    this.state = {
+      categories: [],
+      categoryId: "",
+      categoryName: "",
+      showHideDelete: false,
+      showHideUpdate: false,
+    };
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
+  handleChange(event) {
+    this.setState({ [event.target.name]: event.target.value });
+  }
   componentDidMount() {
     this.getCategories();
   }
-
   handleModalDelete(id) {
     this.setState({
       showHideDelete: !this.state.showHideDelete,
@@ -28,6 +36,24 @@ export default class CategoriesList extends React.Component {
       showHideUpdate: !this.state.showHideUpdate,
       categoryId: id,
     });
+    axios.get(`http://localhost:3001/categories/${id}`).then((res) => {
+      const { categoryName } = res.data;
+      this.setState({
+        _id: id,
+        categoryName,
+      });
+    });
+  }
+  async handleSubmit(event) {
+    event.preventDefault();
+    const { categoryId, categoryName } = this.state;
+    const { data } = await axios.put(
+      `http://localhost:3001/categories/${categoryId}`,
+      { _id: categoryId, categoryName }
+    );
+    console.log("=====", data);
+    this.getCategories();
+    this.setState({ showHideUpdate: !this.state.showHideUpdate });
   }
   getCategories() {
     axios.get("http://localhost:3001/categories").then((res) => {
@@ -114,7 +140,7 @@ export default class CategoriesList extends React.Component {
 
         {/* Update */}
         <Modal show={this.state.showHideUpdate}>
-          <form onSubmit={this.handleSubmit}>
+          <form onSubmit={(e) => this.handleSubmit(e)}>
             <Modal.Header closeButton onClick={() => this.handleModalUpdate()}>
               <Modal.Title>Edit category</Modal.Title>
             </Modal.Header>
@@ -123,7 +149,8 @@ export default class CategoriesList extends React.Component {
                 Name:
                 <input
                   type="text"
-                  name="description"
+                  name="categoryName"
+                  value={this.state.categoryName}
                   className="form-control"
                   onChange={this.handleChange}
                 />
@@ -141,7 +168,7 @@ export default class CategoriesList extends React.Component {
                 value="submit"
                 variant="primary"
                 // onClick={() => this.deleteRow(this.state.rowId)}
-                onClick={() => this.handleSubmit()}
+                // onClick={() => this.handleSubmit()}
               >
                 Update
               </Button>

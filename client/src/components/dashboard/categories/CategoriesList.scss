@@ -6,6 +6,9 @@
     height: 140px;
     margin: 5px;
     position: relative;
+    span {
+      word-break: break-all;
+    }
     .ctgIcons {
       position: absolute;
       bottom: 10px;

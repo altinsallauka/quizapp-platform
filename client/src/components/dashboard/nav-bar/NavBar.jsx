@@ -9,7 +9,7 @@ export default class NavBar extends React.Component {
         <nav className="navbar navbar-expand navbar-dark bg-primary">
           <div className="container">
             <a href="/home" className="navbar-brand">
-              .Quest
+              Quizapp MERN
             </a>
             {/* <div className="navbar-nav mr-auto"> */}
             <div className="navbar-nav">

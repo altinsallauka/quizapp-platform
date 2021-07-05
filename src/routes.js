@@ -115,11 +115,27 @@ router.get("/numberOfQuestions", async (req, res) => {
   }
 });
 
+
 // get all categories
 router.get("/categories", async (req, res) => {
   try {
     const ctg = await Categories.find();
     return res.status(200).json(ctg);
+  } catch (error) {
+    return res.status(500).json({ error: error });
+  }
+});
+// get one category
+router.get("/categories/:id", async (req, res) => {
+  try {
+    const _id = req.params.id;
+
+    const ctg = await Categories.findOne({ _id });
+    if (!ctg) {
+      return res.status(404).json({});
+    } else {
+      return res.status(200).json(ctg);
+    }
   } catch (error) {
     return res.status(500).json({ error: error });
   }
