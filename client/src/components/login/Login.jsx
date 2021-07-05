@@ -37,7 +37,7 @@ export default class LoginComponent extends React.Component {
     return (
       <React.Fragment>
         <div className="row">
-          <div className="container">
+          <div className="container login-view">
             <div className="col-md-6">
               <form onSubmit={this.handleSubmit}>
                 <div className="mb-3">

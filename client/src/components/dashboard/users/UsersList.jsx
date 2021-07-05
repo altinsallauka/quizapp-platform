@@ -103,10 +103,26 @@ export default class UsersList extends React.Component {
   //   //   });
   // }
   getusers() {
-    axios.get(`http://localhost:3001/users`).then((res) => {
-      const users = res.data;
-      this.setState({ users });
-    });
+    const access_token = localStorage.getItem("token");
+    // axios.get(`http://localhost:3001/users`, token).then((res) => {
+    //   const users = res.data;
+    //   this.setState({ users });
+    // });
+
+    axios
+      .get("http://localhost:3001/users", {
+        headers: {
+          Authorization: `Bearer ${access_token}`,
+        },
+      })
+      .then((res) => {
+        console.log(res.data);
+        const users = res.data;
+        this.setState({ users });
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   }
   deleteRow(id) {
     axios.delete(`http://localhost:3001/users/${id}`).then((res) => {
