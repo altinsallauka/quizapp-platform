@@ -59,7 +59,7 @@ export default class UsersList extends React.Component {
       showHideUpdate: false,
       toUpdate: [],
     };
-    // this.handleChange = this.handleChange.bind(this);
+    this.handleChange = this.handleChange.bind(this);
     // this.handleSubmit = this.handleSubmit.bind(this);
   }
   handleChange(event) {
