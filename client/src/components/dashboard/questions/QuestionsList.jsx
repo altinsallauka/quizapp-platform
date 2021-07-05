@@ -170,7 +170,7 @@ export default class QuestionsList extends React.Component {
   }
 
   render() {
-    console.log(this.state.toUpdate.correct);
+    // console.log(this.state.toUpdate.correct);
     return (
       <div>
         <div className="row mt-4 pt-4">

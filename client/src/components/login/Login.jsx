@@ -26,6 +26,7 @@ export default class LoginComponent extends React.Component {
     );
     console.log("data", data);
     this.setState({ token: data.token });
+    localStorage.setItem("token", data.token);
     this.props.history.push("/home");
   }
 

@@ -3,6 +3,10 @@ import "./NavBar.scss";
 import { Link } from "react-router-dom";
 export default class NavBar extends React.Component {
   state = {};
+  logOut() {
+    localStorage.removeItem("token");
+    // this.props.history.push("/role");
+  }
   render() {
     return (
       <div>
@@ -28,11 +32,15 @@ export default class NavBar extends React.Component {
                   Categories
                 </Link>
               </li>
-              {/* <li className="nav-item">
-                <Link to={"/login"} className="nav-link">
-                  Login
+              <li className="nav-item">
+                <Link
+                  to={"/role"}
+                  className="nav-link"
+                  onClick={() => this.logOut()}
+                >
+                  Log out
                 </Link>
-              </li> */}
+              </li>
             </div>
           </div>
         </nav>
