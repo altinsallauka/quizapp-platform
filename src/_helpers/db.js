@@ -7,9 +7,10 @@ const connectionOptions = {
   useFindAndModify: false,
 };
 // mongoose.connect(
-//   process.env.MONGODB_URI || config.connectionString,
+//   process.env.DATABASE_URL || config.connectionString,
 //   connectionOptions
 // );
+
 mongoose.Promise = global.Promise;
 
 module.exports = {

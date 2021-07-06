@@ -19,7 +19,9 @@ export default class UsersList extends React.Component {
         //   dataField: "_id",
         //   text: "ID",
         // },
-        { dataField: "description", text: "User" },
+        { dataField: "firstName", text: "Name" },
+        { dataField: "lastName", text: "Last Name" },
+        // { dataField: "username", text: "username" },
         {
           dataField: "update",
           text: "Update",

@@ -7,6 +7,8 @@ const jwt = require("./_helpers/jwt");
 const errorHandler = require("./_helpers/error-handler");
 require("dotenv").config();
 
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 app.use(cors()); // We're telling express to use CORS
 app.use(express.json()); // we need to tell server to use json as well
 app.use(routes); // tells the server to use the routes in routes.js
@@ -20,10 +22,6 @@ mongoose.connect(
   process.env.DATABASE_URL || config.connectionString,
   connectionOptions
 );
-
-// app.get("/test", (req, res) => {
-//   console.log(connection.db.sample_airbnb);
-// });
 
 const db = mongoose.connection;
 db.on("error", (error) => console.error(error));
