@@ -50,7 +50,7 @@ export default class UsersList extends React.Component {
               <button
                 className="btn btn-danger btn-xs"
                 // onClick={() => console.log("deleted", row._id)}
-                onClick={() => this.handleModalDelete()}
+                onClick={() => this.handleModalDelete(row.id)}
               >
                 Delete
               </button>
@@ -96,8 +96,8 @@ export default class UsersList extends React.Component {
     console.log(data.data);
     this.props.history.push("/users");
   }
-  handleModalDelete() {
-    this.setState({ showHideDelete: !this.state.showHideDelete });
+  handleModalDelete(id) {
+    this.setState({ showHideDelete: !this.state.showHideDelete, rowId: id });
   }
   handleModalUpdate(id) {
     this.setState({ showHideUpdate: !this.state.showHideUpdate, rowId: id });
@@ -137,10 +137,18 @@ export default class UsersList extends React.Component {
       });
   }
   deleteRow(id) {
-    axios.delete(`http://localhost:3001/users/${id}`).then((res) => {
-      this.handleModalDelete();
-      this.getusers();
-    });
+    const access_token = localStorage.getItem("token");
+
+    axios
+      .delete(`http://localhost:3001/users/${this.state.rowId}`, {
+        headers: {
+          Authorization: `Bearer ${access_token}`,
+        },
+      })
+      .then((res) => {
+        this.handleModalDelete();
+        this.getusers();
+      });
   }
   componentDidMount() {
     this.getusers();
