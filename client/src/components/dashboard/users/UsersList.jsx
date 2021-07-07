@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 import BootstrapTable from "react-bootstrap-table-next";
 import paginationFactory from "react-bootstrap-table2-paginator";
 // import * as ReactBootStrap from "react-bootstrap";
-// import { Button, Modal } from "react-bootstrap";
+import { Button, Modal } from "react-bootstrap";
 export default class UsersList extends React.Component {
   constructor() {
     super();
@@ -28,12 +28,12 @@ export default class UsersList extends React.Component {
           text: "Update",
           editable: false,
           formatter: (cellContent, row) => {
-            this.setState({ rowId: row._id });
+            this.setState({ rowId: row.id });
             return (
               <button
                 className="btn btn-primary btn-xs"
                 // onClick={() => console.log("updated", row._id)}
-                onClick={() => this.handleModalUpdate()}
+                onClick={() => this.handleModalUpdate(row.id)}
               >
                 Edit
               </button>
@@ -45,7 +45,7 @@ export default class UsersList extends React.Component {
           text: "Delete",
           editable: false,
           formatter: (cellContent, row) => {
-            this.setState({ rowId: row._id });
+            this.setState({ rowId: row.id });
             return (
               <button
                 className="btn btn-danger btn-xs"
@@ -63,48 +63,57 @@ export default class UsersList extends React.Component {
       toUpdate: [],
     };
     this.handleChange = this.handleChange.bind(this);
-    // this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
   handleChange(event) {
-    this.setState({ [event.target.name]: event.target.value });
+    this.setState({
+      toUpdate: {
+        ...this.state.toUpdate,
+        [event.target.name]: event.target.value,
+      },
+    });
   }
 
-  // async handleSubmit(event) {
-  //   event.preventDefault();
-  //   const {
-  //     description,
-  //     correct,
-  //     option_one,
-  //     option_two,
-  //     option_three,
-  //     option_four,
-  //   } = this.state;
-  //   const { data } = await axios.put(
-  //     `http://localhost:3001/users/${this.state.rowId}`,
-  //     {
-  //       description,
-  //       correct,
-  //       option_one,
-  //       option_two,
-  //       option_three,
-  //       option_four,
-  //     }
-  //   );
-  //   console.log(data.data);
-  //   this.props.history.push("/users");
-  // }
-  // handleModalDelete() {
-  //   this.setState({ showHideDelete: !this.state.showHideDelete });
-  // }
-  // handleModalUpdate() {
-  //   this.setState({ showHideUpdate: !this.state.showHideUpdate });
-  //   // axios
-  //   //   .get(`http://localhost:3001/users/${this.state.rowId}`)
-  //   //   .then((res) => {
-  //   //     console.log("question", res.data);
-  //   //     this.setState({ toUpdate: res.data });
-  //   //   });
-  // }
+  async handleSubmit(event) {
+    event.preventDefault();
+    // const { firstName, lastName } = this.state;
+    const access_token = localStorage.getItem("token");
+    const updateUser = {
+      firstName: this.state.toUpdate.firstName,
+      lastName: this.state.toUpdate.lastName,
+    };
+    const { data } = await axios.put(
+      `http://localhost:3001/users/${this.state.rowId}`,
+      updateUser,
+      {
+        headers: {
+          Authorization: `Bearer ${access_token}`,
+        },
+      }
+    );
+    this.getusers();
+    this.setState({ showHideUpdate: !this.state.showHideUpdate });
+    console.log(data.data);
+    this.props.history.push("/users");
+  }
+  handleModalDelete() {
+    this.setState({ showHideDelete: !this.state.showHideDelete });
+  }
+  handleModalUpdate(id) {
+    this.setState({ showHideUpdate: !this.state.showHideUpdate, rowId: id });
+
+    const access_token = localStorage.getItem("token");
+    axios
+      .get(`http://localhost:3001/users/${id}`, {
+        headers: {
+          Authorization: `Bearer ${access_token}`,
+        },
+      })
+      .then((res) => {
+        console.log("user", res.data);
+        this.setState({ toUpdate: res.data });
+      });
+  }
   getusers() {
     const access_token = localStorage.getItem("token");
     // axios.get(`http://localhost:3001/users`, token).then((res) => {
@@ -147,18 +156,18 @@ export default class UsersList extends React.Component {
           <hr />
           <h3>List of users</h3>
           <BootstrapTable
-            keyField="_id"
+            keyField="id"
             data={this.state.users}
             columns={this.state.columns}
             pagination={paginationFactory()}
           />
           {/* Delete */}
-          {/* <Modal show={this.state.showHideDelete}>
+          <Modal show={this.state.showHideDelete}>
             <Modal.Header closeButton onClick={() => this.handleModalDelete()}>
               <Modal.Title>Are you sure?</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-              Do you really want to delete this question? This process cannot be
+              Do you really want to delete this user? This process cannot be
               undone.
             </Modal.Body>
             <Modal.Footer>
@@ -175,99 +184,38 @@ export default class UsersList extends React.Component {
                 Delete
               </Button>
             </Modal.Footer>
-          </Modal> */}
+          </Modal>
 
           {/* Update */}
-          {/* <Modal show={this.state.showHideUpdate}>
-            <form onSubmit={this.handleSubmit}>
+          <Modal show={this.state.showHideUpdate}>
+            <form onSubmit={(e) => this.handleSubmit(e)}>
               <Modal.Header
                 closeButton
                 onClick={() => this.handleModalUpdate()}
               >
-                <Modal.Title>Edit question</Modal.Title>
+                <Modal.Title>Update user</Modal.Title>
               </Modal.Header>
               <Modal.Body>
                 <label className="d-flex flex-column align-items-start">
-                  Description:
+                  First Name:
                   <input
                     type="text"
-                    name="description"
+                    name="firstName"
+                    value={this.state.toUpdate.firstName}
                     className="form-control"
                     onChange={this.handleChange}
                   />
                 </label>
-                <div className="d-flex align-items-center">
-                  <label className="d-flex flex-column align-items-start">
-                    First option:
-                    <input
-                      type="text"
-                      name="option_one"
-                      className="form-control"
-                      onChange={this.handleChange}
-                    />
-                  </label>
+                <label className="d-flex flex-column align-items-start">
+                  Last Name:
                   <input
-                    type="radio"
-                    name="correct"
-                    value="0"
-                    className="form-check-input"
+                    type="text"
+                    name="lastName"
+                    className="form-control"
+                    value={this.state.toUpdate.lastName}
                     onChange={this.handleChange}
                   />
-                </div>
-                <div className="d-flex align-items-center">
-                  <label className="d-flex flex-column align-items-start">
-                    Second option:
-                    <input
-                      type="text"
-                      name="option_two"
-                      className="form-control"
-                      onChange={this.handleChange}
-                    />
-                  </label>
-                  <input
-                    type="radio"
-                    name="correct"
-                    value="1"
-                    className="form-check-input"
-                    onChange={this.handleChange}
-                  />
-                </div>
-                <div className="d-flex align-items-center">
-                  <label className="d-flex flex-column align-items-start">
-                    Third option:
-                    <input
-                      type="text"
-                      name="option_three"
-                      className="form-control"
-                      onChange={this.handleChange}
-                    />
-                  </label>
-                  <input
-                    type="radio"
-                    name="correct"
-                    value="2"
-                    className="form-check-input"
-                    onChange={this.handleChange}
-                  />
-                </div>
-                <div className="d-flex align-items-center">
-                  <label className="d-flex flex-column align-items-start">
-                    Forth option:
-                    <input
-                      type="text"
-                      name="option_four"
-                      className="form-control"
-                      onChange={this.handleChange}
-                    />
-                  </label>
-                  <input
-                    type="radio"
-                    name="correct"
-                    value="3"
-                    className="form-check-input"
-                    onChange={this.handleChange}
-                  />
-                </div>
+                </label>
               </Modal.Body>
               <Modal.Footer>
                 <Button
@@ -281,13 +229,13 @@ export default class UsersList extends React.Component {
                   value="submit"
                   variant="primary"
                   // onClick={() => this.deleteRow(this.state.rowId)}
-                  onClick={() => this.handleSubmit()}
+                  // onClick={() => this.handleSubmit()}
                 >
                   Update
                 </Button>
               </Modal.Footer>
             </form>
-          </Modal> */}
+          </Modal>
         </div>
       </div>
     );
