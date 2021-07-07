@@ -18,8 +18,13 @@ export default class NavBar extends React.Component {
             {/* <div className="navbar-nav mr-auto"> */}
             <div className="navbar-nav">
               <li className="nav-item">
-                <Link to={"/my-profile"} className="nav-link">
-                  My Profile
+                <Link to={"/questions"} className="nav-link">
+                  Questions
+                </Link>
+              </li>
+              <li className="nav-item">
+                <Link to={"/categories"} className="nav-link">
+                  Categories
                 </Link>
               </li>
               <li className="nav-item">
@@ -28,13 +33,8 @@ export default class NavBar extends React.Component {
                 </Link>
               </li>
               <li className="nav-item">
-                <Link to={"/questions"} className="nav-link">
-                  Questions
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link to={"/categories"} className="nav-link">
-                  Categories
+                <Link to={"/my-profile"} className="nav-link">
+                  My Profile
                 </Link>
               </li>
               <li className="nav-item">
