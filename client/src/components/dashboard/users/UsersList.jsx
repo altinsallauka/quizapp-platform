@@ -3,6 +3,7 @@ import axios from "axios";
 import "./UsersList.scss";
 // import editImageSrc from "../../../assets/edit.png";
 // import deleteImageSrc from "../../../assets/delete.png";
+import { Link } from "react-router-dom";
 import BootstrapTable from "react-bootstrap-table-next";
 import paginationFactory from "react-bootstrap-table2-paginator";
 // import * as ReactBootStrap from "react-bootstrap";
@@ -19,9 +20,9 @@ export default class UsersList extends React.Component {
         //   dataField: "_id",
         //   text: "ID",
         // },
-        { dataField: "firstName", text: "Name" },
-        { dataField: "lastName", text: "Last Name" },
-        // { dataField: "username", text: "username" },
+        // { dataField: "firstName", text: "Name" },
+        // { dataField: "lastName", text: "Last Name" },
+        { dataField: "username", text: "Username" },
         {
           dataField: "update",
           text: "Update",
@@ -140,6 +141,10 @@ export default class UsersList extends React.Component {
     return (
       <div>
         <div className="row mt-3 pt-4">
+          <Link to={"/register"} className="nav-link">
+            <h2>Register User</h2>
+          </Link>
+          <hr />
           <h3>List of users</h3>
           <BootstrapTable
             keyField="_id"

@@ -12,6 +12,7 @@ import PostQuestion from "./create-question/PostQuestion";
 import QuestionsList from "./questions/QuestionsList";
 import PostCategory from "./create-category/PostCategory";
 import UsersList from "./users/UsersList";
+import RegisterUser from "./register-user/RegisterUser";
 function DashboardComponent() {
   return (
     <Router>
@@ -25,6 +26,7 @@ function DashboardComponent() {
           <Route exact path="/login" component={LoginComponent} />
           {/* <Route exact path="/dashboard" component={DashboardComponent} /> */}
           <Route exact path="/create-question" component={PostQuestion} />
+          <Route exact path="/register" component={RegisterUser} />
           {/* <Route exact path="/questions" component={QuestionsList} /> */}
           <Route exact path="/categories" component={CategoriesList} />
           <Route exact path="/users" component={UsersList} />

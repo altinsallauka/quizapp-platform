@@ -13,6 +13,7 @@ import RolePage from "./components/role-page/RolePage";
 import DashboardComponent from "./components/dashboard/Dashboard";
 import NavBar from "./components/dashboard/nav-bar/NavBar";
 import UsersList from "./components/dashboard/users/UsersList";
+import RegisterUser from "./components/dashboard/register-user/RegisterUser";
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
           <Route exact path="/home" component={DashboardComponent} />
           <Route exact path="/create-question" component={PostQuestion} />
           <Route exact path="/questions" component={QuestionsList} />
+          <Route exact path="/register" component={RegisterUser} />
           <Route exact path="/users" component={UsersList} />
           <Route exact path="/categories" component={CategoriesList} />
           <Route exact path="/create-category" component={PostCategory} />
