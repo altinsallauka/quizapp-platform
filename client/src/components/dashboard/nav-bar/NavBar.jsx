@@ -18,6 +18,11 @@ export default class NavBar extends React.Component {
             {/* <div className="navbar-nav mr-auto"> */}
             <div className="navbar-nav">
               <li className="nav-item">
+                <Link to={"/my-profile"} className="nav-link">
+                  My Profile
+                </Link>
+              </li>
+              <li className="nav-item">
                 <Link to={"/users"} className="nav-link">
                   Users
                 </Link>

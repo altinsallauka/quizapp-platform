@@ -40,7 +40,7 @@ function getAll(req, res, next) {
 }
 
 function getCurrent(req, res, next) {
-  console.log(req.user.sub);
+  // console.log(req.user.sub);
   userService
     .getById(req.user.sub)
     .then((user) => (user ? res.json(user) : res.sendStatus(404)))
@@ -48,7 +48,7 @@ function getCurrent(req, res, next) {
 }
 
 function getById(req, res, next) {
-  console.log(req.params.id);
+  // console.log(req.params.id);
   userService
     .getById(req.params.id)
     .then((user) => (user ? res.json(user) : res.sendStatus(404)))

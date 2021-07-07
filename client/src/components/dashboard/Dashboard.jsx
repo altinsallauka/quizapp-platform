@@ -13,6 +13,7 @@ import QuestionsList from "./questions/QuestionsList";
 import PostCategory from "./create-category/PostCategory";
 import UsersList from "./users/UsersList";
 import RegisterUser from "./register-user/RegisterUser";
+import MyProfile from "./my-profile/MyProfile";
 function DashboardComponent() {
   return (
     <Router>
@@ -26,11 +27,12 @@ function DashboardComponent() {
           <Route exact path="/login" component={LoginComponent} />
           {/* <Route exact path="/dashboard" component={DashboardComponent} /> */}
           <Route exact path="/create-question" component={PostQuestion} />
-          <Route exact path="/register" component={RegisterUser} />
           {/* <Route exact path="/questions" component={QuestionsList} /> */}
           <Route exact path="/categories" component={CategoriesList} />
-          <Route exact path="/users" component={UsersList} />
           <Route exact path="/create-category" component={PostCategory} />
+          <Route exact path="/users" component={UsersList} />
+          <Route exact path="/my-profile" component={MyProfile} />
+          <Route exact path="/register" component={RegisterUser} />
         </Switch>
       </div>
     </Router>
