@@ -84,7 +84,7 @@ export default class RolesList extends React.Component {
           <div className="container role">
             {this.state.roles.map((userRoles) => (
               <div className="rolesBox shadow-sm p-3 mb-5 bg-body rounded">
-                <span>{userRoles.role}</span>
+                <span key={userRoles._id}>{userRoles.role}</span>
                 <div className="roleIcons">
                   <button
                     className="btn btn-primary btn-xs"

@@ -63,8 +63,6 @@ export default class UsersList extends React.Component {
       showHideUpdate: false,
       toUpdate: [],
       roles: [],
-      updateRoleId: "",
-      updateRoleName: "",
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -124,11 +122,9 @@ export default class UsersList extends React.Component {
       .get(`http://localhost:3001/roles/${this.state.toUpdate.roleId}`)
       .then((res) => {
         console.log(res.data);
-        const { toUpdate, roleId } = this.state;
+        const { roleId } = this.state;
         this.setState({
           roleId: res.data._id,
-          // updateRoleId: res.data._id,
-          // updateRoleName: res.data.role,
         });
       });
   }
