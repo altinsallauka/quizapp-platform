@@ -163,7 +163,7 @@ export default class UsersList extends React.Component {
             <h2>Register User</h2>
           </Link>
           <hr />
-          <h3>List of users</h3>
+          <h6>List of users</h6>
           <BootstrapTable
             keyField="id"
             data={this.state.users}

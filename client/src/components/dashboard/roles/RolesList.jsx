@@ -80,7 +80,7 @@ export default class RolesList extends React.Component {
           </div>
         </div>
         <div className="row">
-          <caption>List of Roles</caption>
+          <h6>List of Roles</h6>
           <div className="container role">
             {this.state.roles.map((userRoles) => (
               <div className="rolesBox shadow-sm p-3 mb-5 bg-body rounded">
