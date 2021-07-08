@@ -62,6 +62,9 @@ export default class UsersList extends React.Component {
       showHideDelete: false,
       showHideUpdate: false,
       toUpdate: [],
+      roles: [],
+      updateRoleId: "",
+      updateRoleName: "",
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -113,6 +116,20 @@ export default class UsersList extends React.Component {
       .then((res) => {
         console.log("user", res.data);
         this.setState({ toUpdate: res.data });
+        this.getRoleById();
+      });
+  }
+  getRoleById() {
+    axios
+      .get(`http://localhost:3001/roles/${this.state.toUpdate.roleId}`)
+      .then((res) => {
+        console.log(res.data);
+        const { toUpdate, roleId } = this.state;
+        this.setState({
+          roleId: res.data._id,
+          // updateRoleId: res.data._id,
+          // updateRoleName: res.data.role,
+        });
       });
   }
   getusers() {
@@ -151,8 +168,14 @@ export default class UsersList extends React.Component {
         this.getusers();
       });
   }
+  getRoles() {
+    axios.get("http://localhost:3001/roles").then((res) => {
+      this.setState({ roles: res.data });
+    });
+  }
   componentDidMount() {
     this.getusers();
+    this.getRoles();
   }
 
   render() {
@@ -230,6 +253,27 @@ export default class UsersList extends React.Component {
                     onChange={this.handleChange}
                   />
                 </label>
+                <div className="d-flex align-items-center">
+                  <label className="d-flex flex-column align-items-start">
+                    Role:
+                    <select
+                      className="form-select"
+                      name="roleId"
+                      aria-label="Default select example"
+                      value={this.state.toUpdate.roleId}
+                      onChange={this.handleChange}
+                    >
+                      <option disabled selected>
+                        Select one role
+                      </option>
+                      {this.state.roles.map((userRole) => (
+                        <option value={userRole._id} key={userRole._id}>
+                          {userRole.role}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+                </div>
               </Modal.Body>
               <Modal.Footer>
                 <Button
