@@ -1,7 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const Question = require("./models/Question"); // includes our question model
-const Categories = require("./models/Categories"); // category model
+const Categories = require("./models/Categories"); // includes category model
+const Roles = require("./models/Roles"); // includes roles model
 // get all quiz questions
 router.get("/questions", async (req, res) => {
   try {
@@ -115,7 +116,6 @@ router.get("/numberOfQuestions", async (req, res) => {
   }
 });
 
-
 // get all categories
 router.get("/categories", async (req, res) => {
   try {
@@ -190,6 +190,88 @@ router.delete("/categories/:id", async (req, res) => {
     }
   } catch (error) {
     return res.status(500).json({ error: error });
+  }
+});
+
+// get all roles
+router.get("/roles", async (req, res) => {
+  try {
+    const userRole = await Roles.find();
+    return res.status(200).json(userRole);
+  } catch (error) {
+    return res.status(500).json({ error: error });
+  }
+});
+
+// get one role
+router.get("/roles/:id", async (req, res) => {
+  try {
+    const _id = req.params.id;
+
+    const userRole = await Roles.findOne({ _id });
+    if (!userRole) {
+      return res.status(404).json({});
+    } else {
+      return res.status(200).json(userRole);
+    }
+  } catch (error) {
+    return res.status(500).json({ error: error });
+  }
+});
+
+// create role
+router.post("/roles", async (req, res) => {
+  try {
+    const { role } = req.body;
+
+    const userRole = await Roles.create({
+      role,
+    });
+
+    return res.json(userRole);
+  } catch (error) {
+    return res.status(500).json({ error: error });
+  }
+});
+
+// update role
+router.put("/roles/:id", async (req, res) => {
+  try {
+    const _id = req.params.id;
+    const { role } = req.body;
+
+    let userRole = await Roles.findOne({ _id });
+
+    if (!userRole) {
+      userRole = await Roles.create({
+        role,
+      });
+      return res.status(201).json(userRole);
+    } else {
+      userRole.role = role;
+      await userRole.save();
+      return res.status(200).json(userRole);
+    }
+  } catch (error) {
+    return res.status(500).json({ error: error });
+  }
+});
+
+// delete role
+router.delete("/roles/:id", async (req, res) => {
+  try {
+    const _id = req.params.id;
+
+    const userRole = await Roles.deleteOne({ _id });
+
+    if (userRole.deletedCount === 0) {
+      return res.status(404).json();
+    } else {
+      return res.status(204).json();
+    }
+  } catch (error) {
+    return res.status(500).json({ error: error });
+    a;
   }
 });
 module.exports = router;
