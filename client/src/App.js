@@ -15,6 +15,7 @@ import NavBar from "./components/dashboard/nav-bar/NavBar";
 import UsersList from "./components/dashboard/users/UsersList";
 import RegisterUser from "./components/dashboard/register-user/RegisterUser";
 import MyProfile from "./components/dashboard/my-profile/MyProfile";
+import RolesList from "./components/dashboard/roles/RolesList";
 
 function App() {
   return (
@@ -35,6 +36,7 @@ function App() {
           <Route exact path="/users" component={UsersList} />
           <Route exact path="/my-profile" component={MyProfile} />
           <Route exact path="/register" component={RegisterUser} />
+          <Route exact path="/roles" component={RolesList} />
         </Switch>
       </div>
     </Router>

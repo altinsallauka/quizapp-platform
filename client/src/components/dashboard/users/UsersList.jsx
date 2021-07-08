@@ -8,6 +8,7 @@ import BootstrapTable from "react-bootstrap-table-next";
 import paginationFactory from "react-bootstrap-table2-paginator";
 // import * as ReactBootStrap from "react-bootstrap";
 import { Button, Modal } from "react-bootstrap";
+import RolesList from "../roles/RolesList";
 export default class UsersList extends React.Component {
   constructor() {
     super();
@@ -169,6 +170,11 @@ export default class UsersList extends React.Component {
             columns={this.state.columns}
             pagination={paginationFactory()}
           />
+          <div className="mt-4">
+            <hr />
+            <RolesList />
+          </div>
+
           {/* Delete */}
           <Modal show={this.state.showHideDelete}>
             <Modal.Header closeButton onClick={() => this.handleModalDelete()}>

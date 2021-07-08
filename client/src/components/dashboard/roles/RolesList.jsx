@@ -1,18 +1,18 @@
 import React from "react";
 import axios from "axios";
-import "./CategoriesList.scss";
+import "./RolesList.scss";
 // import * as ReactBootStrap from "react-bootstrap";
 import editImageSrc from "../../../assets/edit.png";
 import deleteImageSrc from "../../../assets/delete.png";
 import { Button, Modal } from "react-bootstrap";
 import { Link } from "react-router-dom";
-export default class CategoriesList extends React.Component {
+export default class RolesList extends React.Component {
   constructor() {
     super();
     this.state = {
-      categories: [],
-      categoryId: "",
-      categoryName: "",
+      roles: [],
+      roleId: "",
+      role: "",
       showHideDelete: false,
       showHideUpdate: false,
     };
@@ -23,88 +23,79 @@ export default class CategoriesList extends React.Component {
     this.setState({ [event.target.name]: event.target.value });
   }
   componentDidMount() {
-    this.getCategories();
+    this.getRoles();
   }
   handleModalDelete(id) {
     this.setState({
       showHideDelete: !this.state.showHideDelete,
-      categoryId: id,
+      roleId: id,
     });
   }
   handleModalUpdate(id) {
     this.setState({
       showHideUpdate: !this.state.showHideUpdate,
-      categoryId: id,
+      roleId: id,
     });
-    axios.get(`http://localhost:3001/categories/${id}`).then((res) => {
-      const { categoryName } = res.data;
+    axios.get(`http://localhost:3001/roles/${id}`).then((res) => {
+      const { role } = res.data;
       this.setState({
         _id: id,
-        categoryName,
+        role,
       });
     });
   }
   async handleSubmit(event) {
     event.preventDefault();
-    const { categoryId, categoryName } = this.state;
-    const { data } = await axios.put(
-      `http://localhost:3001/categories/${categoryId}`,
-      { _id: categoryId, categoryName }
-    );
+    const { roleId, role } = this.state;
+    const { data } = await axios.put(`http://localhost:3001/roles/${roleId}`, {
+      _id: roleId,
+      role: role,
+    });
     console.log("=====", data);
-    this.getCategories();
+    this.getRoles();
     this.setState({ showHideUpdate: !this.state.showHideUpdate });
   }
-  getCategories() {
-    axios.get("http://localhost:3001/categories").then((res) => {
-      this.setState({ categories: res.data });
+  getRoles() {
+    axios.get("http://localhost:3001/roles").then((res) => {
+      this.setState({ roles: res.data });
     });
   }
   deleteRow(id) {
-    axios.delete(`http://localhost:3001/categories/${id}`).then((res) => {
+    axios.delete(`http://localhost:3001/roles/${id}`).then((res) => {
       this.handleModalDelete();
-      this.getCategories();
+      this.getRoles();
     });
   }
-  // createCategory(ctgParameter) {
-  //   axios
-  //     .post("http://localhost:3001/categories", {
-  //       categoryName: "123sasdasdasdasdd4",
-  //     })
-  //     .then(function (response) {
-  //       console.log(response);
-  //     });
-  // }
   render() {
     return (
       <div>
         <div className="row">
           <div className="title-container mt-4">
-            <h1>Categories</h1>
+            <h1>Roles</h1>
             <h1>
-              <Link to={"/create-Category"} className="nav-link">
+              <Link to={"/create-role"} className="nav-link">
                 +
               </Link>
             </h1>
           </div>
         </div>
         <div className="row">
-          <caption>List of categories</caption>
-          <div className="container ctg">
-            {this.state.categories.map((ctg) => (
-              <div className="categoryBox shadow-sm p-3 mb-5 bg-body rounded">
-                <span>{ctg.categoryName}</span>
-                <div className="ctgIcons">
+          <caption>List of Roles</caption>
+          <div className="container role">
+            {this.state.roles.map((userRoles) => (
+              <div className="rolesBox shadow-sm p-3 mb-5 bg-body rounded">
+                <span>{userRoles.role}</span>
+                <div className="roleIcons">
                   <button
                     className="btn btn-primary btn-xs"
-                    onClick={() => this.handleModalUpdate(ctg._id)}
+                    onClick={() => this.handleModalUpdate(userRoles._id)}
                   >
                     <img src={editImageSrc} alt="Edit Icon" />
                   </button>
                   <button
                     className="btn btn-primary btn-xs"
                     // onClick={() => console.log("updated", row._id)}
-                    onClick={() => this.handleModalDelete(ctg._id)}
+                    onClick={() => this.handleModalDelete(userRoles._id)}
                   >
                     <img src={deleteImageSrc} alt="Delete Icon" />
                   </button>
@@ -119,7 +110,7 @@ export default class CategoriesList extends React.Component {
             <Modal.Title>Are you sure?</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            Do you really want to delete this category? This process cannot be
+            Do you really want to delete this role? This process cannot be
             undone.
           </Modal.Body>
           <Modal.Footer>
@@ -131,7 +122,7 @@ export default class CategoriesList extends React.Component {
             </Button>
             <Button
               variant="danger"
-              onClick={() => this.deleteRow(this.state.categoryId)}
+              onClick={() => this.deleteRow(this.state.roleId)}
             >
               Delete
             </Button>
@@ -142,15 +133,15 @@ export default class CategoriesList extends React.Component {
         <Modal show={this.state.showHideUpdate}>
           <form onSubmit={(e) => this.handleSubmit(e)}>
             <Modal.Header closeButton onClick={() => this.handleModalUpdate()}>
-              <Modal.Title>Edit category</Modal.Title>
+              <Modal.Title>Edit role</Modal.Title>
             </Modal.Header>
             <Modal.Body>
               <label className="d-flex flex-column align-items-start">
                 Name:
                 <input
                   type="text"
-                  name="categoryName"
-                  value={this.state.categoryName}
+                  name="role"
+                  value={this.state.role}
                   className="form-control"
                   onChange={this.handleChange}
                 />

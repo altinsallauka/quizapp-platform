@@ -14,6 +14,7 @@ import PostCategory from "./create-category/PostCategory";
 import UsersList from "./users/UsersList";
 import RegisterUser from "./register-user/RegisterUser";
 import MyProfile from "./my-profile/MyProfile";
+import RolesList from "./roles/RolesList";
 function DashboardComponent() {
   return (
     <Router>
@@ -33,6 +34,7 @@ function DashboardComponent() {
           <Route exact path="/users" component={UsersList} />
           <Route exact path="/my-profile" component={MyProfile} />
           <Route exact path="/register" component={RegisterUser} />
+          <Route exact path="/roles" component={RolesList} />
         </Switch>
       </div>
     </Router>
