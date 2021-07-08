@@ -271,7 +271,6 @@ router.delete("/roles/:id", async (req, res) => {
     }
   } catch (error) {
     return res.status(500).json({ error: error });
-    a;
   }
 });
 module.exports = router;
