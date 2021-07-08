@@ -16,6 +16,7 @@ import UsersList from "./components/dashboard/users/UsersList";
 import RegisterUser from "./components/dashboard/register-user/RegisterUser";
 import MyProfile from "./components/dashboard/my-profile/MyProfile";
 import RolesList from "./components/dashboard/roles/RolesList";
+import PostRole from "./components/dashboard/create-role/PostRole";
 
 function App() {
   return (
@@ -37,6 +38,7 @@ function App() {
           <Route exact path="/my-profile" component={MyProfile} />
           <Route exact path="/register" component={RegisterUser} />
           <Route exact path="/roles" component={RolesList} />
+          <Route exact path="/create-role" component={PostRole} />
         </Switch>
       </div>
     </Router>

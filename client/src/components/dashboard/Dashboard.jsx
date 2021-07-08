@@ -15,6 +15,7 @@ import UsersList from "./users/UsersList";
 import RegisterUser from "./register-user/RegisterUser";
 import MyProfile from "./my-profile/MyProfile";
 import RolesList from "./roles/RolesList";
+import PostRole from "./create-role/PostRole";
 function DashboardComponent() {
   return (
     <Router>
@@ -35,6 +36,7 @@ function DashboardComponent() {
           <Route exact path="/my-profile" component={MyProfile} />
           <Route exact path="/register" component={RegisterUser} />
           <Route exact path="/roles" component={RolesList} />
+          <Route exact path="/create-role" component={PostRole} />
         </Switch>
       </div>
     </Router>
