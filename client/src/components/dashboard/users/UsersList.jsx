@@ -12,11 +12,12 @@ import RolesList from "../roles/RolesList";
 export default class UsersList extends React.Component {
   constructor() {
     super();
+    let adminCheck = false;
     this.state = {
       rowId: "",
       users: [],
       numberOfusers: "",
-      columns: [
+      adminColumns: [
         // {
         //   dataField: "_id",
         //   text: "ID",
@@ -59,11 +60,12 @@ export default class UsersList extends React.Component {
           },
         },
       ],
+      notAdminColumns: [{ dataField: "username", text: "Username" }],
       showHideDelete: false,
       showHideUpdate: false,
       toUpdate: [],
       roles: [],
-      isAdmin: false,
+      isAdmin: adminCheck,
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -89,14 +91,17 @@ export default class UsersList extends React.Component {
         console.log(res.data);
         const user = res.data;
         // this.setState({ user });
-        axios.get(`http://localhost:3001/roles/${user.roleId}`).then((res) => {
-          console.log("Role by ID", res.data);
-          if (res.data.role === "Admin") {
-            this.setState({ isAdmin: true });
-          } else {
-            this.setState({ isAdmin: false });
-          }
-        });
+        axios
+          .get(`http://localhost:3001/roles/${user.roleId}`)
+          .then((response) => {
+            console.log("Role by ID", response.data);
+            if (response.data.role === "Admin") {
+              this.setState({ isAdmin: true });
+            } else {
+              this.setState({ isAdmin: false });
+            }
+          });
+        return true;
       })
       .catch((error) => {
         console.error(error);
@@ -210,12 +215,21 @@ export default class UsersList extends React.Component {
 
           {/* {this.state.isAdmin ? <span>Admin</span> : null} */}
           <h6>List of users</h6>
-          <BootstrapTable
-            keyField="id"
-            data={this.state.users}
-            columns={this.state.columns}
-            pagination={paginationFactory()}
-          />
+          {this.state.isAdmin ? (
+            <BootstrapTable
+              keyField="id"
+              data={this.state.users}
+              columns={this.state.adminColumns}
+              pagination={paginationFactory()}
+            />
+          ) : (
+            <BootstrapTable
+              keyField="id"
+              data={this.state.users}
+              columns={this.state.notAdminColumns}
+              pagination={paginationFactory()}
+            />
+          )}
           {this.state.isAdmin ? (
             <div className="mt-4">
               <hr />
