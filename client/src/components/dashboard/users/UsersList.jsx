@@ -136,6 +136,9 @@ export default class UsersList extends React.Component {
   handleModalDelete(id) {
     this.setState({ showHideDelete: !this.state.showHideDelete, rowId: id });
   }
+  closeUpdateModal() {
+    this.setState({ showHideUpdate: !this.state.showHideUpdate });
+  }
   handleModalUpdate(id) {
     this.setState({ showHideUpdate: !this.state.showHideUpdate, rowId: id });
 
@@ -336,7 +339,8 @@ export default class UsersList extends React.Component {
               <Modal.Footer>
                 <Button
                   variant="secondary"
-                  onClick={() => this.handleModalUpdate()}
+                  type="button"
+                  onClick={() => this.closeUpdateModal()}
                 >
                   Cancel
                 </Button>

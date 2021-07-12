@@ -11,7 +11,7 @@ export default class NavBar extends React.Component {
   state = {};
   logOut() {
     localStorage.removeItem("token");
-    toast.success("You have been logged out!x");
+    toast.success("You have been logged out!");
     // this.props.history.push("/role");
   }
   render() {
