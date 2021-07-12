@@ -6,6 +6,8 @@ import editImageSrc from "../../../assets/edit.png";
 import deleteImageSrc from "../../../assets/delete.png";
 import { Button, Modal } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 export default class RolesList extends React.Component {
   constructor() {
     super();
@@ -36,35 +38,57 @@ export default class RolesList extends React.Component {
       showHideUpdate: !this.state.showHideUpdate,
       roleId: id,
     });
-    axios.get(`http://localhost:3001/roles/${id}`).then((res) => {
-      const { role } = res.data;
-      this.setState({
-        _id: id,
-        role,
+    axios
+      .get(`http://localhost:3001/roles/${id}`)
+      .then((res) => {
+        const { role } = res.data;
+        this.setState({
+          _id: id,
+          role,
+        });
+      })
+      .catch((err) => {
+        toast.error(err.response.data.message);
       });
-    });
   }
   async handleSubmit(event) {
     event.preventDefault();
     const { roleId, role } = this.state;
-    const { data } = await axios.put(`http://localhost:3001/roles/${roleId}`, {
-      _id: roleId,
-      role: role,
-    });
-    console.log("=====", data);
-    this.getRoles();
-    this.setState({ showHideUpdate: !this.state.showHideUpdate });
+    await axios
+      .put(`http://localhost:3001/roles/${roleId}`, {
+        _id: roleId,
+        role: role,
+      })
+      .then((res) => {
+        toast.success("Successfully updated Role!");
+        this.getRoles();
+        this.setState({ showHideUpdate: !this.state.showHideUpdate });
+      })
+      .catch((err) => {
+        toast.error(err.response.data.message);
+      });
   }
   getRoles() {
-    axios.get("http://localhost:3001/roles").then((res) => {
-      this.setState({ roles: res.data });
-    });
+    axios
+      .get("http://localhost:3001/roles")
+      .then((res) => {
+        this.setState({ roles: res.data });
+      })
+      .catch((err) => {
+        toast.error(err.response.data.message);
+      });
   }
   deleteRow(id) {
-    axios.delete(`http://localhost:3001/roles/${id}`).then((res) => {
-      this.handleModalDelete();
-      this.getRoles();
-    });
+    axios
+      .delete(`http://localhost:3001/roles/${id}`)
+      .then((res) => {
+        this.handleModalDelete();
+        this.getRoles();
+        toast.warning("Role has been deleted!");
+      })
+      .catch((err) => {
+        toast.error(err.response.data.message);
+      });
   }
   render() {
     return (

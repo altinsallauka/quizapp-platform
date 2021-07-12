@@ -6,6 +6,8 @@ import editImageSrc from "../../../assets/edit.png";
 import deleteImageSrc from "../../../assets/delete.png";
 import { Button, Modal } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 export default class CategoriesList extends React.Component {
   constructor() {
     super();
@@ -36,35 +38,57 @@ export default class CategoriesList extends React.Component {
       showHideUpdate: !this.state.showHideUpdate,
       categoryId: id,
     });
-    axios.get(`http://localhost:3001/categories/${id}`).then((res) => {
-      const { categoryName } = res.data;
-      this.setState({
-        _id: id,
-        categoryName,
+    axios
+      .get(`http://localhost:3001/categories/${id}`)
+      .then((res) => {
+        const { categoryName } = res.data;
+        this.setState({
+          _id: id,
+          categoryName,
+        });
+      })
+      .catch((err) => {
+        toast.error(err.response.data.message);
       });
-    });
   }
   async handleSubmit(event) {
     event.preventDefault();
     const { categoryId, categoryName } = this.state;
-    const { data } = await axios.put(
-      `http://localhost:3001/categories/${categoryId}`,
-      { _id: categoryId, categoryName }
-    );
-    console.log("=====", data);
-    this.getCategories();
-    this.setState({ showHideUpdate: !this.state.showHideUpdate });
+    await axios
+      .put(`http://localhost:3001/categories/${categoryId}`, {
+        _id: categoryId,
+        categoryName,
+      })
+      .then((res) => {
+        toast.success("This category has been updated!");
+        this.getCategories();
+        this.setState({ showHideUpdate: !this.state.showHideUpdate });
+      })
+      .catch((err) => {
+        toast.error(err.response.data.message);
+      });
   }
   getCategories() {
-    axios.get("http://localhost:3001/categories").then((res) => {
-      this.setState({ categories: res.data });
-    });
+    axios
+      .get("http://localhost:3001/categories")
+      .then((res) => {
+        this.setState({ categories: res.data });
+      })
+      .catch((err) => {
+        toast.error(err.response.data.message);
+      });
   }
   deleteRow(id) {
-    axios.delete(`http://localhost:3001/categories/${id}`).then((res) => {
-      this.handleModalDelete();
-      this.getCategories();
-    });
+    axios
+      .delete(`http://localhost:3001/categories/${id}`)
+      .then((res) => {
+        this.handleModalDelete();
+        this.getCategories();
+        toast.warning("This category has been deleted!");
+      })
+      .catch((err) => {
+        toast.error(err.response.data.message);
+      });
   }
   // createCategory(ctgParameter) {
   //   axios

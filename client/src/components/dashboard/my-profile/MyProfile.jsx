@@ -2,6 +2,8 @@ import React from "react";
 import axios from "axios";
 import "./MyProfile.scss";
 import userImageSrc from "../../../assets/user.jpg";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 export default class MyProfile extends React.Component {
   constructor(props) {
     super(props);
@@ -35,8 +37,12 @@ export default class MyProfile extends React.Component {
       .then((res) => {
         console.log("user", res.data);
         // this.setState({ user: res.data });
+        this.props.history.push("/users");
+        toast.success("Your profile has been updated!");
+      })
+      .catch((err) => {
+        toast.error(err.response.data.message);
       });
-    this.props.history.push("/users");
   }
   getCurrentUser() {
     const access_token = localStorage.getItem("token");
@@ -52,8 +58,8 @@ export default class MyProfile extends React.Component {
         const user = res.data;
         this.setState({ user });
       })
-      .catch((error) => {
-        console.error(error);
+      .catch((err) => {
+        toast.error(err.response.data.message);
       });
   }
   componentDidMount() {

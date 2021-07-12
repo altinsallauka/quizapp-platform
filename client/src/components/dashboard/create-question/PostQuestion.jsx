@@ -1,6 +1,8 @@
 import React from "react";
 import axios from "axios";
 import "./PostQuestion.scss";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 export default class PostQuestion extends React.Component {
   constructor(props) {
     super(props);
@@ -34,22 +36,33 @@ export default class PostQuestion extends React.Component {
       option_four,
       categoryId,
     } = this.state;
-    const { data } = await axios.post("http://localhost:3001/questions", {
-      description,
-      correct,
-      option_one,
-      option_two,
-      option_three,
-      option_four,
-      categoryId,
-    });
-    console.log(data.data);
-    this.props.history.push("/questions");
+    await axios
+      .post("http://localhost:3001/questions", {
+        description,
+        correct,
+        option_one,
+        option_two,
+        option_three,
+        option_four,
+        categoryId,
+      })
+      .then((res) => {
+        this.props.history.push("/questions");
+        toast.success("New question has been added!");
+      })
+      .catch((err) => {
+        toast.error(err.response.data.message);
+      });
   }
   getCategories() {
-    axios.get("http://localhost:3001/categories").then((res) => {
-      this.setState({ categories: res.data });
-    });
+    axios
+      .get("http://localhost:3001/categories")
+      .then((res) => {
+        this.setState({ categories: res.data });
+      })
+      .catch((err) => {
+        toast.error(err.response.data.message);
+      });
   }
   componentDidMount() {
     this.getCategories();

@@ -8,6 +8,8 @@ import BootstrapTable from "react-bootstrap-table-next";
 import paginationFactory from "react-bootstrap-table2-paginator";
 // import * as ReactBootStrap from "react-bootstrap";
 import { Button, Modal } from "react-bootstrap";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 export default class QuestionsList extends React.Component {
   constructor() {
     super();
@@ -113,13 +115,20 @@ export default class QuestionsList extends React.Component {
       categoryId,
     };
     valuesTochange.alternatives[correct].isCorrect = true;
-    const { data } = await axios.put(
-      `http://localhost:3001/questions/${this.state.rowId}`,
-      valuesTochange
-    );
-    this.getQuestions();
-    this.setState({ showHideUpdate: !this.state.showHideUpdate });
-    console.log(data.data);
+    await axios
+      .put(
+        `http://localhost:3001/questions/${this.state.rowId}`,
+        valuesTochange
+      )
+      .then((res) => {
+        this.getQuestions();
+        this.setState({ showHideUpdate: !this.state.showHideUpdate });
+        toast.success("Question has been updated!");
+      })
+      .catch((err) => {
+        toast.error(err.response.data.message);
+      });
+
     // this.props.history.push("/questions");
   }
   handleModalDelete() {
@@ -127,46 +136,63 @@ export default class QuestionsList extends React.Component {
   }
   handleModalUpdate(id) {
     this.setState({ showHideUpdate: !this.state.showHideUpdate });
-    axios.get(`http://localhost:3001/questions/${id}`).then((res) => {
-      const { description, categoryId, alternatives } = res.data;
-      this.setState({
-        toUpdate: {
-          description,
-          option_one: alternatives[0].text,
-          correct: alternatives.findIndex((item) => item.isCorrect),
-          option_two: alternatives[1].text,
-          option_three: alternatives[2].text,
-          option_four: alternatives[3].text,
-          _id: id,
-          categoryId,
-        },
+    axios
+      .get(`http://localhost:3001/questions/${id}`)
+      .then((res) => {
+        const { description, categoryId, alternatives } = res.data;
+        this.setState({
+          toUpdate: {
+            description,
+            option_one: alternatives[0].text,
+            correct: alternatives.findIndex((item) => item.isCorrect),
+            option_two: alternatives[1].text,
+            option_three: alternatives[2].text,
+            option_four: alternatives[3].text,
+            _id: id,
+            categoryId,
+          },
+        });
+      })
+      .catch((err) => {
+        toast.error(err.response.data.message);
       });
-    });
   }
   getQuestions() {
-    axios.get(`http://localhost:3001/questions`).then((res) => {
-      const questions = res.data;
-      this.setState({ questions });
-      const numberOfQuestions = res.data.length;
-      this.setState({ numberOfQuestions });
-    });
-    // axios.get(`http://localhost:3001/numberOfQuestions`).then((res) => {
-    //   const numberOfQuestions = res.data;
-    //   this.setState({ numberOfQuestions });
-    // });
+    axios
+      .get(`http://localhost:3001/questions`)
+      .then((res) => {
+        const questions = res.data;
+        this.setState({ questions });
+        const numberOfQuestions = res.data.length;
+        this.setState({ numberOfQuestions });
+      })
+      .catch((err) => {
+        toast.error(err.response.data.message);
+      });
   }
   deleteRow(id) {
-    axios.delete(`http://localhost:3001/questions/${id}`).then((res) => {
-      this.handleModalDelete();
-      this.getQuestions();
-    });
+    axios
+      .delete(`http://localhost:3001/questions/${id}`)
+      .then((res) => {
+        this.handleModalDelete();
+        this.getQuestions();
+        toast.warning("Question has been deleted!");
+      })
+      .catch((err) => {
+        toast.error(err.response.data.message);
+      });
   }
   componentDidMount() {
     this.getQuestions();
-    axios.get(`http://localhost:3001/categories`).then((res) => {
-      const numberOfCategories = res.data.length;
-      this.setState({ numberOfCategories });
-    });
+    axios
+      .get(`http://localhost:3001/categories`)
+      .then((res) => {
+        const numberOfCategories = res.data.length;
+        this.setState({ numberOfCategories });
+      })
+      .catch((err) => {
+        toast.error(err.response.data.message);
+      });
   }
 
   render() {

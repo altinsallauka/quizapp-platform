@@ -1,7 +1,8 @@
 import React from "react";
 import "./PostRole.scss";
 import axios from "axios";
-
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 export default class PostRole extends React.Component {
   constructor(props) {
     super(props);
@@ -15,11 +16,17 @@ export default class PostRole extends React.Component {
   async handleSubmit(event) {
     event.preventDefault();
     const { role } = this.state;
-    const { data } = await axios.post("http://localhost:3001/roles", {
-      role,
-    });
-    console.log(data.data);
-    this.props.history.push("/users");
+    await axios
+      .post("http://localhost:3001/roles", {
+        role,
+      })
+      .then((res) => {
+        toast.success("New role has been added!");
+        this.props.history.push("/users");
+      })
+      .catch((err) => {
+        toast.error(err.response.data.message);
+      });
   }
   render() {
     return (

@@ -9,10 +9,11 @@ import paginationFactory from "react-bootstrap-table2-paginator";
 // import * as ReactBootStrap from "react-bootstrap";
 import { Button, Modal } from "react-bootstrap";
 import RolesList from "../roles/RolesList";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 export default class UsersList extends React.Component {
   constructor() {
     super();
-    let adminCheck = false;
     this.state = {
       rowId: "",
       users: [],
@@ -65,7 +66,7 @@ export default class UsersList extends React.Component {
       showHideUpdate: false,
       toUpdate: [],
       roles: [],
-      isAdmin: adminCheck,
+      isAdmin: false,
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -103,8 +104,8 @@ export default class UsersList extends React.Component {
           });
         return true;
       })
-      .catch((error) => {
-        console.error(error);
+      .catch((err) => {
+        toast.error(err.response.data.message);
       });
   }
   async handleSubmit(event) {
@@ -115,19 +116,22 @@ export default class UsersList extends React.Component {
       firstName: this.state.toUpdate.firstName,
       lastName: this.state.toUpdate.lastName,
     };
-    const { data } = await axios.put(
-      `http://localhost:3001/users/${this.state.rowId}`,
-      updateUser,
-      {
+    await axios
+      .put(`http://localhost:3001/users/${this.state.rowId}`, updateUser, {
         headers: {
           Authorization: `Bearer ${access_token}`,
         },
-      }
-    );
-    this.getusers();
-    this.setState({ showHideUpdate: !this.state.showHideUpdate });
-    console.log(data.data);
-    this.props.history.push("/users");
+      })
+      .then((res) => {
+        toast.success("Successfully updated user!");
+        this.getusers();
+        this.setState({ showHideUpdate: !this.state.showHideUpdate });
+        console.log(res.data);
+        this.props.history.push("/users");
+      })
+      .catch((err) => {
+        toast.error(err.response.data.message);
+      });
   }
   handleModalDelete(id) {
     this.setState({ showHideDelete: !this.state.showHideDelete, rowId: id });
@@ -146,6 +150,9 @@ export default class UsersList extends React.Component {
         console.log("user", res.data);
         this.setState({ toUpdate: res.data });
         this.getRoleById();
+      })
+      .catch((err) => {
+        toast.error(err.response.data.message);
       });
   }
   getRoleById() {
@@ -157,6 +164,9 @@ export default class UsersList extends React.Component {
         this.setState({
           roleId: res.data._id,
         });
+      })
+      .catch((err) => {
+        toast.error(err.response.data.message);
       });
   }
   getusers() {
@@ -173,8 +183,8 @@ export default class UsersList extends React.Component {
         const users = res.data;
         this.setState({ users });
       })
-      .catch((error) => {
-        console.error(error);
+      .catch((err) => {
+        toast.error(err.response.data.message);
       });
   }
   deleteRow(id) {
@@ -189,12 +199,21 @@ export default class UsersList extends React.Component {
       .then((res) => {
         this.handleModalDelete();
         this.getusers();
+        toast.warning("User has been deleted!");
+      })
+      .catch((err) => {
+        toast.error(err.response.data.message);
       });
   }
   getRoles() {
-    axios.get("http://localhost:3001/roles").then((res) => {
-      this.setState({ roles: res.data });
-    });
+    axios
+      .get("http://localhost:3001/roles")
+      .then((res) => {
+        this.setState({ roles: res.data });
+      })
+      .catch((err) => {
+        toast.error(err.response.data.message);
+      });
   }
   componentDidMount() {
     this.getusers();

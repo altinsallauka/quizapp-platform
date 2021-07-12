@@ -1,6 +1,8 @@
 import React from "react";
 import axios from "axios";
 import "./RegisterUser.scss";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 export default class RegisterUser extends React.Component {
   constructor(props) {
     super(props);
@@ -23,20 +25,31 @@ export default class RegisterUser extends React.Component {
   async handleSubmit(event) {
     event.preventDefault();
     const { firstName, lastName, username, roleId, password } = this.state;
-    const { data } = await axios.post("http://localhost:3001/users/register", {
-      firstName,
-      lastName,
-      roleId,
-      username,
-      password,
-    });
-    console.log(data.data);
-    this.props.history.push("/users");
+    await axios
+      .post("http://localhost:3001/users/register", {
+        firstName,
+        lastName,
+        roleId,
+        username,
+        password,
+      })
+      .then((res) => {
+        this.props.history.push("/users");
+        toast.success("User has been registered!");
+      })
+      .catch((err) => {
+        toast.error(err.response.data.message);
+      });
   }
   getRoles() {
-    axios.get("http://localhost:3001/roles").then((res) => {
-      this.setState({ roles: res.data });
-    });
+    axios
+      .get("http://localhost:3001/roles")
+      .then((res) => {
+        this.setState({ roles: res.data });
+      })
+      .catch((err) => {
+        toast.error(err.response.data.message);
+      });
   }
   componentDidMount() {
     this.getRoles();

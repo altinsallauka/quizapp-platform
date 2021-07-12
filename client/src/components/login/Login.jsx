@@ -1,7 +1,7 @@
 import React from "react";
 import axios from "axios";
 import "./Login.scss";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 export default class LoginComponent extends React.Component {
   constructor(props) {
@@ -31,7 +31,11 @@ export default class LoginComponent extends React.Component {
         this.props.history.push("/home");
       })
       .catch((err) => {
-        toast.error("Oops, something went wrong!  " + err.message);
+        console.log(err.response.data.message);
+        // toast.error(
+        //   "Oops, something went wrong!  " + err.response.data.message
+        // );
+        toast.error(err.response.data.message);
       });
   }
 
@@ -88,7 +92,6 @@ export default class LoginComponent extends React.Component {
                   Submit
                 </button>
               </form>
-              <ToastContainer />
             </div>
           </div>
         </div>

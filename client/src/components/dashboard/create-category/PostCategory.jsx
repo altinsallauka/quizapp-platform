@@ -1,7 +1,8 @@
 import React from "react";
 import "./PostCategory.scss";
 import axios from "axios";
-
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 export default class PostCategory extends React.Component {
   constructor(props) {
     super(props);
@@ -15,11 +16,17 @@ export default class PostCategory extends React.Component {
   async handleSubmit(event) {
     event.preventDefault();
     const { categoryName } = this.state;
-    const { data } = await axios.post("http://localhost:3001/categories", {
-      categoryName,
-    });
-    console.log(data.data);
-    this.props.history.push("/categories");
+    await axios
+      .post("http://localhost:3001/categories", {
+        categoryName,
+      })
+      .then((res) => {
+        toast.success("New category has been added");
+        this.props.history.push("/categories");
+      })
+      .catch((err) => {
+        toast.error(err.response.data.message);
+      });
   }
   render() {
     return (
