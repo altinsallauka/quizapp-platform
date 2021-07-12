@@ -63,6 +63,7 @@ export default class UsersList extends React.Component {
       showHideUpdate: false,
       toUpdate: [],
       roles: [],
+      isAdmin: false,
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -75,7 +76,32 @@ export default class UsersList extends React.Component {
       },
     });
   }
+  getCurrentUser() {
+    const access_token = localStorage.getItem("token");
 
+    axios
+      .get("http://localhost:3001/users/current", {
+        headers: {
+          Authorization: `Bearer ${access_token}`,
+        },
+      })
+      .then((res) => {
+        console.log(res.data);
+        const user = res.data;
+        // this.setState({ user });
+        axios.get(`http://localhost:3001/roles/${user.roleId}`).then((res) => {
+          console.log("Role by ID", res.data);
+          if (res.data.role === "Admin") {
+            this.setState({ isAdmin: true });
+          } else {
+            this.setState({ isAdmin: false });
+          }
+        });
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }
   async handleSubmit(event) {
     event.preventDefault();
     // const { firstName, lastName } = this.state;
@@ -130,10 +156,6 @@ export default class UsersList extends React.Component {
   }
   getusers() {
     const access_token = localStorage.getItem("token");
-    // axios.get(`http://localhost:3001/users`, token).then((res) => {
-    //   const users = res.data;
-    //   this.setState({ users });
-    // });
 
     axios
       .get("http://localhost:3001/users", {
@@ -172,16 +194,21 @@ export default class UsersList extends React.Component {
   componentDidMount() {
     this.getusers();
     this.getRoles();
+    this.getCurrentUser();
   }
 
   render() {
     return (
       <div>
         <div className="row mt-3 pt-4">
-          <Link to={"/register"} className="nav-link">
-            <h2>Register User</h2>
-          </Link>
-          <hr />
+          {this.state.isAdmin ? (
+            <Link to={"/register"} className="nav-link">
+              <h2>Register User</h2>
+              <hr />
+            </Link>
+          ) : null}
+
+          {/* {this.state.isAdmin ? <span>Admin</span> : null} */}
           <h6>List of users</h6>
           <BootstrapTable
             keyField="id"
@@ -189,10 +216,12 @@ export default class UsersList extends React.Component {
             columns={this.state.columns}
             pagination={paginationFactory()}
           />
-          <div className="mt-4">
-            <hr />
-            <RolesList />
-          </div>
+          {this.state.isAdmin ? (
+            <div className="mt-4">
+              <hr />
+              <RolesList />
+            </div>
+          ) : null}
 
           {/* Delete */}
           <Modal show={this.state.showHideDelete}>
