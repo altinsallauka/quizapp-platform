@@ -5,10 +5,13 @@ import { Link } from "react-router-dom";
 // import "../node_modules/bootstrap/dist/js/bootstrap.min.js";
 // import "../../../../node_modules/jquery/dist/jquery.min.js";
 import "../../../../node_modules/bootstrap/dist/js/bootstrap.min.js";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 export default class NavBar extends React.Component {
   state = {};
   logOut() {
     localStorage.removeItem("token");
+    toast.success("You have been logged out!x");
     // this.props.history.push("/role");
   }
   render() {
