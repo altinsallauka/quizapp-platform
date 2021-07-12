@@ -1,7 +1,8 @@
 import React from "react";
 import axios from "axios";
 import "./Login.scss";
-
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 export default class LoginComponent extends React.Component {
   constructor(props) {
     super(props);
@@ -13,21 +14,25 @@ export default class LoginComponent extends React.Component {
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
-
   handleChange(event) {
     this.setState({ [event.target.name]: event.target.value });
   }
 
   async handleSubmit(event) {
     event.preventDefault();
-    const { data } = await axios.post(
-      "http://localhost:3001/users/authenticate",
-      this.state
-    );
-    console.log("data", data);
-    this.setState({ token: data.token });
-    localStorage.setItem("token", data.token);
-    this.props.history.push("/home");
+    await axios
+      .post("http://localhost:3001/users/authenticate", this.state)
+      .then((res) => {
+        const data = res.data;
+        toast.success("Successfully logged in!");
+        console.log("data", data);
+        this.setState({ token: res.data.token });
+        localStorage.setItem("token", res.data.token);
+        this.props.history.push("/home");
+      })
+      .catch((err) => {
+        toast.error("Oops, something went wrong!  " + err.message);
+      });
   }
 
   componentDidMount() {
@@ -83,6 +88,7 @@ export default class LoginComponent extends React.Component {
                   Submit
                 </button>
               </form>
+              <ToastContainer />
             </div>
           </div>
         </div>

@@ -16,6 +16,10 @@ import RegisterUser from "./register-user/RegisterUser";
 import MyProfile from "./my-profile/MyProfile";
 import RolesList from "./roles/RolesList";
 import PostRole from "./create-role/PostRole";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+// Call it once in your app. At the root of your app is the best place
+toast.configure();
 function DashboardComponent() {
   return (
     <Router>
@@ -38,6 +42,7 @@ function DashboardComponent() {
           <Route exact path="/roles" component={RolesList} />
           <Route exact path="/create-role" component={PostRole} />
         </Switch>
+        <ToastContainer />
       </div>
     </Router>
   );
