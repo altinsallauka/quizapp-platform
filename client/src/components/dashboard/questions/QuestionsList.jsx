@@ -51,7 +51,7 @@ export default class QuestionsList extends React.Component {
               <button
                 className="btn btn-danger btn-xs"
                 // onClick={() => console.log("deleted", row._id)}
-                onClick={() => this.handleModalDelete()}
+                onClick={() => this.handleModalDelete(row._id)}
               >
                 Delete
               </button>
@@ -131,11 +131,12 @@ export default class QuestionsList extends React.Component {
 
     // this.props.history.push("/questions");
   }
-  handleModalDelete() {
-    this.setState({ showHideDelete: !this.state.showHideDelete });
+  handleModalDelete(id) {
+    this.setState({ showHideDelete: !this.state.showHideDelete, rowId: id });
+    console.log(id)
   }
   handleModalUpdate(id) {
-    this.setState({ showHideUpdate: !this.state.showHideUpdate });
+    this.setState({ showHideUpdate: !this.state.showHideUpdate, rowId:id });
     axios
       .get(`http://localhost:3001/questions/${id}`)
       .then((res) => {
@@ -171,8 +172,9 @@ export default class QuestionsList extends React.Component {
       });
   }
   deleteRow(id) {
+    console.log("ID",id);
     axios
-      .delete(`http://localhost:3001/questions/${id}`)
+      .delete(`http://localhost:3001/questions/${this.state.rowId}`)
       .then((res) => {
         this.handleModalDelete();
         this.getQuestions();
@@ -300,7 +302,7 @@ export default class QuestionsList extends React.Component {
                     name="correct"
                     value="0"
                     checked={+this.state.toUpdate.correct === 0}
-                    className="form-check-input"
+                    className="form-check-input update-question"
                     onChange={this.handleChange2}
                   />
                 </div>
@@ -320,7 +322,7 @@ export default class QuestionsList extends React.Component {
                     name="correct"
                     value="1"
                     checked={+this.state.toUpdate.correct === 1}
-                    className="form-check-input"
+                    className="form-check-input update-question"
                     onChange={this.handleChange2}
                   />
                 </div>
@@ -340,7 +342,7 @@ export default class QuestionsList extends React.Component {
                     name="correct"
                     value="2"
                     checked={+this.state.toUpdate.correct === 2}
-                    className="form-check-input"
+                    className="form-check-input update-question"
                     onChange={this.handleChange2}
                   />
                 </div>
@@ -360,7 +362,7 @@ export default class QuestionsList extends React.Component {
                     name="correct"
                     value="3"
                     checked={+this.state.toUpdate.correct === 3}
-                    className="form-check-input"
+                    className="form-check-input update-question"
                     onChange={this.handleChange2}
                   />
                 </div>

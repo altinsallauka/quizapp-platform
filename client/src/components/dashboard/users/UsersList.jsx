@@ -252,12 +252,12 @@ export default class UsersList extends React.Component {
               pagination={paginationFactory()}
             />
           )}
-          {this.state.isAdmin ? (
+          {/* {this.state.isAdmin ? (
             <div className="mt-4">
               <hr />
               <RolesList />
             </div>
-          ) : null}
+          ) : null} */}
 
           {/* Delete */}
           <Modal show={this.state.showHideDelete}>

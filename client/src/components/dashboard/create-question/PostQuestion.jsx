@@ -163,6 +163,9 @@ export default class PostQuestion extends React.Component {
                   aria-label="Default select example"
                   onChange={this.handleChange}
                 >
+                  <option disabled selected>
+                    Select one category
+                  </option>
                   {this.state.categories.map((ctg) => (
                     <option value={ctg._id} key={ctg._id}>
                       {ctg.categoryName}
