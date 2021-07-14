@@ -9,18 +9,24 @@
     "dev": "concurrently \"npm run server\" \"npm run client\""
   },
   "author": "Altin Sallauka",
-  "license": "AS",
+  "license": "UNLICENSED",
   "dependencies": {
     "bcryptjs": "^2.4.3",
+    "bootstrap": "5.0.2",
     "concurrently": "^6.0.2",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "express-jwt": "^6.0.0",
     "mongoose": "^5.8.11",
+    "next": "11.0.1",
+    "react": "17.0.2",
+    "react-bootstrap": "1.6.1",
+    "react-dom": "17.0.2",
     "sass": "^1.32.12"
   },
   "devDependencies": {
     "nodemon": "^2.0.2"
-  }
+  },
+  "description": "Quiz API built with NodeJS, ExpressJS and Mongoose. Front End built with ReactJS."
 }
