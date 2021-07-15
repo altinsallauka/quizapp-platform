@@ -71,6 +71,7 @@ export default class QuestionsList extends React.Component {
         option_four: "",
         description: "",
       },
+      isLoading: false,
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleChange2 = this.handleChange2.bind(this);
@@ -133,10 +134,10 @@ export default class QuestionsList extends React.Component {
   }
   handleModalDelete(id) {
     this.setState({ showHideDelete: !this.state.showHideDelete, rowId: id });
-    console.log(id)
+    console.log(id);
   }
   handleModalUpdate(id) {
-    this.setState({ showHideUpdate: !this.state.showHideUpdate, rowId:id });
+    this.setState({ showHideUpdate: !this.state.showHideUpdate, rowId: id });
     axios
       .get(`http://localhost:3001/questions/${id}`)
       .then((res) => {
@@ -159,20 +160,21 @@ export default class QuestionsList extends React.Component {
       });
   }
   getQuestions() {
+    this.setState({ isLoading: true });
     axios
       .get(`http://localhost:3001/questions`)
       .then((res) => {
         const questions = res.data;
         this.setState({ questions });
         const numberOfQuestions = res.data.length;
-        this.setState({ numberOfQuestions });
+        this.setState({ numberOfQuestions, isLoading: false });
       })
       .catch((err) => {
         toast.error(err.response.data.message);
       });
   }
   deleteRow(id) {
-    console.log("ID",id);
+    console.log("ID", id);
     axios
       .delete(`http://localhost:3001/questions/${this.state.rowId}`)
       .then((res) => {
@@ -198,190 +200,259 @@ export default class QuestionsList extends React.Component {
   }
 
   render() {
+    const { isLoading, questions } = this.state;
     // console.log(this.state.toUpdate.correct);
-    return (
-      <div>
-        <div className="row mt-4 pt-4">
-          <div className="col">
-            <div className="row bd-box shadow-sm">
-              <div className="col-md-8">
-                <h2>Number of questions</h2>
+    if (isLoading || questions.length > 0) {
+      return (
+        <div>
+          <div className="row mt-4 pt-4">
+            <div className="col">
+              <div className="row bd-box shadow-sm">
+                <div className="col-md-8">
+                  <h2>Number of questions</h2>
+                </div>
+                <div className="col-md-4 num-bx">
+                  <h1>{this.state.numberOfQuestions}</h1>
+                  <span>
+                    <Link to={"/create-question"} className="nav-link">
+                      Create question
+                    </Link>
+                  </span>
+                </div>
               </div>
-              <div className="col-md-4 num-bx">
-                <h1>{this.state.numberOfQuestions}</h1>
-                <span>
-                  <Link to={"/create-question"} className="nav-link">
-                    Create question
-                  </Link>
-                </span>
+            </div>
+            <div className="col">
+              <div className="row bd-box shadow-sm">
+                <div className="col-md-8">
+                  <h2>Number of categories</h2>
+                </div>
+                <div className="col-md-4 num-bx">
+                  <h1>{this.state.numberOfCategories}</h1>
+                  <span>
+                    <Link to={"/categories"} className="nav-link">
+                      Categories
+                    </Link>
+                  </span>
+                </div>
               </div>
             </div>
           </div>
-          <div className="col">
-            <div className="row bd-box shadow-sm">
-              <div className="col-md-8">
-                <h2>Number of categories</h2>
+          <div className="row mt-3">
+            {isLoading ? (
+              <div className="mt-4">
+                <div class="spinner-border text-primary" role="status">
+                  <span class="visually-hidden">Loading...</span>
+                </div>
+                <span class="text-primary ml-3">Loading questions...</span>
               </div>
-              <div className="col-md-4 num-bx">
-                <h1>{this.state.numberOfCategories}</h1>
-                <span>
-                  <Link to={"/categories"} className="nav-link">
-                    Categories
-                  </Link>
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="row mt-3">
-          <h3>List of questions</h3>
-          <BootstrapTable
-            keyField="_id"
-            data={this.state.questions}
-            columns={this.state.columns}
-            pagination={paginationFactory()}
-          />
-          {/* Delete */}
-          <Modal show={this.state.showHideDelete}>
-            <Modal.Header closeButton onClick={() => this.handleModalDelete()}>
-              <Modal.Title>Are you sure?</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-              Do you really want to delete this question? This process cannot be
-              undone.
-            </Modal.Body>
-            <Modal.Footer>
-              <Button
-                variant="secondary"
-                onClick={() => this.handleModalDelete()}
-              >
-                Cancel
-              </Button>
-              <Button
-                variant="danger"
-                onClick={() => this.deleteRow(this.state.rowId)}
-              >
-                Delete
-              </Button>
-            </Modal.Footer>
-          </Modal>
+            ) : (
+              <div>
+                <div>
+                  <h3>List of questions</h3>
+                  <BootstrapTable
+                    keyField="_id"
+                    data={this.state.questions}
+                    columns={this.state.columns}
+                    pagination={paginationFactory()}
+                  />
+                </div>
+                <Modal show={this.state.showHideDelete}>
+                  <Modal.Header
+                    closeButton
+                    onClick={() => this.handleModalDelete()}
+                  >
+                    <Modal.Title>Are you sure?</Modal.Title>
+                  </Modal.Header>
+                  <Modal.Body>
+                    Do you really want to delete this question? This process
+                    cannot be undone.
+                  </Modal.Body>
+                  <Modal.Footer>
+                    <Button
+                      variant="secondary"
+                      onClick={() => this.handleModalDelete()}
+                    >
+                      Cancel
+                    </Button>
+                    <Button
+                      variant="danger"
+                      onClick={() => this.deleteRow(this.state.rowId)}
+                    >
+                      Delete
+                    </Button>
+                  </Modal.Footer>
+                </Modal>
 
-          {/* Update */}
-          <Modal show={this.state.showHideUpdate}>
-            <form onSubmit={(e) => this.handleSubmit(e)}>
-              <Modal.Header
-                closeButton
-                onClick={() => this.handleModalUpdate()}
-              >
-                <Modal.Title>Edit question</Modal.Title>
-              </Modal.Header>
-              <Modal.Body>
-                <label className="d-flex flex-column align-items-start">
-                  Description:
-                  <input
-                    type="text"
-                    name="description"
-                    value={this.state.toUpdate.description}
-                    className="form-control"
-                    onChange={this.handleChange2}
-                  />
-                </label>
-                <div className="d-flex align-items-center">
-                  <label className="d-flex flex-column align-items-start">
-                    First option:
-                    <input
-                      type="text"
-                      name="option_one"
-                      value={this.state.toUpdate.option_one}
-                      className="form-control"
-                      onChange={this.handleChange2}
-                    />
-                  </label>
-                  <input
-                    type="radio"
-                    name="correct"
-                    value="0"
-                    checked={+this.state.toUpdate.correct === 0}
-                    className="form-check-input update-question"
-                    onChange={this.handleChange2}
-                  />
-                </div>
-                <div className="d-flex align-items-center">
-                  <label className="d-flex flex-column align-items-start">
-                    Second option:
-                    <input
-                      type="text"
-                      name="option_two"
-                      value={this.state.toUpdate.option_two}
-                      className="form-control"
-                      onChange={this.handleChange2}
-                    />
-                  </label>
-                  <input
-                    type="radio"
-                    name="correct"
-                    value="1"
-                    checked={+this.state.toUpdate.correct === 1}
-                    className="form-check-input update-question"
-                    onChange={this.handleChange2}
-                  />
-                </div>
-                <div className="d-flex align-items-center">
-                  <label className="d-flex flex-column align-items-start">
-                    Third option:
-                    <input
-                      type="text"
-                      name="option_three"
-                      value={this.state.toUpdate.option_three}
-                      className="form-control"
-                      onChange={this.handleChange2}
-                    />
-                  </label>
-                  <input
-                    type="radio"
-                    name="correct"
-                    value="2"
-                    checked={+this.state.toUpdate.correct === 2}
-                    className="form-check-input update-question"
-                    onChange={this.handleChange2}
-                  />
-                </div>
-                <div className="d-flex align-items-center">
-                  <label className="d-flex flex-column align-items-start">
-                    Forth option:
-                    <input
-                      type="text"
-                      name="option_four"
-                      value={this.state.toUpdate.option_four}
-                      className="form-control"
-                      onChange={this.handleChange2}
-                    />
-                  </label>
-                  <input
-                    type="radio"
-                    name="correct"
-                    value="3"
-                    checked={+this.state.toUpdate.correct === 3}
-                    className="form-check-input update-question"
-                    onChange={this.handleChange2}
-                  />
-                </div>
-              </Modal.Body>
-              <Modal.Footer>
-                <Button
-                  variant="secondary"
-                  onClick={() => this.handleModalUpdate()}
-                >
-                  Cancel
-                </Button>
-                <Button type="submit" value="submit" variant="primary">
-                  Update
-                </Button>
-              </Modal.Footer>
-            </form>
-          </Modal>
+                <Modal show={this.state.showHideUpdate}>
+                  <form onSubmit={(e) => this.handleSubmit(e)}>
+                    <Modal.Header
+                      closeButton
+                      onClick={() => this.handleModalUpdate()}
+                    >
+                      <Modal.Title>Edit question</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                      <label className="d-flex flex-column align-items-start">
+                        Description:
+                        <input
+                          type="text"
+                          name="description"
+                          value={this.state.toUpdate.description}
+                          className="form-control"
+                          onChange={this.handleChange2}
+                        />
+                      </label>
+                      <div className="d-flex align-items-center">
+                        <label className="d-flex flex-column align-items-start">
+                          First option:
+                          <input
+                            type="text"
+                            name="option_one"
+                            value={this.state.toUpdate.option_one}
+                            className="form-control"
+                            onChange={this.handleChange2}
+                          />
+                        </label>
+                        <input
+                          type="radio"
+                          name="correct"
+                          value="0"
+                          checked={+this.state.toUpdate.correct === 0}
+                          className="form-check-input update-question"
+                          onChange={this.handleChange2}
+                        />
+                      </div>
+                      <div className="d-flex align-items-center">
+                        <label className="d-flex flex-column align-items-start">
+                          Second option:
+                          <input
+                            type="text"
+                            name="option_two"
+                            value={this.state.toUpdate.option_two}
+                            className="form-control"
+                            onChange={this.handleChange2}
+                          />
+                        </label>
+                        <input
+                          type="radio"
+                          name="correct"
+                          value="1"
+                          checked={+this.state.toUpdate.correct === 1}
+                          className="form-check-input update-question"
+                          onChange={this.handleChange2}
+                        />
+                      </div>
+                      <div className="d-flex align-items-center">
+                        <label className="d-flex flex-column align-items-start">
+                          Third option:
+                          <input
+                            type="text"
+                            name="option_three"
+                            value={this.state.toUpdate.option_three}
+                            className="form-control"
+                            onChange={this.handleChange2}
+                          />
+                        </label>
+                        <input
+                          type="radio"
+                          name="correct"
+                          value="2"
+                          checked={+this.state.toUpdate.correct === 2}
+                          className="form-check-input update-question"
+                          onChange={this.handleChange2}
+                        />
+                      </div>
+                      <div className="d-flex align-items-center">
+                        <label className="d-flex flex-column align-items-start">
+                          Forth option:
+                          <input
+                            type="text"
+                            name="option_four"
+                            value={this.state.toUpdate.option_four}
+                            className="form-control"
+                            onChange={this.handleChange2}
+                          />
+                        </label>
+                        <input
+                          type="radio"
+                          name="correct"
+                          value="3"
+                          checked={+this.state.toUpdate.correct === 3}
+                          className="form-check-input update-question"
+                          onChange={this.handleChange2}
+                        />
+                      </div>
+                    </Modal.Body>
+                    <Modal.Footer>
+                      <Button
+                        variant="secondary"
+                        onClick={() => this.handleModalUpdate()}
+                      >
+                        Cancel
+                      </Button>
+                      <Button type="submit" value="submit" variant="primary">
+                        Update
+                      </Button>
+                    </Modal.Footer>
+                  </form>
+                </Modal>
+              </div>
+            )}
+          </div>
         </div>
-      </div>
-    );
+      );
+    } else if (questions.length <= 0) {
+      return (
+        <div>
+          <div className="row mt-4 pt-4">
+            <div className="col">
+              <div className="row bd-box shadow-sm">
+                <div className="col-md-8">
+                  <h2>Number of questions</h2>
+                </div>
+                <div className="col-md-4 num-bx">
+                  <h1>{this.state.numberOfQuestions}</h1>
+                  <span>
+                    <Link to={"/create-question"} className="nav-link">
+                      Create question
+                    </Link>
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div className="col">
+              <div className="row bd-box shadow-sm">
+                <div className="col-md-8">
+                  <h2>Number of categories</h2>
+                </div>
+                <div className="col-md-4 num-bx">
+                  <h1>{this.state.numberOfCategories}</h1>
+                  <span>
+                    <Link to={"/categories"} className="nav-link">
+                      Categories
+                    </Link>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="mt-4">
+            <div>
+              {/* {isLoading && (
+              <div className="mt-4">
+                <div class="spinner-border text-primary" role="status">
+                  <span class="visually-hidden">Loading...</span>
+                </div>
+                <span class="text-primary ml-3">Loading questions...</span>
+              </div>
+            )} */}
+              <span className="text-primary">
+                No questions found on the database...
+              </span>
+            </div>
+          </div>
+        </div>
+      );
+    }
   }
 }

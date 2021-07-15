@@ -231,184 +231,214 @@ export default class UsersList extends React.Component {
 
   render() {
     const { isLoading, users } = this.state;
-    if (isLoading) {
-      return (
-        <div className="mt-4">
-          <div class="spinner-border text-primary" role="status">
-            <span class="visually-hidden">Loading...</span>
-          </div>
-          <span class="text-primary ml-3">Loading users...</span>
-        </div>
-      );
-    } else if (users.length <= 0) {
-      // setTimeout(() => {
-      //   this.setState({ isLoading: true });
-      // }, 1000);
-      return (
-        <div className="mt-4">
-          <div>
-            {this.state.isAdmin ? (
-              <div>
-                <Link to={"/register"} className="nav-link">
-                  <h2>Register User</h2>
-                </Link>
-                <hr className="text-primary" />
-              </div>
-            ) : null}
-          </div>
-          <div>
-            {isLoading && (
-              <div class="spinner-border text-primary" role="status">
-                <span class="visually-hidden">Loading...</span>
-              </div>
-            )}
-            <span className="text-primary">
-              No users found on the database...
-            </span>
-          </div>
-        </div>
-      );
-    } else {
+    // if (isLoading) {
+    //   return (
+    //     <div className="mt-4">
+    //       <div class="spinner-border text-primary" role="status">
+    //         <span class="visually-hidden">Loading...</span>
+    //       </div>
+    //       <span class="text-primary ml-3">Loading users...</span>
+    //     </div>
+    //   );
+    // } else if (users.length <= 0) {
+    //   // setTimeout(() => {
+    //   //   this.setState({ isLoading: true });
+    //   // }, 1000);
+    //   return (
+    //     <div className="mt-4">
+    //       <div>
+    //         {this.state.isAdmin ? (
+    //           <div>
+    //             <Link to={"/register"} className="nav-link">
+    //               <h2>Register User</h2>
+    //             </Link>
+    //             <hr className="text-primary" />
+    //           </div>
+    //         ) : null}
+    //       </div>
+    //       <div>
+    //         {isLoading && (
+    //           <div className="mt-4">
+    //             <div class="spinner-border text-primary" role="status">
+    //               <span class="visually-hidden">Loading...</span>
+    //             </div>
+    //             <span class="text-primary ml-3">Loading users...</span>
+    //           </div>
+    //         )}
+    //         <span className="text-primary">
+    //           No users found on the database...
+    //         </span>
+    //       </div>
+    //     </div>
+    //   );
+    // } else {
+    if (isLoading || users.length > 0) {
       return (
         <div>
           <div className="row mt-3 pt-4">
-            {/* {isLoading && (
-            <div class="spinner-border text-primary" role="status">
-              <span class="visually-hidden">Loading...</span>
-            </div>
-          )} */}
-            {this.state.isAdmin ? (
-              <div>
-                <Link to={"/register"} className="nav-link">
-                  <h2>Register User</h2>
-                </Link>
-                <hr className="text-primary" />
+            {isLoading ? (
+              <div className="mt-4">
+                <div class="spinner-border text-primary" role="status">
+                  <span class="visually-hidden">Loading...</span>
+                </div>
+                <span class="text-primary ml-3">Loading users...</span>
               </div>
-            ) : null}
-            {/* {this.state.isAdmin ? <span>Admin</span> : null} */}
-            <h6>List of users</h6>
-            {this.state.isAdmin ? (
-              <BootstrapTable
-                keyField="id"
-                data={this.state.users}
-                columns={this.state.adminColumns}
-                pagination={paginationFactory()}
-              />
             ) : (
-              <BootstrapTable
-                keyField="id"
-                data={this.state.users}
-                columns={this.state.notAdminColumns}
-                pagination={paginationFactory()}
-              />
-            )}
-            {/* {this.state.isAdmin ? (
+              <div>
+                {this.state.isAdmin ? (
+                  <div>
+                    <Link to={"/register"} className="nav-link">
+                      <h2>Register User</h2>
+                    </Link>
+                    <hr className="text-primary" />
+                  </div>
+                ) : null}
+                {/* {this.state.isAdmin ? <span>Admin</span> : null} */}
+                <h6>List of users</h6>
+                {this.state.isAdmin ? (
+                  <BootstrapTable
+                    keyField="id"
+                    data={this.state.users}
+                    columns={this.state.adminColumns}
+                    pagination={paginationFactory()}
+                  />
+                ) : (
+                  <BootstrapTable
+                    keyField="id"
+                    data={this.state.users}
+                    columns={this.state.notAdminColumns}
+                    pagination={paginationFactory()}
+                  />
+                )}
+                {/* {this.state.isAdmin ? (
             <div className="mt-4">
               <hr />
               <RolesList />
             </div>
           ) : null} */}
 
-            {/* Delete */}
-            <Modal show={this.state.showHideDelete}>
-              <Modal.Header
-                closeButton
-                onClick={() => this.handleModalDelete()}
-              >
-                <Modal.Title>Are you sure?</Modal.Title>
-              </Modal.Header>
-              <Modal.Body>
-                Do you really want to delete this user? This process cannot be
-                undone.
-              </Modal.Body>
-              <Modal.Footer>
-                <Button
-                  variant="secondary"
-                  onClick={() => this.handleModalDelete()}
-                >
-                  Cancel
-                </Button>
-                <Button
-                  variant="danger"
-                  onClick={() => this.deleteRow(this.state.rowId)}
-                >
-                  Delete
-                </Button>
-              </Modal.Footer>
-            </Modal>
+                {/* Delete */}
+                <Modal show={this.state.showHideDelete}>
+                  <Modal.Header
+                    closeButton
+                    onClick={() => this.handleModalDelete()}
+                  >
+                    <Modal.Title>Are you sure?</Modal.Title>
+                  </Modal.Header>
+                  <Modal.Body>
+                    Do you really want to delete this user? This process cannot
+                    be undone.
+                  </Modal.Body>
+                  <Modal.Footer>
+                    <Button
+                      variant="secondary"
+                      onClick={() => this.handleModalDelete()}
+                    >
+                      Cancel
+                    </Button>
+                    <Button
+                      variant="danger"
+                      onClick={() => this.deleteRow(this.state.rowId)}
+                    >
+                      Delete
+                    </Button>
+                  </Modal.Footer>
+                </Modal>
 
-            {/* Update */}
-            <Modal show={this.state.showHideUpdate}>
-              <form onSubmit={(e) => this.handleSubmit(e)}>
-                <Modal.Header
-                  closeButton
-                  onClick={() => this.handleModalUpdate()}
-                >
-                  <Modal.Title>Update user</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                  <label className="d-flex flex-column align-items-start">
-                    First Name:
-                    <input
-                      type="text"
-                      name="firstName"
-                      value={this.state.toUpdate.firstName}
-                      className="form-control"
-                      onChange={this.handleChange}
-                    />
-                  </label>
-                  <label className="d-flex flex-column align-items-start">
-                    Last Name:
-                    <input
-                      type="text"
-                      name="lastName"
-                      className="form-control"
-                      value={this.state.toUpdate.lastName}
-                      onChange={this.handleChange}
-                    />
-                  </label>
-                  <div className="d-flex align-items-center">
-                    <label className="d-flex flex-column align-items-start">
-                      Role:
-                      <select
-                        className="form-select"
-                        name="roleId"
-                        aria-label="Default select example"
-                        value={this.state.toUpdate.roleId}
-                        onChange={this.handleChange}
+                {/* Update */}
+                <Modal show={this.state.showHideUpdate}>
+                  <form onSubmit={(e) => this.handleSubmit(e)}>
+                    <Modal.Header
+                      closeButton
+                      onClick={() => this.handleModalUpdate()}
+                    >
+                      <Modal.Title>Update user</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                      <label className="d-flex flex-column align-items-start">
+                        First Name:
+                        <input
+                          type="text"
+                          name="firstName"
+                          value={this.state.toUpdate.firstName}
+                          className="form-control"
+                          onChange={this.handleChange}
+                        />
+                      </label>
+                      <label className="d-flex flex-column align-items-start">
+                        Last Name:
+                        <input
+                          type="text"
+                          name="lastName"
+                          className="form-control"
+                          value={this.state.toUpdate.lastName}
+                          onChange={this.handleChange}
+                        />
+                      </label>
+                      <div className="d-flex align-items-center">
+                        <label className="d-flex flex-column align-items-start">
+                          Role:
+                          <select
+                            className="form-select"
+                            name="roleId"
+                            aria-label="Default select example"
+                            value={this.state.toUpdate.roleId}
+                            onChange={this.handleChange}
+                          >
+                            <option disabled selected>
+                              Select one role
+                            </option>
+                            {this.state.roles.map((userRole) => (
+                              <option value={userRole._id} key={userRole._id}>
+                                {userRole.role}
+                              </option>
+                            ))}
+                          </select>
+                        </label>
+                      </div>
+                    </Modal.Body>
+                    <Modal.Footer>
+                      <Button
+                        variant="secondary"
+                        type="button"
+                        onClick={() => this.closeUpdateModal()}
                       >
-                        <option disabled selected>
-                          Select one role
-                        </option>
-                        {this.state.roles.map((userRole) => (
-                          <option value={userRole._id} key={userRole._id}>
-                            {userRole.role}
-                          </option>
-                        ))}
-                      </select>
-                    </label>
-                  </div>
-                </Modal.Body>
-                <Modal.Footer>
-                  <Button
-                    variant="secondary"
-                    type="button"
-                    onClick={() => this.closeUpdateModal()}
-                  >
-                    Cancel
-                  </Button>
-                  <Button
-                    type="submit"
-                    value="submit"
-                    variant="primary"
-                    // onClick={() => this.deleteRow(this.state.rowId)}
-                    // onClick={() => this.handleSubmit()}
-                  >
-                    Update
-                  </Button>
-                </Modal.Footer>
-              </form>
-            </Modal>
+                        Cancel
+                      </Button>
+                      <Button
+                        type="submit"
+                        value="submit"
+                        variant="primary"
+                        // onClick={() => this.deleteRow(this.state.rowId)}
+                        // onClick={() => this.handleSubmit()}
+                      >
+                        Update
+                      </Button>
+                    </Modal.Footer>
+                  </form>
+                </Modal>
+              </div>
+            )}
+          </div>
+        </div>
+      );
+    } else if (users.length <= 0) {
+      return (
+        <div>
+          <div className="mt-4">
+            <div>
+              {/* {isLoading && (
+              <div className="mt-4">
+                <div class="spinner-border text-primary" role="status">
+                  <span class="visually-hidden">Loading...</span>
+                </div>
+                <span class="text-primary ml-3">Loading questions...</span>
+              </div>
+            )} */}
+              <span className="text-primary">
+                No users found on the database...
+              </span>
+            </div>
           </div>
         </div>
       );
