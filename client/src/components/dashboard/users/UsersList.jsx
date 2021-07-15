@@ -186,13 +186,14 @@ export default class UsersList extends React.Component {
         console.log(res.data);
         const users = res.data;
         this.setState({ users });
+        this.setState({ isLoading: false });
       })
       .catch((err) => {
         toast.error(err.response.data.message);
-      })
-      .finally(() => {
-        this.setState({ isLoading: false });
       });
+    // .finally(() => {
+    //   this.setState({ isLoading: false });
+    // });
   }
   deleteRow(id) {
     const access_token = localStorage.getItem("token");
@@ -237,14 +238,6 @@ export default class UsersList extends React.Component {
             <span class="visually-hidden">Loading...</span>
           </div>
           <span class="text-primary ml-3">Loading users...</span>
-          {this.state.isAdmin ? (
-            <div>
-              <Link to={"/register"} className="nav-link">
-                <h2>Register User</h2>
-              </Link>
-              <hr className="text-primary" />
-            </div>
-          ) : null}
         </div>
       );
     } else if (users.length <= 0) {

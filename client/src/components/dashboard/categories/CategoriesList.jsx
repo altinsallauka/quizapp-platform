@@ -17,6 +17,7 @@ export default class CategoriesList extends React.Component {
       categoryName: "",
       showHideDelete: false,
       showHideUpdate: false,
+      isLoading: false,
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -24,9 +25,7 @@ export default class CategoriesList extends React.Component {
   handleChange(event) {
     this.setState({ [event.target.name]: event.target.value });
   }
-  componentDidMount() {
-    this.getCategories();
-  }
+
   handleModalDelete(id) {
     this.setState({
       showHideDelete: !this.state.showHideDelete,
@@ -69,10 +68,11 @@ export default class CategoriesList extends React.Component {
       });
   }
   getCategories() {
+    this.setState({ isLoading: true });
     axios
       .get("http://localhost:3001/categories")
       .then((res) => {
-        this.setState({ categories: res.data });
+        this.setState({ categories: res.data, isLoading: false });
       })
       .catch((err) => {
         toast.error(err.response.data.message);
@@ -99,107 +99,140 @@ export default class CategoriesList extends React.Component {
   //       console.log(response);
   //     });
   // }
+  componentDidMount() {
+    this.getCategories();
+  }
   render() {
-    return (
-      <div>
-        <div className="row">
-          <div className="title-container mt-4">
-            <h1>Categories</h1>
-            <h1>
-              <Link to={"/create-Category"} className="nav-link">
-                +
-              </Link>
-            </h1>
+    const { isLoading, categories } = this.state;
+    if (isLoading) {
+      return (
+        <div className="mt-4">
+          <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
           </div>
+          <span class="text-primary ml-3">Loading categories...</span>
         </div>
-        <div className="row">
-          <caption>List of categories</caption>
-          <div className="container ctg">
-            {this.state.categories.map((ctg) => (
-              <div className="categoryBox shadow-sm p-3 mb-5 bg-body rounded">
-                <span>{ctg.categoryName}</span>
-                <div className="ctgIcons">
-                  <button
-                    className="btn btn-primary btn-xs"
-                    onClick={() => this.handleModalUpdate(ctg._id)}
-                  >
-                    <img src={editImageSrc} alt="Edit Icon" />
-                  </button>
-                  <button
-                    className="btn btn-primary btn-xs"
-                    // onClick={() => console.log("updated", row._id)}
-                    onClick={() => this.handleModalDelete(ctg._id)}
-                  >
-                    <img src={deleteImageSrc} alt="Delete Icon" />
-                  </button>
-                </div>
+      );
+    } else if (categories.length <= 0) {
+      return (
+        <div className="mt-4">
+          <div>
+            {isLoading && (
+              <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
               </div>
-            ))}
+            )}
+            <span className="text-primary">
+              No categories found on the database...
+            </span>
           </div>
         </div>
-        {/* Delete */}
-        <Modal show={this.state.showHideDelete}>
-          <Modal.Header closeButton onClick={() => this.handleModalDelete()}>
-            <Modal.Title>Are you sure?</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            Do you really want to delete this category? This process cannot be
-            undone.
-          </Modal.Body>
-          <Modal.Footer>
-            <Button
-              variant="secondary"
-              onClick={() => this.handleModalDelete()}
-            >
-              Cancel
-            </Button>
-            <Button
-              variant="danger"
-              onClick={() => this.deleteRow(this.state.categoryId)}
-            >
-              Delete
-            </Button>
-          </Modal.Footer>
-        </Modal>
-
-        {/* Update */}
-        <Modal show={this.state.showHideUpdate}>
-          <form onSubmit={(e) => this.handleSubmit(e)}>
-            <Modal.Header closeButton onClick={() => this.handleModalUpdate()}>
-              <Modal.Title>Edit category</Modal.Title>
+      );
+    } else {
+      return (
+        <div>
+          <div className="row">
+            <div className="title-container mt-4">
+              <h1>Categories</h1>
+              <h1>
+                <Link to={"/create-Category"} className="nav-link">
+                  +
+                </Link>
+              </h1>
+            </div>
+          </div>
+          <div className="row">
+            <caption>List of categories</caption>
+            <div className="container ctg">
+              {this.state.categories.map((ctg) => (
+                <div className="categoryBox shadow-sm p-3 mb-5 bg-body rounded">
+                  <span>{ctg.categoryName}</span>
+                  <div className="ctgIcons">
+                    <button
+                      className="btn btn-primary btn-xs"
+                      onClick={() => this.handleModalUpdate(ctg._id)}
+                    >
+                      <img src={editImageSrc} alt="Edit Icon" />
+                    </button>
+                    <button
+                      className="btn btn-primary btn-xs"
+                      // onClick={() => console.log("updated", row._id)}
+                      onClick={() => this.handleModalDelete(ctg._id)}
+                    >
+                      <img src={deleteImageSrc} alt="Delete Icon" />
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+          {/* Delete */}
+          <Modal show={this.state.showHideDelete}>
+            <Modal.Header closeButton onClick={() => this.handleModalDelete()}>
+              <Modal.Title>Are you sure?</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-              <label className="d-flex flex-column align-items-start">
-                Name:
-                <input
-                  type="text"
-                  name="categoryName"
-                  value={this.state.categoryName}
-                  className="form-control"
-                  onChange={this.handleChange}
-                />
-              </label>
+              Do you really want to delete this category? This process cannot be
+              undone.
             </Modal.Body>
             <Modal.Footer>
               <Button
                 variant="secondary"
-                onClick={() => this.handleModalUpdate()}
+                onClick={() => this.handleModalDelete()}
               >
                 Cancel
               </Button>
               <Button
-                type="submit"
-                value="submit"
-                variant="primary"
-                // onClick={() => this.deleteRow(this.state.rowId)}
-                // onClick={() => this.handleSubmit()}
+                variant="danger"
+                onClick={() => this.deleteRow(this.state.categoryId)}
               >
-                Update
+                Delete
               </Button>
             </Modal.Footer>
-          </form>
-        </Modal>
-      </div>
-    );
+          </Modal>
+
+          {/* Update */}
+          <Modal show={this.state.showHideUpdate}>
+            <form onSubmit={(e) => this.handleSubmit(e)}>
+              <Modal.Header
+                closeButton
+                onClick={() => this.handleModalUpdate()}
+              >
+                <Modal.Title>Edit category</Modal.Title>
+              </Modal.Header>
+              <Modal.Body>
+                <label className="d-flex flex-column align-items-start">
+                  Name:
+                  <input
+                    type="text"
+                    name="categoryName"
+                    value={this.state.categoryName}
+                    className="form-control"
+                    onChange={this.handleChange}
+                  />
+                </label>
+              </Modal.Body>
+              <Modal.Footer>
+                <Button
+                  variant="secondary"
+                  onClick={() => this.handleModalUpdate()}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  type="submit"
+                  value="submit"
+                  variant="primary"
+                  // onClick={() => this.deleteRow(this.state.rowId)}
+                  // onClick={() => this.handleSubmit()}
+                >
+                  Update
+                </Button>
+              </Modal.Footer>
+            </form>
+          </Modal>
+        </div>
+      );
+    }
   }
 }
