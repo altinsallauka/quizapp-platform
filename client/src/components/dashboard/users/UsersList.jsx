@@ -15,6 +15,7 @@ export default class UsersList extends React.Component {
   constructor() {
     super();
     this.state = {
+      access_token: localStorage.getItem("token"),
       rowId: "",
       users: [],
       numberOfusers: "",
@@ -81,12 +82,10 @@ export default class UsersList extends React.Component {
     });
   }
   getCurrentUser() {
-    const access_token = localStorage.getItem("token");
-
     axios
       .get("http://localhost:3001/users/current", {
         headers: {
-          Authorization: `Bearer ${access_token}`,
+          Authorization: `Bearer ${this.state.access_token}`,
         },
       })
       .then((res) => {
@@ -94,7 +93,11 @@ export default class UsersList extends React.Component {
         const user = res.data;
         // this.setState({ user });
         axios
-          .get(`http://localhost:3001/roles/${user.roleId}`)
+          .get(`http://localhost:3001/roles/${user.roleId}`, {
+            headers: {
+              Authorization: `Bearer ${this.state.access_token}`,
+            },
+          })
           .then((response) => {
             console.log("Role by ID", response.data);
             if (response.data.role === "Admin") {
@@ -112,7 +115,6 @@ export default class UsersList extends React.Component {
   async handleSubmit(event) {
     event.preventDefault();
     // const { firstName, lastName } = this.state;
-    const access_token = localStorage.getItem("token");
     const updateUser = {
       firstName: this.state.toUpdate.firstName,
       lastName: this.state.toUpdate.lastName,
@@ -120,7 +122,7 @@ export default class UsersList extends React.Component {
     await axios
       .put(`http://localhost:3001/users/${this.state.rowId}`, updateUser, {
         headers: {
-          Authorization: `Bearer ${access_token}`,
+          Authorization: `Bearer ${this.state.access_token}`,
         },
       })
       .then((res) => {
@@ -143,11 +145,10 @@ export default class UsersList extends React.Component {
   handleModalUpdate(id) {
     this.setState({ showHideUpdate: !this.state.showHideUpdate, rowId: id });
 
-    const access_token = localStorage.getItem("token");
     axios
       .get(`http://localhost:3001/users/${id}`, {
         headers: {
-          Authorization: `Bearer ${access_token}`,
+          Authorization: `Bearer ${this.state.access_token}`,
         },
       })
       .then((res) => {
@@ -161,7 +162,11 @@ export default class UsersList extends React.Component {
   }
   getRoleById() {
     axios
-      .get(`http://localhost:3001/roles/${this.state.toUpdate.roleId}`)
+      .get(`http://localhost:3001/roles/${this.state.toUpdate.roleId}`, {
+        headers: {
+          Authorization: `Bearer ${this.state.access_token}`,
+        },
+      })
       .then((res) => {
         console.log(res.data);
         // const { roleId } = this.state;
@@ -174,12 +179,11 @@ export default class UsersList extends React.Component {
       });
   }
   getusers() {
-    const access_token = localStorage.getItem("token");
     this.setState({ isLoading: true });
     axios
       .get("http://localhost:3001/users", {
         headers: {
-          Authorization: `Bearer ${access_token}`,
+          Authorization: `Bearer ${this.state.access_token}`,
         },
       })
       .then((res) => {
@@ -196,12 +200,10 @@ export default class UsersList extends React.Component {
     // });
   }
   deleteRow(id) {
-    const access_token = localStorage.getItem("token");
-
     axios
       .delete(`http://localhost:3001/users/${this.state.rowId}`, {
         headers: {
-          Authorization: `Bearer ${access_token}`,
+          Authorization: `Bearer ${this.state.access_token}`,
         },
       })
       .then((res) => {
@@ -215,7 +217,11 @@ export default class UsersList extends React.Component {
   }
   getRoles() {
     axios
-      .get("http://localhost:3001/roles")
+      .get("http://localhost:3001/roles", {
+        headers: {
+          Authorization: `Bearer ${this.state.access_token}`,
+        },
+      })
       .then((res) => {
         this.setState({ roles: res.data });
       })

@@ -6,7 +6,10 @@ import "react-toastify/dist/ReactToastify.css";
 export default class PostCategory extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { categoryName: "" };
+    this.state = {
+      categoryName: "",
+      access_token: localStorage.getItem("token"),
+    };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
@@ -17,9 +20,17 @@ export default class PostCategory extends React.Component {
     event.preventDefault();
     const { categoryName } = this.state;
     await axios
-      .post("http://localhost:3001/categories", {
-        categoryName,
-      })
+      .post(
+        "http://localhost:3001/categories",
+        {
+          categoryName,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${this.state.access_token}`,
+          },
+        }
+      )
       .then((res) => {
         toast.success("New category has been added");
         this.props.history.push("/categories");

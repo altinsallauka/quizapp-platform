@@ -7,6 +7,7 @@ export default class PostQuestion extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      access_token: localStorage.getItem("token"),
       description: "",
       option_one: "",
       option_two: "",
@@ -37,15 +38,23 @@ export default class PostQuestion extends React.Component {
       categoryId,
     } = this.state;
     await axios
-      .post("http://localhost:3001/questions", {
-        description,
-        correct,
-        option_one,
-        option_two,
-        option_three,
-        option_four,
-        categoryId,
-      })
+      .post(
+        "http://localhost:3001/questions",
+        {
+          description,
+          correct,
+          option_one,
+          option_two,
+          option_three,
+          option_four,
+          categoryId,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${this.state.access_token}`,
+          },
+        }
+      )
       .then((res) => {
         this.props.history.push("/questions");
         toast.success("New question has been added!");
@@ -56,7 +65,11 @@ export default class PostQuestion extends React.Component {
   }
   getCategories() {
     axios
-      .get("http://localhost:3001/categories")
+      .get("http://localhost:3001/categories", {
+        headers: {
+          Authorization: `Bearer ${this.state.access_token}`,
+        },
+      })
       .then((res) => {
         this.setState({ categories: res.data });
       })

@@ -12,6 +12,7 @@ export default class RolesList extends React.Component {
   constructor() {
     super();
     this.state = {
+      access_token: localStorage.getItem("token"),
       roles: [],
       roleId: "",
       role: "",
@@ -38,7 +39,11 @@ export default class RolesList extends React.Component {
       roleId: id,
     });
     axios
-      .get(`http://localhost:3001/roles/${id}`)
+      .get(`http://localhost:3001/roles/${id}`, {
+        headers: {
+          Authorization: `Bearer ${this.state.access_token}`,
+        },
+      })
       .then((res) => {
         const { role } = res.data;
         this.setState({
@@ -54,10 +59,18 @@ export default class RolesList extends React.Component {
     event.preventDefault();
     const { roleId, role } = this.state;
     await axios
-      .put(`http://localhost:3001/roles/${roleId}`, {
-        _id: roleId,
-        role: role,
-      })
+      .put(
+        `http://localhost:3001/roles/${roleId}`,
+        {
+          _id: roleId,
+          role: role,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${this.state.access_token}`,
+          },
+        }
+      )
       .then((res) => {
         toast.success("Successfully updated Role!");
         this.getRoles();
@@ -70,7 +83,11 @@ export default class RolesList extends React.Component {
   getRoles() {
     this.setState({ isLoading: true });
     axios
-      .get("http://localhost:3001/roles")
+      .get("http://localhost:3001/roles", {
+        headers: {
+          Authorization: `Bearer ${this.state.access_token}`,
+        },
+      })
       .then((res) => {
         this.setState({ roles: res.data, isLoading: false });
       })
@@ -80,7 +97,11 @@ export default class RolesList extends React.Component {
   }
   deleteRow(id) {
     axios
-      .delete(`http://localhost:3001/roles/${id}`)
+      .delete(`http://localhost:3001/roles/${id}`, {
+        headers: {
+          Authorization: `Bearer ${this.state.access_token}`,
+        },
+      })
       .then((res) => {
         this.handleModalDelete();
         this.getRoles();

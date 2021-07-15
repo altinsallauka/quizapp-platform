@@ -8,6 +8,7 @@ export default class MyProfile extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      access_token: localStorage.getItem("token"),
       user: [],
     };
 
@@ -27,11 +28,10 @@ export default class MyProfile extends React.Component {
   async handleSubmit(event) {
     event.preventDefault();
     const { user } = this.state;
-    const access_token = localStorage.getItem("token");
     axios
       .put(`http://localhost:3001/users/${user.id}`, user, {
         headers: {
-          Authorization: `Bearer ${access_token}`,
+          Authorization: `Bearer ${this.state.access_token}`,
         },
       })
       .then((res) => {
@@ -45,12 +45,10 @@ export default class MyProfile extends React.Component {
       });
   }
   getCurrentUser() {
-    const access_token = localStorage.getItem("token");
-
     axios
       .get("http://localhost:3001/users/current", {
         headers: {
-          Authorization: `Bearer ${access_token}`,
+          Authorization: `Bearer ${this.state.access_token}`,
         },
       })
       .then((res) => {

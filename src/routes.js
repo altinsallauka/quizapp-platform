@@ -3,8 +3,9 @@ const router = express.Router();
 const Question = require("./models/Question"); // includes our question model
 const Categories = require("./models/Categories"); // includes category model
 const Roles = require("./models/Roles"); // includes roles model
+const auth = require("./middleware/auth");
 // get all quiz questions
-router.get("/questions", async (req, res) => {
+router.get("/questions", auth, async (req, res) => {
   try {
     const questions = await Question.find();
     return res.status(200).json(questions);
@@ -14,7 +15,7 @@ router.get("/questions", async (req, res) => {
 });
 
 // get one quiz question
-router.get("/questions/:id", async (req, res) => {
+router.get("/questions/:id", auth, async (req, res) => {
   try {
     const _id = req.params.id;
 
@@ -30,7 +31,7 @@ router.get("/questions/:id", async (req, res) => {
 });
 
 // create one quiz question
-router.post("/questions", async (req, res) => {
+router.post("/questions", auth, async (req, res) => {
   try {
     const {
       description,
@@ -62,7 +63,7 @@ router.post("/questions", async (req, res) => {
 });
 
 // update one quiz question
-router.put("/questions/:id", async (req, res) => {
+router.put("/questions/:id", auth, async (req, res) => {
   try {
     // const _id = req.params.id;
     const { description, alternatives, _id, categoryId } = req.body;
@@ -90,7 +91,7 @@ router.put("/questions/:id", async (req, res) => {
 });
 
 // delete one quiz question
-router.delete("/questions/:id", async (req, res) => {
+router.delete("/questions/:id", auth, async (req, res) => {
   try {
     const _id = req.params.id;
 
@@ -107,7 +108,7 @@ router.delete("/questions/:id", async (req, res) => {
 });
 
 // get number of questions
-router.get("/numberOfQuestions", async (req, res) => {
+router.get("/numberOfQuestions", auth, async (req, res) => {
   try {
     const questions = await Question.countDocuments();
     return res.status(200).json(questions);
@@ -117,7 +118,7 @@ router.get("/numberOfQuestions", async (req, res) => {
 });
 
 // get all categories
-router.get("/categories", async (req, res) => {
+router.get("/categories", auth, async (req, res) => {
   try {
     const ctg = await Categories.find();
     return res.status(200).json(ctg);
@@ -126,7 +127,7 @@ router.get("/categories", async (req, res) => {
   }
 });
 // get one category
-router.get("/categories/:id", async (req, res) => {
+router.get("/categories/:id", auth, async (req, res) => {
   try {
     const _id = req.params.id;
 
@@ -141,7 +142,7 @@ router.get("/categories/:id", async (req, res) => {
   }
 });
 // create category
-router.post("/categories", async (req, res) => {
+router.post("/categories", auth, async (req, res) => {
   try {
     const { categoryName } = req.body;
 
@@ -155,7 +156,7 @@ router.post("/categories", async (req, res) => {
   }
 });
 // update a category
-router.put("/categories/:id", async (req, res) => {
+router.put("/categories/:id", auth, async (req, res) => {
   try {
     const _id = req.params.id;
     const { categoryName } = req.body;
@@ -177,7 +178,7 @@ router.put("/categories/:id", async (req, res) => {
   }
 });
 // delete one category
-router.delete("/categories/:id", async (req, res) => {
+router.delete("/categories/:id", auth, async (req, res) => {
   try {
     const _id = req.params.id;
 
@@ -194,7 +195,7 @@ router.delete("/categories/:id", async (req, res) => {
 });
 
 // get all roles
-router.get("/roles", async (req, res) => {
+router.get("/roles", auth, async (req, res) => {
   try {
     const userRole = await Roles.find();
     return res.status(200).json(userRole);
@@ -204,7 +205,7 @@ router.get("/roles", async (req, res) => {
 });
 
 // get one role
-router.get("/roles/:id", async (req, res) => {
+router.get("/roles/:id", auth, async (req, res) => {
   try {
     const _id = req.params.id;
 
@@ -220,7 +221,7 @@ router.get("/roles/:id", async (req, res) => {
 });
 
 // create role
-router.post("/roles", async (req, res) => {
+router.post("/roles", auth, async (req, res) => {
   try {
     const { role } = req.body;
 
@@ -235,7 +236,7 @@ router.post("/roles", async (req, res) => {
 });
 
 // update role
-router.put("/roles/:id", async (req, res) => {
+router.put("/roles/:id", auth, async (req, res) => {
   try {
     const _id = req.params.id;
     const { role } = req.body;
@@ -258,7 +259,7 @@ router.put("/roles/:id", async (req, res) => {
 });
 
 // delete role
-router.delete("/roles/:id", async (req, res) => {
+router.delete("/roles/:id", auth, async (req, res) => {
   try {
     const _id = req.params.id;
 

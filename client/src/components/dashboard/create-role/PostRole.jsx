@@ -6,7 +6,7 @@ import "react-toastify/dist/ReactToastify.css";
 export default class PostRole extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { role: "" };
+    this.state = { role: "", access_token: localStorage.getItem("token") };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
@@ -17,9 +17,17 @@ export default class PostRole extends React.Component {
     event.preventDefault();
     const { role } = this.state;
     await axios
-      .post("http://localhost:3001/roles", {
-        role,
-      })
+      .post(
+        "http://localhost:3001/roles",
+        {
+          role,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${this.state.access_token}`,
+          },
+        }
+      )
       .then((res) => {
         toast.success("New role has been added!");
         this.props.history.push("/users");

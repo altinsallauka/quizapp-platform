@@ -7,6 +7,7 @@ export default class RegisterUser extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      access_token: localStorage.getItem("token"),
       firstName: "",
       lastName: "",
       username: "",

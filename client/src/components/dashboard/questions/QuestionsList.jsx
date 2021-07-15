@@ -14,6 +14,7 @@ export default class QuestionsList extends React.Component {
   constructor() {
     super();
     this.state = {
+      access_token: localStorage.getItem("token"),
       rowId: "",
       questions: [],
       numberOfQuestions: "",
@@ -119,7 +120,12 @@ export default class QuestionsList extends React.Component {
     await axios
       .put(
         `http://localhost:3001/questions/${this.state.rowId}`,
-        valuesTochange
+        valuesTochange,
+        {
+          headers: {
+            Authorization: `Bearer ${this.state.access_token}`,
+          },
+        }
       )
       .then((res) => {
         this.getQuestions();
@@ -139,7 +145,11 @@ export default class QuestionsList extends React.Component {
   handleModalUpdate(id) {
     this.setState({ showHideUpdate: !this.state.showHideUpdate, rowId: id });
     axios
-      .get(`http://localhost:3001/questions/${id}`)
+      .get(`http://localhost:3001/questions/${id}`, {
+        headers: {
+          Authorization: `Bearer ${this.state.access_token}`,
+        },
+      })
       .then((res) => {
         const { description, categoryId, alternatives } = res.data;
         this.setState({
@@ -162,7 +172,11 @@ export default class QuestionsList extends React.Component {
   getQuestions() {
     this.setState({ isLoading: true });
     axios
-      .get(`http://localhost:3001/questions`)
+      .get(`http://localhost:3001/questions`, {
+        headers: {
+          Authorization: `Bearer ${this.state.access_token}`,
+        },
+      })
       .then((res) => {
         const questions = res.data;
         this.setState({ questions });
@@ -176,7 +190,11 @@ export default class QuestionsList extends React.Component {
   deleteRow(id) {
     console.log("ID", id);
     axios
-      .delete(`http://localhost:3001/questions/${this.state.rowId}`)
+      .delete(`http://localhost:3001/questions/${this.state.rowId}`, {
+        headers: {
+          Authorization: `Bearer ${this.state.access_token}`,
+        },
+      })
       .then((res) => {
         this.handleModalDelete();
         this.getQuestions();
@@ -189,7 +207,11 @@ export default class QuestionsList extends React.Component {
   componentDidMount() {
     this.getQuestions();
     axios
-      .get(`http://localhost:3001/categories`)
+      .get(`http://localhost:3001/categories`, {
+        headers: {
+          Authorization: `Bearer ${this.state.access_token}`,
+        },
+      })
       .then((res) => {
         const numberOfCategories = res.data.length;
         this.setState({ numberOfCategories });
@@ -240,10 +262,10 @@ export default class QuestionsList extends React.Component {
           <div className="row mt-3">
             {isLoading ? (
               <div className="mt-4">
-                <div class="spinner-border text-primary" role="status">
-                  <span class="visually-hidden">Loading...</span>
+                <div className="spinner-border text-primary" role="status">
+                  <span className="visually-hidden">Loading...</span>
                 </div>
-                <span class="text-primary ml-3">Loading questions...</span>
+                <span className="text-primary ml-3">Loading questions...</span>
               </div>
             ) : (
               <div>
@@ -440,10 +462,10 @@ export default class QuestionsList extends React.Component {
             <div>
               {/* {isLoading && (
               <div className="mt-4">
-                <div class="spinner-border text-primary" role="status">
-                  <span class="visually-hidden">Loading...</span>
+                <div className="spinner-border text-primary" role="status">
+                  <span className="visually-hidden">Loading...</span>
                 </div>
-                <span class="text-primary ml-3">Loading questions...</span>
+                <span className="text-primary ml-3">Loading questions...</span>
               </div>
             )} */}
               <span className="text-primary">

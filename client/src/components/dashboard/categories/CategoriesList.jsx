@@ -12,6 +12,7 @@ export default class CategoriesList extends React.Component {
   constructor() {
     super();
     this.state = {
+      access_token: localStorage.getItem("token"),
       categories: [],
       categoryId: "",
       categoryName: "",
@@ -38,7 +39,11 @@ export default class CategoriesList extends React.Component {
       categoryId: id,
     });
     axios
-      .get(`http://localhost:3001/categories/${id}`)
+      .get(`http://localhost:3001/categories/${id}`, {
+        headers: {
+          Authorization: `Bearer ${this.state.access_token}`,
+        },
+      })
       .then((res) => {
         const { categoryName } = res.data;
         this.setState({
@@ -54,10 +59,18 @@ export default class CategoriesList extends React.Component {
     event.preventDefault();
     const { categoryId, categoryName } = this.state;
     await axios
-      .put(`http://localhost:3001/categories/${categoryId}`, {
-        _id: categoryId,
-        categoryName,
-      })
+      .put(
+        `http://localhost:3001/categories/${categoryId}`,
+        {
+          _id: categoryId,
+          categoryName,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${this.state.access_token}`,
+          },
+        }
+      )
       .then((res) => {
         toast.success("This category has been updated!");
         this.getCategories();
@@ -70,7 +83,11 @@ export default class CategoriesList extends React.Component {
   getCategories() {
     this.setState({ isLoading: true });
     axios
-      .get("http://localhost:3001/categories")
+      .get("http://localhost:3001/categories", {
+        headers: {
+          Authorization: `Bearer ${this.state.access_token}`,
+        },
+      })
       .then((res) => {
         this.setState({ categories: res.data, isLoading: false });
       })
@@ -80,7 +97,11 @@ export default class CategoriesList extends React.Component {
   }
   deleteRow(id) {
     axios
-      .delete(`http://localhost:3001/categories/${id}`)
+      .delete(`http://localhost:3001/categories/${id}`, {
+        headers: {
+          Authorization: `Bearer ${this.state.access_token}`,
+        },
+      })
       .then((res) => {
         this.handleModalDelete();
         this.getCategories();
