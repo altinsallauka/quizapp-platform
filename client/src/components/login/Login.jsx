@@ -93,11 +93,11 @@ export default class LoginComponent extends React.Component {
                   Submit
                 </button>
               </form>
-              <h3 className="text-primary mt-3">
-                <Link to={"/sign-up"} className="nav-link">
+              <h6 className="text-primary mt-3">
+                <Link to={"/sign-up"} className="sign-up">
                   You don't have an account? Sign Up!
                 </Link>
-              </h3>
+              </h6>
             </div>
           </div>
         </div>

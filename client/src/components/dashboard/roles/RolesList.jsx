@@ -39,7 +39,11 @@ export default class RolesList extends React.Component {
       roleId: id,
     });
     axios
-      .get(`http://localhost:3001/roles/${id}`)
+      .get(`http://localhost:3001/roles/${id}`, {
+        headers: {
+          Authorization: `Bearer ${this.state.access_token}`,
+        },
+      })
       .then((res) => {
         const { role } = res.data;
         this.setState({
@@ -55,18 +59,10 @@ export default class RolesList extends React.Component {
     event.preventDefault();
     const { roleId, role } = this.state;
     await axios
-      .put(
-        `http://localhost:3001/roles/${roleId}`,
-        {
-          _id: roleId,
-          role: role,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${this.state.access_token}`,
-          },
-        }
-      )
+      .put(`http://localhost:3001/roles/${roleId}`, {
+        _id: roleId,
+        role: role,
+      })
       .then((res) => {
         toast.success("Successfully updated Role!");
         this.getRoles();
