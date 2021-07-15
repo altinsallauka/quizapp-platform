@@ -195,7 +195,7 @@ router.delete("/categories/:id", auth, async (req, res) => {
 });
 
 // get all roles
-router.get("/roles", auth, async (req, res) => {
+router.get("/roles", async (req, res) => {
   try {
     const userRole = await Roles.find();
     return res.status(200).json(userRole);

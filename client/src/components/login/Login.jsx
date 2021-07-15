@@ -3,6 +3,7 @@ import axios from "axios";
 import "./Login.scss";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { Link } from "react-router-dom";
 export default class LoginComponent extends React.Component {
   constructor(props) {
     super(props);
@@ -92,6 +93,11 @@ export default class LoginComponent extends React.Component {
                   Submit
                 </button>
               </form>
+              <h3 className="text-primary mt-3">
+                <Link to={"/sign-up"} className="nav-link">
+                  You don't have an account? Sign Up!
+                </Link>
+              </h3>
             </div>
           </div>
         </div>

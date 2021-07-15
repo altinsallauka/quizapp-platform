@@ -39,11 +39,7 @@ export default class RolesList extends React.Component {
       roleId: id,
     });
     axios
-      .get(`http://localhost:3001/roles/${id}`, {
-        headers: {
-          Authorization: `Bearer ${this.state.access_token}`,
-        },
-      })
+      .get(`http://localhost:3001/roles/${id}`)
       .then((res) => {
         const { role } = res.data;
         this.setState({
@@ -83,11 +79,7 @@ export default class RolesList extends React.Component {
   getRoles() {
     this.setState({ isLoading: true });
     axios
-      .get("http://localhost:3001/roles", {
-        headers: {
-          Authorization: `Bearer ${this.state.access_token}`,
-        },
-      })
+      .get("http://localhost:3001/roles")
       .then((res) => {
         this.setState({ roles: res.data, isLoading: false });
       })

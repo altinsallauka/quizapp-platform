@@ -19,6 +19,7 @@ import RolesList from "./components/dashboard/roles/RolesList";
 import PostRole from "./components/dashboard/create-role/PostRole";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import ProtectedRoute from "./utils/ProtectedRoute";
 
 // Call it once in your app. At the root of your app is the best place
 toast.configure();
@@ -26,23 +27,36 @@ function App() {
   return (
     <Router>
       <Switch>
-        <Route exact path={["/", "/role", "/login"]} component={null} />
+        <Route
+          exact
+          path={["/", "/role", "/login", "/sign-up"]}
+          component={null}
+        />
         <Route component={NavBar} />
       </Switch>
       <div className="container">
         <Switch>
           <Route exact path={["/", "/role"]} component={RolePage} />
           <Route exact path="/login" component={LoginComponent} />
-          <Route exact path="/home" component={DashboardComponent} />
-          <Route exact path="/create-question" component={PostQuestion} />
-          <Route exact path="/questions" component={QuestionsList} />
-          <Route exact path="/categories" component={CategoriesList} />
-          <Route exact path="/create-category" component={PostCategory} />
-          <Route exact path="/users" component={UsersList} />
-          <Route exact path="/my-profile" component={MyProfile} />
-          <Route exact path="/register" component={RegisterUser} />
-          <Route exact path="/roles" component={RolesList} />
-          <Route exact path="/create-role" component={PostRole} />
+          <Route exact path="/sign-up" component={RegisterUser} />
+          <ProtectedRoute exact path="/home" component={DashboardComponent} />
+          <ProtectedRoute
+            exact
+            path="/create-question"
+            component={PostQuestion}
+          />
+          <ProtectedRoute exact path="/questions" component={QuestionsList} />
+          <ProtectedRoute exact path="/categories" component={CategoriesList} />
+          <ProtectedRoute
+            exact
+            path="/create-category"
+            component={PostCategory}
+          />
+          <ProtectedRoute exact path="/users" component={UsersList} />
+          <ProtectedRoute exact path="/my-profile" component={MyProfile} />
+          <ProtectedRoute exact path="/register" component={RegisterUser} />
+          <ProtectedRoute exact path="/roles" component={RolesList} />
+          <ProtectedRoute exact path="/create-role" component={PostRole} />
         </Switch>
         <ToastContainer />
       </div>
