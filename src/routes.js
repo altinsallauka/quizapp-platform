@@ -274,4 +274,19 @@ router.delete("/roles/:id", auth, async (req, res) => {
     return res.status(500).json({ error: error });
   }
 });
+// get all questions by category
+// router.get("/questions/:categoryId", async (req, res) => {
+//   try {
+//     const categoryId = req.params.categoryId;
+//     var query = { categoryId };
+//     const question = await Question.find(query).toArray(function (err, result) {
+//       if (err) throw err;
+//       console.log(result);
+//     });
+//     // const question = await Question.find(query);
+//     return res.status(200).json(question);
+//   } catch (error) {
+//     return res.status(500).json({ error: error });
+//   }
+// });
 module.exports = router;

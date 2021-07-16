@@ -19,6 +19,7 @@ export default class QuestionsList extends React.Component {
       questions: [],
       numberOfQuestions: "",
       numberOfCategories: "",
+      categories: [],
       columns: [
         // {
         //   dataField: "_id",
@@ -164,6 +165,7 @@ export default class QuestionsList extends React.Component {
             categoryId,
           },
         });
+        this.getCategoryById();
       })
       .catch((err) => {
         toast.error(err.response.data.message);
@@ -204,8 +206,28 @@ export default class QuestionsList extends React.Component {
         toast.error(err.response.data.message);
       });
   }
-  componentDidMount() {
-    this.getQuestions();
+  getCategoryById() {
+    axios
+      .get(
+        `http://localhost:3001/categories/${this.state.toUpdate.categoryId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${this.state.access_token}`,
+          },
+        }
+      )
+      .then((res) => {
+        console.log(res.data);
+        // const { toUpdate } = this.state;
+        this.setState({
+          categoryId: res.data._id,
+        });
+      })
+      .catch((err) => {
+        toast.error(err.response.data.message);
+      });
+  }
+  getCategories() {
     axios
       .get(`http://localhost:3001/categories`, {
         headers: {
@@ -214,11 +236,15 @@ export default class QuestionsList extends React.Component {
       })
       .then((res) => {
         const numberOfCategories = res.data.length;
-        this.setState({ numberOfCategories });
+        this.setState({ categories: res.data, numberOfCategories });
       })
       .catch((err) => {
         toast.error(err.response.data.message);
       });
+  }
+  componentDidMount() {
+    this.getQuestions();
+    this.getCategories();
   }
 
   render() {
@@ -403,6 +429,27 @@ export default class QuestionsList extends React.Component {
                           className="form-check-input update-question"
                           onChange={this.handleChange2}
                         />
+                      </div>
+                      <div className="d-flex align-items-center">
+                        <label className="d-flex flex-column align-items-start">
+                          Category:
+                          <select
+                            className="form-select"
+                            name="categoryId"
+                            aria-label="Default select example"
+                            value={this.state.toUpdate.categoryId}
+                            onChange={this.handleChange2}
+                          >
+                            <option disabled selected>
+                              Select one category
+                            </option>
+                            {this.state.categories.map((ctg) => (
+                              <option value={ctg._id} key={ctg._id}>
+                                {ctg.categoryName}
+                              </option>
+                            ))}
+                          </select>
+                        </label>
                       </div>
                     </Modal.Body>
                     <Modal.Footer>
