@@ -1,6 +1,7 @@
 const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
+const path = require("path");
 const routes = require("./routes"); // includes the routes.js file
 const cors = require("cors"); // includes cors module
 const jwt = require("./_helpers/jwt");
