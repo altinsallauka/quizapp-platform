@@ -13,21 +13,21 @@
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "bootstrap": "5.0.2",
-    "concurrently": "^6.0.2",
+    "concurrently": "^6.2.0",
     "cookie-parser": "^1.4.5",
     "cors": "^2.8.5",
-    "dotenv": "^8.2.0",
+    "dotenv": "^8.6.0",
     "express": "^4.17.1",
     "express-jwt": "^6.0.0",
-    "mongoose": "^5.8.11",
+    "mongoose": "^5.13.3",
     "next": "11.0.1",
     "react": "17.0.2",
     "react-bootstrap": "1.6.1",
     "react-dom": "17.0.2",
-    "sass": "^1.32.12"
+    "sass": "^1.35.2"
   },
   "devDependencies": {
-    "nodemon": "^2.0.2"
+    "nodemon": "^2.0.12"
   },
   "description": "Quiz API built with NodeJS, ExpressJS and Mongoose. Front End built with ReactJS."
 }
