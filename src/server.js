@@ -45,7 +45,7 @@ if (process.env.NODE_ENV === "production") {
   );
 }
 
-app.listen(3001, () => {
+app.listen(process.env.port || 3001, () => {
   console.log("The api is running...");
 });
 mongoose.Promise = global.Promise;
