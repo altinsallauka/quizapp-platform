@@ -44,8 +44,7 @@ if (process.env.NODE_ENV === "production") {
     res.sendFile(path.resolve(__dirname, "client", "build", "index.html"))
   );
 }
-
-app.listen(process.env.port || 3001, () => {
+app.listen(3001, () => {
   console.log("The api is running...");
 });
 mongoose.Promise = global.Promise;
