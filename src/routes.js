@@ -313,7 +313,7 @@ router.get("/questions/:categoryId/:studentName", async (req, res) => {
 });
 
 // post result
-router.post("/results", auth, async (req, res) => {
+router.post("/results", async (req, res) => {
   try {
     const { studentName, score } = req.body;
 

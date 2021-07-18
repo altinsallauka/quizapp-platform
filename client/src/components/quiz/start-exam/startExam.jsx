@@ -57,7 +57,7 @@ export default class StartExam extends Component {
       // toast.error("The answer is not correct!");
     }
 
-    setTimeout(() => {
+    setTimeout(async () => {
       const questions = Array.from(this.state.questions);
       questions.pop();
 
@@ -71,6 +71,18 @@ export default class StartExam extends Component {
       if (!questions.length) {
         this.setState({ finishedQuiz: true });
         // save user data
+        await axios
+          .post("http://localhost:3001/results", {
+            studentName: user,
+            score,
+          })
+          .then((res) => {
+            toast.success("Quiz results have been recorded!");
+            // this.props.history.push("/categories");
+          })
+          .catch((err) => {
+            toast.error(err.response.data.message);
+          });
         // Send score and user to backend and save to database
       }
     }, 1000);
