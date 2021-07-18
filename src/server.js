@@ -36,6 +36,14 @@ app.use("/users", require("./users/users.controller"));
 // global error handler
 app.use(errorHandler);
 
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static("client/build"));
+
+  app.get("*", (req, res) =>
+    res.sendFile(path.resolve(__dirname, "client", "build", "index.html"))
+  );
+}
+
 app.listen(3001, () => {
   console.log("The api is running...");
 });
