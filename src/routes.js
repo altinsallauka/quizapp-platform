@@ -3,6 +3,7 @@ const router = express.Router();
 const Question = require("./models/Question"); // includes our question model
 const Categories = require("./models/Categories"); // includes category model
 const Roles = require("./models/Roles"); // includes roles model
+const Results = require("./models/Results");
 const auth = require("./middleware/auth");
 
 // get all quiz questions
@@ -306,6 +307,31 @@ router.get("/questions/:categoryId/:studentName", async (req, res) => {
     //   { maxAge: 86400 }
     // );
     return res.status(200).json(questions10);
+  } catch (error) {
+    return res.status(500).json({ error: error });
+  }
+});
+
+// post result
+router.post("/results", auth, async (req, res) => {
+  try {
+    const { studentName, score } = req.body;
+
+    const results = await Results.create({
+      studentName,
+      score,
+    });
+
+    return res.json(results);
+  } catch (error) {
+    return res.status(500).json({ error: error });
+  }
+});
+// get all results
+router.get("/results", auth, async (req, res) => {
+  try {
+    const results = await Results.find();
+    return res.status(200).json(results);
   } catch (error) {
     return res.status(500).json({ error: error });
   }

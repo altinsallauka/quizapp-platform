@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import "./startExam.scss";
+import { Link } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -15,6 +16,7 @@ export default class StartExam extends Component {
       categoryName: "",
     };
     this.onAnswer = this.onAnswer.bind(this);
+    this.clearStorage = this.clearStorage.bind(this);
   }
 
   handleChange(event) {
@@ -35,6 +37,11 @@ export default class StartExam extends Component {
       .catch((err) => {
         toast.error(err.response.data.message);
       });
+  }
+
+  clearStorage() {
+    localStorage.removeItem("categoryId");
+    localStorage.removeItem("quiz-user-data");
   }
 
   onAnswer(e, answer) {
@@ -111,6 +118,15 @@ export default class StartExam extends Component {
                   <span className="text-primary ml-3">
                     You finished this quiz. Your Score is: <b>{score}</b>
                   </span>
+                  <h3>
+                    <Link
+                      to={"/role"}
+                      className="nav-link"
+                      onClick={(e) => this.clearStorage()}
+                    >
+                      Back to main page
+                    </Link>
+                  </h3>
                 </div>
               ) : (
                 <div>
