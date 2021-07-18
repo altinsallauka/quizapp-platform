@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import "./quizEntry.scss";
 import axios from "axios";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -19,6 +20,7 @@ export default class QuizEntry extends Component {
     this.setState({
       [event.target.name]: event.target.value,
     });
+    console.log(event.target.option);
   }
   getCategories() {
     this.setState({ isLoading: true });
@@ -39,14 +41,15 @@ export default class QuizEntry extends Component {
     const all10Questions = await axios.get(
       `http://localhost:3001/questions/${this.state.categoryId}/${this.state.studentName}`
     );
-    toast.success("Ready to start quiz!");
+    // toast.success("Quiz has started!");
     localStorage.setItem(
       "quiz-user-data",
       JSON.stringify({
         user: studentName,
         questions: all10Questions.data,
         score: 0,
-      })
+      }),
+      localStorage.setItem("categoryId", categoryId)
     );
     this.props.history.push("/start-quiz");
   }
@@ -58,14 +61,18 @@ export default class QuizEntry extends Component {
   render() {
     const { isLoading, categories } = this.state;
     return (
-      <div className="mt-4">
-        <form onSubmit={this.handleSubmit}>
+      <div className="mt-5">
+        <h3>Take quiz</h3>
+        <span>
+          Start a quiz, by selecting a quiz category, and writing your name
+        </span>
+        <form onSubmit={this.handleSubmit} className="mt-4">
           {isLoading && (
             <div className="spinner-border text-primary" role="status">
               <span className="visually-hidden">Loading...</span>
             </div>
           )}
-          <div className="d-flex align-items-center">
+          <div className="entry-section">
             <label className="d-flex flex-column align-items-start">
               Category:
               <select
@@ -84,20 +91,21 @@ export default class QuizEntry extends Component {
                 ))}
               </select>
             </label>
+
+            <label className="d-flex flex-column align-items-start">
+              Name:
+              <input
+                type="text"
+                name="studentName"
+                className="form-control"
+                onChange={this.handleChange}
+              />
+            </label>
           </div>
-          <label className="d-flex flex-column align-items-start">
-            Name:
-            <input
-              type="text"
-              name="studentName"
-              className="form-control"
-              onChange={this.handleChange}
-            />
-          </label>
           <input
             type="submit"
             className="btn btn-primary mt-2"
-            value="Submit"
+            value="Find me a quiz!"
           />
         </form>
       </div>

@@ -128,7 +128,7 @@ router.get("/categories", async (req, res) => {
   }
 });
 // get one category
-router.get("/categories/:id", auth, async (req, res) => {
+router.get("/categories/:id", async (req, res) => {
   try {
     const _id = req.params.id;
 
@@ -305,7 +305,6 @@ router.get("/questions/:categoryId/:studentName", async (req, res) => {
     //   JSON.stringify({ user: req.params.studentName, questions: questions10 }),
     //   { maxAge: 86400 }
     // );
-    // const question = await Question.find(query);
     return res.status(200).json(questions10);
   } catch (error) {
     return res.status(500).json({ error: error });

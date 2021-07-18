@@ -39,11 +39,7 @@ export default class CategoriesList extends React.Component {
       categoryId: id,
     });
     axios
-      .get(`http://localhost:3001/categories/${id}`, {
-        headers: {
-          Authorization: `Bearer ${this.state.access_token}`,
-        },
-      })
+      .get(`http://localhost:3001/categories/${id}`)
       .then((res) => {
         const { categoryName } = res.data;
         this.setState({
