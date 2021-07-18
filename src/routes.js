@@ -4,6 +4,7 @@ const Question = require("./models/Question"); // includes our question model
 const Categories = require("./models/Categories"); // includes category model
 const Roles = require("./models/Roles"); // includes roles model
 const auth = require("./middleware/auth");
+
 // get all quiz questions
 router.get("/questions", auth, async (req, res) => {
   try {
@@ -118,7 +119,7 @@ router.get("/numberOfQuestions", auth, async (req, res) => {
 });
 
 // get all categories
-router.get("/categories", auth, async (req, res) => {
+router.get("/categories", async (req, res) => {
   try {
     const ctg = await Categories.find();
     return res.status(200).json(ctg);
@@ -274,19 +275,40 @@ router.delete("/roles/:id", auth, async (req, res) => {
     return res.status(500).json({ error: error });
   }
 });
+
+// function to randomize questions array
+function shuffleArray(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+}
+
 // get all questions by category
-// router.get("/questions/:categoryId", async (req, res) => {
-//   try {
-//     const categoryId = req.params.categoryId;
-//     var query = { categoryId };
-//     const question = await Question.find(query).toArray(function (err, result) {
-//       if (err) throw err;
-//       console.log(result);
-//     });
-//     // const question = await Question.find(query);
-//     return res.status(200).json(question);
-//   } catch (error) {
-//     return res.status(500).json({ error: error });
-//   }
-// });
+router.get("/questions/:categoryId/:studentName", async (req, res) => {
+  try {
+    // const categoryId = req.params.categoryId;
+    // var query = { categoryId };
+    const questions = await Question.find(
+      { categoryId: req.params.categoryId },
+      function (err, result) {
+        if (err) throw err;
+        console.log("Questions success.");
+      }
+    );
+    console.log(JSON.stringify(req.cookies));
+
+    shuffleArray(questions);
+    const questions10 = questions.slice(0, 10);
+    // res.cookie(
+    //   "quiz_user_data",
+    //   JSON.stringify({ user: req.params.studentName, questions: questions10 }),
+    //   { maxAge: 86400 }
+    // );
+    // const question = await Question.find(query);
+    return res.status(200).json(questions10);
+  } catch (error) {
+    return res.status(500).json({ error: error });
+  }
+});
 module.exports = router;

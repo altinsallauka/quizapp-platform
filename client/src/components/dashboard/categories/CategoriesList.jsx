@@ -83,11 +83,7 @@ export default class CategoriesList extends React.Component {
   getCategories() {
     this.setState({ isLoading: true });
     axios
-      .get("http://localhost:3001/categories", {
-        headers: {
-          Authorization: `Bearer ${this.state.access_token}`,
-        },
-      })
+      .get("http://localhost:3001/categories")
       .then((res) => {
         this.setState({ categories: res.data, isLoading: false });
       })

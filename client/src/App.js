@@ -20,6 +20,8 @@ import PostRole from "./components/dashboard/create-role/PostRole";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ProtectedRoute from "./utils/ProtectedRoute";
+import QuizEntry from "./components/quiz/quizEntry";
+import startQuiz from "./components/quiz/start-exam/startExam";
 
 // Call it once in your app. At the root of your app is the best place
 toast.configure();
@@ -29,7 +31,14 @@ function App() {
       <Switch>
         <Route
           exact
-          path={["/", "/role", "/login", "/sign-up"]}
+          path={[
+            "/",
+            "/role",
+            "/login",
+            "/sign-up",
+            "/start-quiz",
+            "/entry-quiz",
+          ]}
           component={null}
         />
         <Route component={NavBar} />
@@ -38,6 +47,8 @@ function App() {
         <Switch>
           <Route exact path={["/", "/role"]} component={RolePage} />
           <Route exact path="/login" component={LoginComponent} />
+          <Route exact path="/entry-quiz" component={QuizEntry} />
+          <Route exact path="/start-quiz" component={startQuiz} />
           <Route exact path="/sign-up" component={RegisterUser} />
           <ProtectedRoute exact path="/home" component={DashboardComponent} />
           <ProtectedRoute

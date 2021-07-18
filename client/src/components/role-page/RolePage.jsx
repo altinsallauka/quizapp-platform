@@ -10,7 +10,7 @@ export default class RolePage extends React.Component {
         <div className="container role-content">
           <h1 className="mb-5">Start using our platform as</h1>
           <div className="role-links">
-            <Link to={"/#"} className="nav-link">
+            <Link to={"/entry-quiz"} className="nav-link">
               Student
             </Link>
             <Link to={"/login"} className="nav-link">
