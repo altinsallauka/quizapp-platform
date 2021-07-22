@@ -6,6 +6,7 @@ import "./UsersList.scss";
 import { Link } from "react-router-dom";
 import BootstrapTable from "react-bootstrap-table-next";
 import paginationFactory from "react-bootstrap-table2-paginator";
+import filterFactory, { textFilter } from "react-bootstrap-table2-filter";
 // import * as ReactBootStrap from "react-bootstrap";
 import { Button, Modal } from "react-bootstrap";
 // import RolesList from "../roles/RolesList";
@@ -26,7 +27,12 @@ export default class UsersList extends React.Component {
         // },
         // { dataField: "firstName", text: "Name" },
         // { dataField: "lastName", text: "Last Name" },
-        { dataField: "username", text: "Username" },
+        {
+          dataField: "username",
+          text: "Username",
+          sort: true,
+          filter: textFilter(),
+        },
         {
           dataField: "update",
           text: "Update",
@@ -62,7 +68,14 @@ export default class UsersList extends React.Component {
           },
         },
       ],
-      notAdminColumns: [{ dataField: "username", text: "Username" }],
+      notAdminColumns: [
+        {
+          dataField: "username",
+          text: "Username",
+          sort: true,
+          filter: textFilter(),
+        },
+      ],
       showHideDelete: false,
       showHideUpdate: false,
       toUpdate: [],
@@ -307,6 +320,7 @@ export default class UsersList extends React.Component {
                     data={this.state.users}
                     columns={this.state.adminColumns}
                     pagination={paginationFactory()}
+                    filter={filterFactory()}
                   />
                 ) : (
                   <BootstrapTable
@@ -314,6 +328,7 @@ export default class UsersList extends React.Component {
                     data={this.state.users}
                     columns={this.state.notAdminColumns}
                     pagination={paginationFactory()}
+                    filter={filterFactory()}
                   />
                 )}
                 {/* {this.state.isAdmin ? (
