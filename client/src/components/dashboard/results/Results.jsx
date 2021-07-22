@@ -72,6 +72,7 @@ export default class Results extends React.Component {
       });
   }
   getResults() {
+    this.setState({ isLoading: true });
     axios
       .get("http://localhost:3001/results", {
         headers: {
@@ -80,6 +81,7 @@ export default class Results extends React.Component {
       })
       .then((res) => {
         this.setState({ results: res.data });
+        this.setState({ isLoading: false });
       })
       .catch((err) => {
         toast.error(err.response.data.message);
@@ -108,42 +110,53 @@ export default class Results extends React.Component {
     } else {
       return (
         <div className="row">
-          <div className="col mt-4 results-table">
-            <h1>Quiz results</h1>
-            <BootstrapTable
-              keyField="_id"
-              data={this.state.results}
-              columns={this.state.columns}
-              pagination={paginationFactory()}
-              filter={filterFactory()}
-            />
-            <Modal show={this.state.showHideDelete}>
-              <Modal.Header
-                closeButton
-                onClick={() => this.handleModalDelete()}
-              >
-                <Modal.Title>Are you sure?</Modal.Title>
-              </Modal.Header>
-              <Modal.Body>
-                Do you really want to delete this quiz result? This process
-                cannot be undone.
-              </Modal.Body>
-              <Modal.Footer>
-                <Button
-                  variant="secondary"
-                  onClick={() => this.handleModalDelete()}
-                >
-                  Cancel
-                </Button>
-                <Button
-                  variant="danger"
-                  onClick={() => this.deleteRow(this.state.rowId)}
-                >
-                  Delete
-                </Button>
-              </Modal.Footer>
-            </Modal>
-          </div>
+          {isLoading ? (
+            <div className="mt-4">
+              <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+              </div>
+              <span class="text-primary ml-3">Loading users...</span>
+            </div>
+          ) : (
+            <div>
+              <div className="col mt-4 results-table">
+                <h1>Quiz results</h1>
+                <BootstrapTable
+                  keyField="_id"
+                  data={this.state.results}
+                  columns={this.state.columns}
+                  pagination={paginationFactory()}
+                  filter={filterFactory()}
+                />
+                <Modal show={this.state.showHideDelete}>
+                  <Modal.Header
+                    closeButton
+                    onClick={() => this.handleModalDelete()}
+                  >
+                    <Modal.Title>Are you sure?</Modal.Title>
+                  </Modal.Header>
+                  <Modal.Body>
+                    Do you really want to delete this quiz result? This process
+                    cannot be undone.
+                  </Modal.Body>
+                  <Modal.Footer>
+                    <Button
+                      variant="secondary"
+                      onClick={() => this.handleModalDelete()}
+                    >
+                      Cancel
+                    </Button>
+                    <Button
+                      variant="danger"
+                      onClick={() => this.deleteRow(this.state.rowId)}
+                    >
+                      Delete
+                    </Button>
+                  </Modal.Footer>
+                </Modal>
+              </div>
+            </div>
+          )}
         </div>
       );
     }
