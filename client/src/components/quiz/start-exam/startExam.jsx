@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import CryptoJS from "crypto-js";
 export default class StartExam extends Component {
   constructor() {
     super();
@@ -63,7 +64,11 @@ export default class StartExam extends Component {
 
       this.setState({ questions, score, user });
       const localStorage_data = JSON.stringify({ user, score, questions });
-      localStorage.setItem("quiz-user-data", localStorage_data);
+      const encryptAgainQuizData = CryptoJS.AES.encrypt(
+        localStorage_data,
+        "secretkey3ncrvpt@"
+      ).toString();
+      localStorage.setItem("quiz-user-data", encryptAgainQuizData);
 
       e.target.classList.remove("btn-success");
       e.target.classList.remove("btn-danger");
@@ -89,7 +94,12 @@ export default class StartExam extends Component {
   }
   componentDidMount() {
     const questions_local = localStorage.getItem("quiz-user-data");
-    const { questions, score, user } = JSON.parse(questions_local);
+    // Decrypt
+    var bytes = CryptoJS.AES.decrypt(questions_local, "secretkey3ncrvpt@");
+    var decryptedQuizUserData = bytes.toString(CryptoJS.enc.Utf8);
+
+    console.log(decryptedQuizUserData); // 'my message'
+    const { questions, score, user } = JSON.parse(decryptedQuizUserData);
     if (questions_local) {
       this.setState({ questions, score, user });
     }

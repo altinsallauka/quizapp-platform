@@ -3,6 +3,8 @@ import "./quizEntry.scss";
 import axios from "axios";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import CryptoJS from "crypto-js";
+
 export default class QuizEntry extends Component {
   constructor() {
     super();
@@ -38,20 +40,31 @@ export default class QuizEntry extends Component {
     const { studentName, categoryId } = this.state;
 
     console.log(studentName, categoryId);
-    const all10Questions = await axios.get(
-      `http://localhost:3001/questions/${this.state.categoryId}/${this.state.studentName}`
-    );
-    // toast.success("Quiz has started!");
-    localStorage.setItem(
-      "quiz-user-data",
-      JSON.stringify({
-        user: studentName,
-        questions: all10Questions.data,
-        score: 0,
-      }),
-      localStorage.setItem("categoryId", categoryId)
-    );
-    this.props.history.push("/start-quiz");
+    await axios
+      .get(
+        `http://localhost:3001/questions/${this.state.categoryId}/${this.state.studentName}`
+      )
+      .then((res) => {
+        // console.log("user", res.data);
+        const questions10 = res.data;
+        localStorage.setItem(
+          "quiz-user-data",
+          CryptoJS.AES.encrypt(
+            JSON.stringify({
+              user: studentName,
+              questions: questions10,
+              score: 0,
+            }),
+            "secretkey3ncrvpt@"
+          ).toString()
+        );
+        localStorage.setItem("categoryId", categoryId);
+        this.props.history.push("/start-quiz");
+      })
+      .catch((err) => {
+        console.log(err.response);
+        // toast.error(err.response.data.message);
+      });
   }
   componentDidMount() {
     if (localStorage.getItem("quiz-user-data"))
