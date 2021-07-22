@@ -19,6 +19,7 @@ import PostRole from "./create-role/PostRole";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ProtectedRoute from "./../../utils/ProtectedRoute";
+import Results from "./results/Results";
 // Call it once in your app. At the root of your app is the best place
 toast.configure();
 function DashboardComponent() {
@@ -49,6 +50,7 @@ function DashboardComponent() {
           <ProtectedRoute exact path="/my-profile" component={MyProfile} />
           <ProtectedRoute exact path="/register" component={RegisterUser} />
           <ProtectedRoute exact path="/roles" component={RolesList} />
+          <ProtectedRoute exact path="/results" component={Results} />
           <ProtectedRoute exact path="/create-role" component={PostRole} />
         </Switch>
         <ToastContainer />

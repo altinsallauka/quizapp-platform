@@ -336,4 +336,20 @@ router.get("/results", auth, async (req, res) => {
     return res.status(500).json({ error: error });
   }
 });
+// delete one result
+router.delete("/results/:id", auth, async (req, res) => {
+  try {
+    const _id = req.params.id;
+
+    const result = await Results.deleteOne({ _id });
+
+    if (result.deletedCount === 0) {
+      return res.status(404).json();
+    } else {
+      return res.status(204).json();
+    }
+  } catch (error) {
+    return res.status(500).json({ error: error });
+  }
+});
 module.exports = router;

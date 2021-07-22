@@ -45,6 +45,11 @@ export default class NavBar extends React.Component {
                 </Link>
               </li>
               <li className="nav-item">
+                <Link to={"/results"} className="nav-link">
+                  Results
+                </Link>
+              </li>
+              <li className="nav-item">
                 <Link to={"/users"} className="nav-link">
                   Users
                 </Link>

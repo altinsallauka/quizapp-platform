@@ -22,6 +22,7 @@ import "react-toastify/dist/ReactToastify.css";
 import ProtectedRoute from "./utils/ProtectedRoute";
 import QuizEntry from "./components/quiz/quizEntry";
 import StartExam from "./components/quiz/start-exam/startExam";
+import Results from "./components/dashboard/results/Results";
 
 // Call it once in your app. At the root of your app is the best place
 toast.configure();
@@ -67,6 +68,7 @@ function App() {
           <ProtectedRoute exact path="/my-profile" component={MyProfile} />
           <ProtectedRoute exact path="/register" component={RegisterUser} />
           <ProtectedRoute exact path="/roles" component={RolesList} />
+          <ProtectedRoute exact path="/results" component={Results} />
           <ProtectedRoute exact path="/create-role" component={PostRole} />
         </Switch>
         <ToastContainer />
