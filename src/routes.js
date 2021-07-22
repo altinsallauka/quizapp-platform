@@ -294,7 +294,7 @@ router.get("/questions/:categoryId/:studentName", async (req, res) => {
       { categoryId: req.params.categoryId },
       function (err, result) {
         if (err) throw err;
-        console.log("Questions success.");
+        // console.log("Questions success.");
       }
     );
     console.log(JSON.stringify(req.cookies));

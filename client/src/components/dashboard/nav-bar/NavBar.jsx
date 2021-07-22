@@ -19,7 +19,7 @@ export default class NavBar extends React.Component {
       <nav className="navbar navbar-expand-lg navbar-dark bg-primary">
         <div className="container">
           <a href="/home" className="navbar-brand">
-            Quizapp MERN
+            Quiz Platform
           </a>
           <button
             className="navbar-toggler"
