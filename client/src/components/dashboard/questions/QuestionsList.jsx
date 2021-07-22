@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 // import deleteImageSrc from "../../../assets/delete.png";
 import BootstrapTable from "react-bootstrap-table-next";
 import paginationFactory from "react-bootstrap-table2-paginator";
+import filterFactory, { textFilter } from "react-bootstrap-table2-filter";
 // import * as ReactBootStrap from "react-bootstrap";
 import { Button, Modal } from "react-bootstrap";
 import { toast } from "react-toastify";
@@ -25,7 +26,12 @@ export default class QuestionsList extends React.Component {
         //   dataField: "_id",
         //   text: "ID",
         // },
-        { dataField: "description", text: "Question" },
+        {
+          dataField: "description",
+          text: "Question",
+          sort: true,
+          filter: textFilter(),
+        },
         {
           dataField: "update",
           text: "Update",
@@ -302,6 +308,7 @@ export default class QuestionsList extends React.Component {
                     data={this.state.questions}
                     columns={this.state.columns}
                     pagination={paginationFactory()}
+                    filter={filterFactory()}
                   />
                 </div>
                 <Modal show={this.state.showHideDelete}>
@@ -406,7 +413,7 @@ export default class QuestionsList extends React.Component {
                           name="correct"
                           value="2"
                           checked={+this.state.toUpdate.correct === 2}
-                          className="form-check-input update-question"
+                          className="form-check-input update-"
                           onChange={this.handleChange2}
                         />
                       </div>
@@ -508,13 +515,13 @@ export default class QuestionsList extends React.Component {
           <div className="mt-4">
             <div>
               {/* {isLoading && (
-              <div className="mt-4">
-                <div className="spinner-border text-primary" role="status">
+                  <div className="mt-4">
+                  <div className="spinner-border text-primary" role="status">
                   <span className="visually-hidden">Loading...</span>
-                </div>
-                <span className="text-primary ml-3">Loading questions...</span>
-              </div>
-            )} */}
+                  </div>
+                  <span className="text-primary ml-3">Loading questions...</span>
+                  </div>
+                )} */}
               <span className="text-primary">
                 No questions found on the database...
               </span>
