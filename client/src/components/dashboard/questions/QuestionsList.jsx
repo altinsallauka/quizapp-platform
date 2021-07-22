@@ -413,7 +413,7 @@ export default class QuestionsList extends React.Component {
                           name="correct"
                           value="2"
                           checked={+this.state.toUpdate.correct === 2}
-                          className="form-check-input update-"
+                          className="form-check-input update-question"
                           onChange={this.handleChange2}
                         />
                       </div>
