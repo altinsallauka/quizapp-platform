@@ -2,11 +2,56 @@ const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
 const path = require("path");
-const routes = require("./routes"); // includes the routes.js file
+const routes = require("./routes/routes"); // includes the routes.js file
 const cors = require("cors"); // includes cors module
 const jwt = require("./_helpers/jwt");
 const errorHandler = require("./_helpers/error-handler");
+const swaggerJsDoc = require("swagger-jsdoc");
+const swaggerUI = require("swagger-ui-express");
+var swaggerDocument = require("./utils/swagger.json");
 require("dotenv").config();
+// swagger definition
+// var swaggerDefinition = {
+//   info: {
+//     title: "NodeJS QuizApp API",
+//     version: "1.0.0",
+//     description: "Swagger API for QuizApp",
+//   },
+//   security: [{ bearerAuth: [] }],
+//   host: "localhost:3001",
+//   basePath: "/",
+// };
+const swaggerDefinition = {
+  swagger: "2.0",
+  info: {
+    title: "NodeJS QuizApp Swagger API",
+    version: "1.0.0",
+    description: "Endpoints of QuizAp Platform",
+  },
+  host: "localhost:3001",
+  basePath: "/",
+  securityDefinitions: {
+    bearerAuth: {
+      type: "apiKey",
+      name: "x-auth-token",
+      scheme: "bearer",
+      in: "header",
+    },
+  },
+};
+
+// options for the swagger docs
+var swaggerOptions = {
+  // import swaggerDefinitions
+  swaggerDefinition: swaggerDefinition,
+  // path to the API docs
+  // apis: ["./routes/*.js"],
+  apis: ["src/routes/*.js"],
+};
+
+const swaggerDocs = swaggerJsDoc(swaggerOptions);
+// app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(swaggerDocs));
+app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(swaggerDocument));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -33,7 +78,7 @@ db.once("open", () => console.log("database connected"));
 app.use(jwt());
 
 // api routes
-app.use("/users", require("./users/users.controller"));
+app.use("/users", require("./routes/users.controller"));
 
 // global error handler
 app.use(errorHandler);

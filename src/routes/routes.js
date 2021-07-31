@@ -1,12 +1,24 @@
 const express = require("express");
 const router = express.Router();
-const Question = require("./models/Question"); // includes our question model
-const Categories = require("./models/Categories"); // includes category model
-const Roles = require("./models/Roles"); // includes roles model
-const Results = require("./models/Results");
-const auth = require("./middleware/auth");
+const Question = require("../models/Question"); // includes our question model
+const Categories = require("../models/Categories"); // includes category model
+const Roles = require("../models/Roles"); // includes roles model
+const Results = require("../models/Results");
+const auth = require("../middleware/auth");
 
 // get all quiz questions
+/**
+ * @swagger
+ * /questions:
+ *   get:
+ *     description: Get all questions
+ *     security:
+ *	     - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Success
+ *
+ */
 router.get("/questions", auth, async (req, res) => {
   try {
     const questions = await Question.find();
