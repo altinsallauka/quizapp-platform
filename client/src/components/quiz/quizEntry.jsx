@@ -1,23 +1,24 @@
-import React, { Component, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./quizEntry.scss";
 import axios from "axios";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import CryptoJS from "crypto-js";
-const QuizEntry = ({ history }) => {
+
+const QuizEntry = (props) => {
   const [categories, setCategories] = useState([]);
-  const [isLoading, setisLoading] = useState(false);
-  const [studentName, setstudentName] = useState("");
-  const [categoryId, setcategoryId] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [studentName, setStudentName] = useState("");
+  const [categoryId, setCategoryId] = useState("");
 
   const getCategories = async (event) => {
     // this.setState({ isLoading: true });
-    setisLoading(true);
+    setIsLoading(true);
     await axios
       .get("http://localhost:3001/categories")
       .then((res) => {
         setCategories(res.data);
-        setisLoading(false);
+        setIsLoading(false);
       })
       .catch((err) => {
         toast.error(err.response.data.message);
@@ -41,7 +42,7 @@ const QuizEntry = ({ history }) => {
           ).toString()
         );
         localStorage.setItem("categoryId", categoryId);
-        history.push("/start-quiz");
+        props.history.push("/start-quiz");
       })
       .catch((err) => {
         console.log(err.response);
@@ -50,7 +51,8 @@ const QuizEntry = ({ history }) => {
   };
 
   const dataCondition = () => {
-    if (localStorage.getItem("quiz-user-data")) history.push("/start-quiz");
+    if (localStorage.getItem("quiz-user-data"))
+      props.history.push("/start-quiz");
     else getCategories();
   };
   useEffect(() => {
@@ -76,7 +78,7 @@ const QuizEntry = ({ history }) => {
               className="form-select"
               name="categoryId"
               aria-label="Default select example"
-              onChange={(e) => setcategoryId(e.target.value)}
+              onChange={(e) => setCategoryId(e.target.value)}
             >
               <option disabled selected>
                 Select one category
@@ -95,7 +97,7 @@ const QuizEntry = ({ history }) => {
               type="text"
               name="studentName"
               className="form-control"
-              onChange={(e) => setstudentName(e.target.value)}
+              onChange={(e) => setStudentName(e.target.value)}
             />
           </label>
         </div>
