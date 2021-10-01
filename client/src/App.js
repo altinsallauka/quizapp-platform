@@ -1,4 +1,4 @@
-import { React, useState } from "react";
+import { React } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.scss";
@@ -23,7 +23,7 @@ import ProtectedRoute from "./utils/ProtectedRoute";
 import QuizEntry from "./components/quiz/quizEntry";
 import StartExam from "./components/quiz/start-exam/startExam";
 import Results from "./components/dashboard/results/Results";
-import deleteImgSrc from "../src/assets/delete.png";
+// import deleteImgSrc from "../src/assets/delete.png";
 // Call it once in your app. At the root of your app is the best place
 toast.configure();
 function App() {
