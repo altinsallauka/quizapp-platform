@@ -1,4 +1,4 @@
-import React from "react";
+import { React, useState } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.scss";
@@ -23,7 +23,7 @@ import ProtectedRoute from "./utils/ProtectedRoute";
 import QuizEntry from "./components/quiz/quizEntry";
 import StartExam from "./components/quiz/start-exam/startExam";
 import Results from "./components/dashboard/results/Results";
-
+import deleteImgSrc from "../src/assets/delete.png";
 // Call it once in your app. At the root of your app is the best place
 toast.configure();
 function App() {
@@ -50,7 +50,7 @@ function App() {
           <Route exact path="/login" component={LoginComponent} />
           <Route exact path="/entry-quiz" component={QuizEntry} />
           <Route exact path="/start-quiz" component={StartExam} />
-          <Route exact path="/sign-up" component={RegisterUser} />
+          {/* <Route exact path="/sign-up" component={RegisterUser} /> */}
           <ProtectedRoute exact path="/home" component={DashboardComponent} />
           <ProtectedRoute
             exact
