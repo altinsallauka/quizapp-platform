@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./RolesList.scss";
 // import * as ReactBootStrap from "react-bootstrap";
@@ -8,231 +8,463 @@ import { Button, Modal } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-export default class RolesList extends React.Component {
-  constructor() {
-    super();
-    this.state = {
-      access_token: localStorage.getItem("token"),
-      roles: [],
-      roleId: "",
-      role: "",
-      showHideDelete: false,
-      showHideUpdate: false,
-      isLoading: false,
-    };
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-  }
-  handleChange(event) {
-    this.setState({ [event.target.name]: event.target.value });
-  }
+// export default class RolesList extends React.Component {
+//   constructor() {
+//     super();
+//     this.state = {
+//       access_token: localStorage.getItem("token"),
+//       roles: [],
+//       roleId: "",
+//       role: "",
+//       showHideDelete: false,
+//       showHideUpdate: false,
+//       isLoading: false,
+//     };
+//     this.handleChange = this.handleChange.bind(this);
+//     this.handleSubmit = this.handleSubmit.bind(this);
+//   }
+//   handleChange(event) {
+//     this.setState({ [event.target.name]: event.target.value });
+//   }
 
-  handleModalDelete(id) {
-    this.setState({
-      showHideDelete: !this.state.showHideDelete,
-      roleId: id,
-    });
-  }
-  handleModalUpdate(id) {
-    this.setState({
-      showHideUpdate: !this.state.showHideUpdate,
-      roleId: id,
-    });
+//   handleModalDelete(id) {
+//     this.setState({
+//       showHideDelete: !this.state.showHideDelete,
+//       roleId: id,
+//     });
+//   }
+//   handleModalUpdate(id) {
+//     this.setState({
+//       showHideUpdate: !this.state.showHideUpdate,
+//       roleId: id,
+//     });
+//     axios
+//       .get(`http://localhost:3001/roles/${id}`, {
+//         headers: {
+//           Authorization: `Bearer ${this.state.access_token}`,
+//         },
+//       })
+//       .then((res) => {
+//         const { role } = res.data;
+//         this.setState({
+//           _id: id,
+//           role,
+//         });
+//       })
+//       .catch((err) => {
+//         toast.error(err.response.data.message);
+//       });
+//   }
+//   async handleSubmit(event) {
+//     event.preventDefault();
+//     const { roleId, role } = this.state;
+//     await axios
+//       .put(`http://localhost:3001/roles/${roleId}`, {
+//         _id: roleId,
+//         role: role,
+//       })
+//       .then((res) => {
+//         toast.success("Successfully updated Role!");
+//         this.getRoles();
+//         this.setState({ showHideUpdate: !this.state.showHideUpdate });
+//       })
+//       .catch((err) => {
+//         toast.error(err.response.data.message);
+//       });
+//   }
+//   getRoles() {
+//     this.setState({ isLoading: true });
+//     axios
+//       .get("http://localhost:3001/roles")
+//       .then((res) => {
+//         this.setState({ roles: res.data, isLoading: false });
+//       })
+//       .catch((err) => {
+//         toast.error(err.response.data.message);
+//       });
+//   }
+//   deleteRow(id) {
+//     axios
+//       .delete(`http://localhost:3001/roles/${id}`, {
+//         headers: {
+//           Authorization: `Bearer ${this.state.access_token}`,
+//         },
+//       })
+//       .then((res) => {
+//         this.handleModalDelete();
+//         this.getRoles();
+//         toast.warning("Role has been deleted!");
+//       })
+//       .catch((err) => {
+//         toast.error(err.response.data.message);
+//       });
+//   }
+//   componentDidMount() {
+//     this.getRoles();
+//   }
+//   render() {
+//     const { isLoading, roles } = this.state;
+//     if (isLoading) {
+//       return (
+//         <div className="mt-4">
+//           <div class="spinner-border text-primary" role="status">
+//             <span class="visually-hidden">Loading...</span>
+//           </div>
+//           <span class="text-primary ml-3">Loading roles...</span>
+//         </div>
+//       );
+//     } else if (roles.length <= 0) {
+//       return (
+//         <div className="mt-4">
+//           <div>
+//             {isLoading && (
+//               <div class="spinner-border text-primary" role="status">
+//                 <span class="visually-hidden">Loading...</span>
+//               </div>
+//             )}
+//             <span className="text-primary">
+//               No roles found on the database...
+//             </span>
+//           </div>
+//         </div>
+//       );
+//     } else {
+//       return (
+//         <div>
+//           <div className="row">
+//             <div className="title-container mt-4">
+//               <h1>Roles</h1>
+//               <h1>
+//                 <Link to={"/create-role"} className="nav-link">
+//                   +
+//                 </Link>
+//               </h1>
+//             </div>
+//           </div>
+//           <div className="row">
+//             <h6>List of Roles</h6>
+//             <div className="container role">
+//               {this.state.roles.map((userRoles) => (
+//                 <div className="rolesBox shadow-sm p-3 mb-5 bg-body rounded">
+//                   <span key={userRoles._id}>{userRoles.role}</span>
+//                   <div className="roleIcons">
+//                     <button
+//                       className="btn btn-primary btn-xs"
+//                       onClick={() => this.handleModalUpdate(userRoles._id)}
+//                     >
+//                       <img src={editImageSrc} alt="Edit Icon" />
+//                     </button>
+//                     <button
+//                       className="btn btn-primary btn-xs"
+//                       // onClick={() => console.log("updated", row._id)}
+//                       onClick={() => this.handleModalDelete(userRoles._id)}
+//                     >
+//                       <img src={deleteImageSrc} alt="Delete Icon" />
+//                     </button>
+//                   </div>
+//                 </div>
+//               ))}
+//             </div>
+//           </div>
+//           {/* Delete */}
+//           <Modal show={this.state.showHideDelete}>
+//             <Modal.Header closeButton onClick={() => this.handleModalDelete()}>
+//               <Modal.Title>Are you sure?</Modal.Title>
+//             </Modal.Header>
+//             <Modal.Body>
+//               Do you really want to delete this role? This process cannot be
+//               undone.
+//             </Modal.Body>
+//             <Modal.Footer>
+//               <Button
+//                 variant="secondary"
+//                 onClick={() => this.handleModalDelete()}
+//               >
+//                 Cancel
+//               </Button>
+//               <Button
+//                 variant="danger"
+//                 onClick={() => this.deleteRow(this.state.roleId)}
+//               >
+//                 Delete
+//               </Button>
+//             </Modal.Footer>
+//           </Modal>
+
+//           {/* Update */}
+//           <Modal show={this.state.showHideUpdate}>
+//             <form onSubmit={(e) => this.handleSubmit(e)}>
+//               <Modal.Header
+//                 closeButton
+//                 onClick={() => this.handleModalUpdate()}
+//               >
+//                 <Modal.Title>Edit role</Modal.Title>
+//               </Modal.Header>
+//               <Modal.Body>
+//                 <label className="d-flex flex-column align-items-start">
+//                   Name:
+//                   <input
+//                     type="text"
+//                     name="role"
+//                     value={this.state.role}
+//                     className="form-control"
+//                     onChange={this.handleChange}
+//                   />
+//                 </label>
+//               </Modal.Body>
+//               <Modal.Footer>
+//                 <Button
+//                   variant="secondary"
+//                   onClick={() => this.handleModalUpdate()}
+//                 >
+//                   Cancel
+//                 </Button>
+//                 <Button
+//                   type="submit"
+//                   value="submit"
+//                   variant="primary"
+//                   // onClick={() => this.deleteRow(this.state.rowId)}
+//                   // onClick={() => this.handleSubmit()}
+//                 >
+//                   Update
+//                 </Button>
+//               </Modal.Footer>
+//             </form>
+//           </Modal>
+//         </div>
+//       );
+//     }
+//   }
+// }
+
+const RolesList = () => {
+  const [access_token, setAccess_token] = useState(
+    localStorage.getItem("token")
+  );
+  const [roles, setRoles] = useState([]);
+  const [roleId, setRoleId] = useState("");
+  const [role, setRole] = useState("");
+  const [showHideDelete, setShowHideDelete] = useState(false);
+  const [showHideUpdate, setShowHideUpdate] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [_id, set_Id] = useState("");
+
+  const handleModalDelete = (id) => {
+    // this.setState({
+    //   showHideDelete: !this.state.showHideDelete,
+    //   roleId: id,
+    // });
+    setShowHideDelete(!showHideDelete);
+    setRoleId(id);
+  };
+  const handleModalUpdate = (id) => {
+    // this.setState({
+    //   showHideUpdate: !this.state.showHideUpdate,
+    //   roleId: id,
+    // });
+    setShowHideUpdate(!showHideUpdate);
+    setRoleId(id);
     axios
       .get(`http://localhost:3001/roles/${id}`, {
         headers: {
-          Authorization: `Bearer ${this.state.access_token}`,
+          Authorization: `Bearer ${access_token}`,
         },
       })
       .then((res) => {
         const { role } = res.data;
-        this.setState({
-          _id: id,
-          role,
-        });
+        // this.setState({
+        //   _id: id,
+        //   role,
+        // });
+        // set_Id(id);
+        setRoleId(id);
+        setRole(role);
       })
       .catch((err) => {
         toast.error(err.response.data.message);
       });
-  }
-  async handleSubmit(event) {
+  };
+
+  const handleSubmit = async (event, id) => {
     event.preventDefault();
-    const { roleId, role } = this.state;
+    // const { roleId, role } = this.state;
     await axios
-      .put(`http://localhost:3001/roles/${roleId}`, {
-        _id: roleId,
-        role: role,
-      })
+      .put(
+        `http://localhost:3001/roles/${id}`,
+        {
+          _id: roleId,
+          role: role,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${access_token}`,
+          },
+        }
+      )
+      // role: role,
       .then((res) => {
         toast.success("Successfully updated Role!");
-        this.getRoles();
-        this.setState({ showHideUpdate: !this.state.showHideUpdate });
+        getRoles();
+        setShowHideUpdate(!showHideUpdate);
+        // this.setState({ showHideUpdate: !this.state.showHideUpdate });
       })
       .catch((err) => {
+        console.log(err.response);
         toast.error(err.response.data.message);
       });
-  }
-  getRoles() {
-    this.setState({ isLoading: true });
+  };
+  const getRoles = () => {
+    // this.setState({ isLoading: true });
+    setIsLoading(true);
     axios
       .get("http://localhost:3001/roles")
       .then((res) => {
-        this.setState({ roles: res.data, isLoading: false });
+        // this.setState({ roles: res.data, isLoading: false });
+        setRoles(res.data);
+        setIsLoading(false);
       })
       .catch((err) => {
         toast.error(err.response.data.message);
       });
-  }
-  deleteRow(id) {
+  };
+  const deleteRow = (id) => {
     axios
       .delete(`http://localhost:3001/roles/${id}`, {
         headers: {
-          Authorization: `Bearer ${this.state.access_token}`,
+          Authorization: `Bearer ${access_token}`,
         },
       })
       .then((res) => {
-        this.handleModalDelete();
-        this.getRoles();
+        handleModalDelete();
+        getRoles();
         toast.warning("Role has been deleted!");
       })
       .catch((err) => {
         toast.error(err.response.data.message);
       });
-  }
-  componentDidMount() {
-    this.getRoles();
-  }
-  render() {
-    const { isLoading, roles } = this.state;
-    if (isLoading) {
-      return (
-        <div className="mt-4">
-          <div class="spinner-border text-primary" role="status">
-            <span class="visually-hidden">Loading...</span>
-          </div>
-          <span class="text-primary ml-3">Loading roles...</span>
+  };
+  useEffect(() => {
+    getRoles();
+  }, []);
+
+  if (isLoading) {
+    return (
+      <div className="mt-4">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Loading...</span>
         </div>
-      );
-    } else if (roles.length <= 0) {
-      return (
-        <div className="mt-4">
-          <div>
-            {isLoading && (
-              <div class="spinner-border text-primary" role="status">
-                <span class="visually-hidden">Loading...</span>
-              </div>
-            )}
-            <span className="text-primary">
-              No roles found on the database...
-            </span>
-          </div>
-        </div>
-      );
-    } else {
-      return (
+        <span class="text-primary ml-3">Loading roles...</span>
+      </div>
+    );
+  } else if (roles.length <= 0) {
+    return (
+      <div className="mt-4">
         <div>
-          <div className="row">
-            <div className="title-container mt-4">
-              <h1>Roles</h1>
-              <h1>
-                <Link to={"/create-role"} className="nav-link">
-                  +
-                </Link>
-              </h1>
+          {isLoading && (
+            <div class="spinner-border text-primary" role="status">
+              <span class="visually-hidden">Loading...</span>
             </div>
+          )}
+          <span className="text-primary">
+            No roles found on the database...
+          </span>
+        </div>
+      </div>
+    );
+  } else {
+    return (
+      <div>
+        <div className="row">
+          <div className="title-container mt-4">
+            <h1>Roles</h1>
+            <h1>
+              <Link to={"/create-role"} className="nav-link">
+                +
+              </Link>
+            </h1>
           </div>
-          <div className="row">
-            <h6>List of Roles</h6>
-            <div className="container role">
-              {this.state.roles.map((userRoles) => (
-                <div className="rolesBox shadow-sm p-3 mb-5 bg-body rounded">
-                  <span key={userRoles._id}>{userRoles.role}</span>
-                  <div className="roleIcons">
-                    <button
-                      className="btn btn-primary btn-xs"
-                      onClick={() => this.handleModalUpdate(userRoles._id)}
-                    >
-                      <img src={editImageSrc} alt="Edit Icon" />
-                    </button>
-                    <button
-                      className="btn btn-primary btn-xs"
-                      // onClick={() => console.log("updated", row._id)}
-                      onClick={() => this.handleModalDelete(userRoles._id)}
-                    >
-                      <img src={deleteImageSrc} alt="Delete Icon" />
-                    </button>
-                  </div>
+        </div>
+        <div className="row">
+          <h6>List of Roles</h6>
+          <div className="container role">
+            {roles.map((userRoles) => (
+              <div className="rolesBox shadow-sm p-3 mb-5 bg-body rounded">
+                <span key={userRoles._id}>{userRoles.role}</span>
+                <div className="roleIcons">
+                  <button
+                    className="btn btn-primary btn-xs"
+                    onClick={() => handleModalUpdate(userRoles._id)}
+                  >
+                    <img src={editImageSrc} alt="Edit Icon" />
+                  </button>
+                  <button
+                    className="btn btn-primary btn-xs"
+                    // onClick={() => console.log("updated", row._id)}
+                    onClick={() => handleModalDelete(userRoles._id)}
+                  >
+                    <img src={deleteImageSrc} alt="Delete Icon" />
+                  </button>
                 </div>
-              ))}
-            </div>
+              </div>
+            ))}
           </div>
-          {/* Delete */}
-          <Modal show={this.state.showHideDelete}>
-            <Modal.Header closeButton onClick={() => this.handleModalDelete()}>
-              <Modal.Title>Are you sure?</Modal.Title>
+        </div>
+        {/* Delete */}
+        <Modal show={showHideDelete}>
+          <Modal.Header onClick={() => handleModalDelete()}>
+            <Modal.Title>Are you sure?</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            Do you really want to delete this role? This process cannot be
+            undone.
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={() => handleModalDelete()}>
+              Cancel
+            </Button>
+            <Button variant="danger" onClick={() => deleteRow(roleId)}>
+              Delete
+            </Button>
+          </Modal.Footer>
+        </Modal>
+
+        {/* Update */}
+        <Modal show={showHideUpdate}>
+          <form onSubmit={(e) => handleSubmit(e, roleId)}>
+            <Modal.Header onClick={() => handleModalUpdate()}>
+              <Modal.Title>Edit role</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-              Do you really want to delete this role? This process cannot be
-              undone.
+              <label className="d-flex flex-column align-items-start">
+                Name:
+                <input
+                  type="text"
+                  name="role"
+                  value={role}
+                  className="form-control"
+                  onChange={(e) => setRole(e.target.value)}
+                />
+              </label>
             </Modal.Body>
             <Modal.Footer>
-              <Button
-                variant="secondary"
-                onClick={() => this.handleModalDelete()}
-              >
+              <Button variant="secondary" onClick={() => handleModalUpdate()}>
                 Cancel
               </Button>
               <Button
-                variant="danger"
-                onClick={() => this.deleteRow(this.state.roleId)}
+                type="submit"
+                value="submit"
+                variant="primary"
+                // onClick={() => this.deleteRow(this.state.rowId)}
+                // onClick={() => this.handleSubmit()}
               >
-                Delete
+                Update
               </Button>
             </Modal.Footer>
-          </Modal>
-
-          {/* Update */}
-          <Modal show={this.state.showHideUpdate}>
-            <form onSubmit={(e) => this.handleSubmit(e)}>
-              <Modal.Header
-                closeButton
-                onClick={() => this.handleModalUpdate()}
-              >
-                <Modal.Title>Edit role</Modal.Title>
-              </Modal.Header>
-              <Modal.Body>
-                <label className="d-flex flex-column align-items-start">
-                  Name:
-                  <input
-                    type="text"
-                    name="role"
-                    value={this.state.role}
-                    className="form-control"
-                    onChange={this.handleChange}
-                  />
-                </label>
-              </Modal.Body>
-              <Modal.Footer>
-                <Button
-                  variant="secondary"
-                  onClick={() => this.handleModalUpdate()}
-                >
-                  Cancel
-                </Button>
-                <Button
-                  type="submit"
-                  value="submit"
-                  variant="primary"
-                  // onClick={() => this.deleteRow(this.state.rowId)}
-                  // onClick={() => this.handleSubmit()}
-                >
-                  Update
-                </Button>
-              </Modal.Footer>
-            </form>
-          </Modal>
-        </div>
-      );
-    }
+          </form>
+        </Modal>
+      </div>
+    );
   }
-}
+};
+
+export default RolesList;
