@@ -86,6 +86,10 @@ const StartExam = (props) => {
       }
     }, 1000);
   };
+  const goBack = () => {
+    props.history.push("/entry-quiz");
+    clearStorage();
+  };
 
   useEffect(() => {
     const questions_local = localStorage.getItem("quiz-user-data");
@@ -115,7 +119,9 @@ const StartExam = (props) => {
     <div className="text-primary mt-4">
       <h2>:)</h2>
       <span>No questions found for this category for the moment. Sorry!</span>
-      <h3>Back</h3>
+      <h3 onClick={(e) => goBack()} className="backBtn">
+        Go back
+      </h3>
     </div>
   ) : (
     <div className="mt-4">

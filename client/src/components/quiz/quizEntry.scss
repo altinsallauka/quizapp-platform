@@ -3,3 +3,10 @@
   flex-direction: column;
   max-width: 300px;
 }
+.cancelEntry {
+  cursor: pointer;
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  color: #0d6efd;
+}

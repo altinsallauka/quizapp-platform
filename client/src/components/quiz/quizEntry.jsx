@@ -55,6 +55,11 @@ const QuizEntry = (props) => {
       props.history.push("/start-quiz");
     else getCategories();
   };
+
+  const goBack = () => {
+    props.history.push("/");
+  };
+
   useEffect(() => {
     dataCondition();
   }, []);
@@ -107,6 +112,9 @@ const QuizEntry = (props) => {
           value="Find me a quiz!"
         />
       </form>
+      <h5 onClick={(e) => goBack()} className="cancelEntry">
+        Go back
+      </h5>
     </div>
   );
 };
