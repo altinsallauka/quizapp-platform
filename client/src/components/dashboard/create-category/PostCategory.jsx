@@ -1,24 +1,17 @@
-import React from "react";
+import React, { useState } from "react";
 import "./PostCategory.scss";
 import axios from "axios";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-export default class PostCategory extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      categoryName: "",
-      access_token: localStorage.getItem("token"),
-    };
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-  }
-  handleChange(event) {
-    this.setState({ [event.target.name]: event.target.value });
-  }
-  async handleSubmit(event) {
+
+const PostCategory = (props) => {
+  const [access_token, setAccess_token] = useState(
+    localStorage.getItem("token")
+  );
+  const [categoryName, setCategoryName] = useState("");
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    const { categoryName } = this.state;
+    // const { categoryName } = this.state;
     await axios
       .post(
         "http://localhost:3001/categories",
@@ -27,46 +20,46 @@ export default class PostCategory extends React.Component {
         },
         {
           headers: {
-            Authorization: `Bearer ${this.state.access_token}`,
+            Authorization: `Bearer ${access_token}`,
           },
         }
       )
       .then((res) => {
         toast.success("New category has been added");
-        this.props.history.push("/categories");
+        props.history.push("/categories");
       })
       .catch((err) => {
         toast.error(err.response.data.message);
       });
-  }
-  render() {
-    return (
-      <React.Fragment>
-        <div className="row">
-          <div className="container">
-            <div className="col-md-6">
-              <form onSubmit={this.handleSubmit}>
-                <div className="mb-3">
-                  <h1>Create category</h1>
-                  <label for="categoryNameInput" className="form-label">
-                    Category name
-                  </label>
-                  <input
-                    type="text"
-                    name="categoryName"
-                    className="form-control"
-                    id="categoryNameInput"
-                    onChange={this.handleChange}
-                  />
-                </div>
-                <button type="submit" className="btn btn-primary">
-                  Create
-                </button>
-              </form>
-            </div>
+  };
+  return (
+    <React.Fragment>
+      <div className="row">
+        <div className="container">
+          <div className="col-md-6">
+            <form onSubmit={handleSubmit}>
+              <div className="mb-3">
+                <h1>Create category</h1>
+                <label for="categoryNameInput" className="form-label">
+                  Category name
+                </label>
+                <input
+                  type="text"
+                  name="categoryName"
+                  className="form-control"
+                  id="categoryNameInput"
+                  onChange={(e) => setCategoryName(e.target.value)}
+                />
+              </div>
+              <button type="submit" className="btn btn-primary">
+                Create
+              </button>
+            </form>
           </div>
         </div>
-      </React.Fragment>
-    );
-  }
-}
+      </div>
+    </React.Fragment>
+  );
+};
+
+export default PostCategory;

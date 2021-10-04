@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "./CategoriesList.scss";
 // import * as ReactBootStrap from "react-bootstrap";
@@ -8,53 +8,44 @@ import { Button, Modal } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-export default class CategoriesList extends React.Component {
-  constructor() {
-    super();
-    this.state = {
-      access_token: localStorage.getItem("token"),
-      categories: [],
-      categoryId: "",
-      categoryName: "",
-      showHideDelete: false,
-      showHideUpdate: false,
-      isLoading: false,
-    };
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-  }
-  handleChange(event) {
-    console.log(this.state);
-    this.setState({ [event.target.name]: event.target.value });
-  }
 
-  handleModalDelete(id) {
-    this.setState({
-      showHideDelete: !this.state.showHideDelete,
-      categoryId: id,
-    });
-  }
-  handleModalUpdate(id) {
-    this.setState({
-      showHideUpdate: !this.state.showHideUpdate,
-      categoryId: id,
-    });
+const CategoriesList = (props) => {
+  const [access_token, setAccess_token] = useState(
+    localStorage.getItem("token")
+  );
+  const [categories, setCategories] = useState([]);
+  const [categoryId, setCategoryId] = useState("");
+  const [categoryName, setCategoryName] = useState("");
+  const [showHideDelete, setShowHideDelete] = useState(false);
+  const [showHideUpdate, setShowHideUpdate] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [_id, setId] = useState("");
+
+  const handleModalDelete = (id) => {
+    setShowHideDelete(!showHideDelete);
+    setCategoryId(id);
+  };
+  const handleModalUpdate = (id) => {
+    setShowHideUpdate(!showHideUpdate);
+    setCategoryId(id);
     axios
       .get(`http://localhost:3001/categories/${id}`)
       .then((res) => {
         const { categoryName } = res.data;
-        this.setState({
-          _id: id,
-          categoryName,
-        });
+        // this.setState({
+        //   _id: id,
+        //   categoryName,
+        // });
+        setId(id);
+        setCategoryName(categoryName);
       })
       .catch((err) => {
         toast.error(err.response.data.message);
       });
-  }
-  async handleSubmit(event) {
+  };
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    const { categoryId, categoryName } = this.state;
+    // const { categoryId, categoryName } = this.state;
     await axios
       .put(
         `http://localhost:3001/categories/${categoryId}`,
@@ -64,46 +55,50 @@ export default class CategoriesList extends React.Component {
         },
         {
           headers: {
-            Authorization: `Bearer ${this.state.access_token}`,
+            Authorization: `Bearer ${access_token}`,
           },
         }
       )
       .then((res) => {
         toast.success("This category has been updated!");
-        this.getCategories();
-        this.setState({ showHideUpdate: !this.state.showHideUpdate });
+        getCategories();
+        // this.setState({ showHideUpdate: !this.state.showHideUpdate });
+        setShowHideUpdate(!showHideUpdate);
       })
       .catch((err) => {
         toast.error(err.response.data.message);
       });
-  }
-  getCategories() {
-    this.setState({ isLoading: true });
+  };
+  const getCategories = () => {
+    // this.setState({ isLoading: true });
+    setIsLoading(true);
     axios
       .get("http://localhost:3001/categories")
       .then((res) => {
-        this.setState({ categories: res.data, isLoading: false });
+        // this.setState({ categories: res.data, isLoading: false });
+        setCategories(res.data);
+        setIsLoading(false);
       })
       .catch((err) => {
         toast.error(err.response.data.message);
       });
-  }
-  deleteRow(id) {
+  };
+  const deleteRow = (id) => {
     axios
       .delete(`http://localhost:3001/categories/${id}`, {
         headers: {
-          Authorization: `Bearer ${this.state.access_token}`,
+          Authorization: `Bearer ${access_token}`,
         },
       })
       .then((res) => {
-        this.handleModalDelete();
-        this.getCategories();
+        handleModalDelete();
+        getCategories();
         toast.warning("This category has been deleted!");
       })
       .catch((err) => {
         toast.error(err.response.data.message);
       });
-  }
+  };
   // createCategory(ctgParameter) {
   //   axios
   //     .post("http://localhost:3001/categories", {
@@ -113,140 +108,129 @@ export default class CategoriesList extends React.Component {
   //       console.log(response);
   //     });
   // }
-  componentDidMount() {
-    this.getCategories();
-  }
-  render() {
-    const { isLoading, categories } = this.state;
-    if (isLoading) {
-      return (
-        <div className="mt-4">
-          <div class="spinner-border text-primary" role="status">
-            <span class="visually-hidden">Loading...</span>
-          </div>
-          <span class="text-primary ml-3">Loading categories...</span>
+
+  useEffect(() => {
+    getCategories();
+  }, []);
+
+  if (isLoading) {
+    return (
+      <div className="mt-4">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Loading...</span>
         </div>
-      );
-    } else if (categories.length <= 0) {
-      return (
-        <div className="mt-4">
-          <div>
-            {isLoading && (
-              <div class="spinner-border text-primary" role="status">
-                <span class="visually-hidden">Loading...</span>
-              </div>
-            )}
-            <span className="text-primary">
-              No categories found on the database...
-            </span>
-          </div>
-        </div>
-      );
-    } else {
-      return (
+        <span class="text-primary ml-3">Loading categories...</span>
+      </div>
+    );
+  } else if (categories.length <= 0) {
+    return (
+      <div className="mt-4">
         <div>
-          <div className="row">
-            <div className="title-container mt-4">
-              <h1>Categories</h1>
-              <h1>
-                <Link to={"/create-Category"} className="nav-link">
-                  +
-                </Link>
-              </h1>
+          {isLoading && (
+            <div class="spinner-border text-primary" role="status">
+              <span class="visually-hidden">Loading...</span>
             </div>
+          )}
+          <span className="text-primary">
+            No categories found on the database...
+          </span>
+        </div>
+      </div>
+    );
+  } else {
+    return (
+      <div>
+        <div className="row">
+          <div className="title-container mt-4">
+            <h1>Categories</h1>
+            <h1>
+              <Link to={"/create-Category"} className="nav-link">
+                +
+              </Link>
+            </h1>
           </div>
-          <div className="row">
-            <caption>List of categories</caption>
-            <div className="container ctg">
-              {this.state.categories.map((ctg) => (
-                <div className="categoryBox shadow-sm p-3 mb-5 bg-body rounded">
-                  <span>{ctg.categoryName}</span>
-                  <div className="ctgIcons">
-                    <button
-                      className="btn btn-primary btn-xs"
-                      onClick={() => this.handleModalUpdate(ctg._id)}
-                    >
-                      <img src={editImageSrc} alt="Edit Icon" />
-                    </button>
-                    <button
-                      className="btn btn-primary btn-xs"
-                      // onClick={() => console.log("updated", row._id)}
-                      onClick={() => this.handleModalDelete(ctg._id)}
-                    >
-                      <img src={deleteImageSrc} alt="Delete Icon" />
-                    </button>
-                  </div>
+        </div>
+        <div className="row">
+          <caption>List of categories</caption>
+          <div className="container ctg">
+            {categories.map((ctg) => (
+              <div className="categoryBox shadow-sm p-3 mb-5 bg-body rounded">
+                <span>{ctg.categoryName}</span>
+                <div className="ctgIcons">
+                  <button
+                    className="btn btn-primary btn-xs"
+                    onClick={() => handleModalUpdate(ctg._id)}
+                  >
+                    <img src={editImageSrc} alt="Edit Icon" />
+                  </button>
+                  <button
+                    className="btn btn-primary btn-xs"
+                    // onClick={() => console.log("updated", row._id)}
+                    onClick={() => handleModalDelete(ctg._id)}
+                  >
+                    <img src={deleteImageSrc} alt="Delete Icon" />
+                  </button>
                 </div>
-              ))}
-            </div>
+              </div>
+            ))}
           </div>
-          {/* Delete */}
-          <Modal show={this.state.showHideDelete}>
-            <Modal.Header closeButton onClick={() => this.handleModalDelete()}>
-              <Modal.Title>Are you sure?</Modal.Title>
+        </div>
+        {/* Delete */}
+        <Modal show={showHideDelete}>
+          <Modal.Header onClick={() => handleModalDelete()}>
+            <Modal.Title>Are you sure?</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            Do you really want to delete this category? This process cannot be
+            undone.
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={() => handleModalDelete()}>
+              Cancel
+            </Button>
+            <Button variant="danger" onClick={() => deleteRow(categoryId)}>
+              Delete
+            </Button>
+          </Modal.Footer>
+        </Modal>
+
+        {/* Update */}
+        <Modal show={showHideUpdate}>
+          <form onSubmit={(e) => handleSubmit(e)}>
+            <Modal.Header onClick={() => handleModalUpdate()}>
+              <Modal.Title>Edit category</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-              Do you really want to delete this category? This process cannot be
-              undone.
+              <label className="d-flex flex-column align-items-start">
+                Name:
+                <input
+                  type="text"
+                  name="categoryName"
+                  value={categoryName}
+                  className="form-control"
+                  onChange={(e) => setCategoryName(e.target.value)}
+                />
+              </label>
             </Modal.Body>
             <Modal.Footer>
-              <Button
-                variant="secondary"
-                onClick={() => this.handleModalDelete()}
-              >
+              <Button variant="secondary" onClick={() => handleModalUpdate()}>
                 Cancel
               </Button>
               <Button
-                variant="danger"
-                onClick={() => this.deleteRow(this.state.categoryId)}
+                type="submit"
+                value="submit"
+                variant="primary"
+                // onClick={() => this.deleteRow(this.state.rowId)}
+                // onClick={() => this.handleSubmit()}
               >
-                Delete
+                Update
               </Button>
             </Modal.Footer>
-          </Modal>
-
-          {/* Update */}
-          <Modal show={this.state.showHideUpdate}>
-            <form onSubmit={(e) => this.handleSubmit(e)}>
-              <Modal.Header
-                closeButton
-                onClick={() => this.handleModalUpdate()}
-              >
-                <Modal.Title>Edit category</Modal.Title>
-              </Modal.Header>
-              <Modal.Body>
-                <label className="d-flex flex-column align-items-start">
-                  Name:
-                  <input
-                    type="text"
-                    name="categoryName"
-                    value={this.state.categoryName}
-                    className="form-control"
-                    onChange={this.handleChange}
-                  />
-                </label>
-              </Modal.Body>
-              <Modal.Footer>
-                <Button
-                  variant="secondary"
-                  onClick={() => this.handleModalUpdate()}
-                >
-                  Cancel
-                </Button>
-                <Button
-                  type="submit"
-                  value="submit"
-                  variant="primary"
-                  // onClick={() => this.deleteRow(this.state.rowId)}
-                  // onClick={() => this.handleSubmit()}
-                >
-                  Update
-                </Button>
-              </Modal.Footer>
-            </form>
-          </Modal>
-        </div>
-      );
-    }
+          </form>
+        </Modal>
+      </div>
+    );
   }
-}
+};
+
+export default CategoriesList;
