@@ -615,17 +615,17 @@ const UsersList = (props) => {
       })
       .then((res) => {
         console.log("user", res.data);
+        getRoleById(res.data.roleId);
         setToUpdate(res.data);
-        getRoleById();
       })
       .catch((err) => {
         toast.error(err.response.data.message);
       });
   };
 
-  const getRoleById = async () => {
+  const getRoleById = async (id) => {
     await axios
-      .get(`http://localhost:3001/roles/${toUpdate.roleId}`, {
+      .get(`http://localhost:3001/roles/${id}`, {
         headers: {
           Authorization: `Bearer ${access_token}`,
         },
@@ -636,7 +636,7 @@ const UsersList = (props) => {
         // this.setState({
         //   roleId: res.data._id,
         // });
-        setRoleId({ roleId: res.data._id });
+        setRoleId(res.data._id);
         console.log("roleID", roleId);
       })
       .catch((err) => {

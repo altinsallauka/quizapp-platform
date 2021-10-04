@@ -9,7 +9,7 @@ import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-const RolesList = () => {
+const RolesList = (props) => {
   const [access_token, setAccess_token] = useState(
     localStorage.getItem("token")
   );

@@ -7,7 +7,7 @@ import { Button, Modal } from "react-bootstrap";
 import BootstrapTable from "react-bootstrap-table-next";
 import paginationFactory from "react-bootstrap-table2-paginator";
 import filterFactory, { textFilter } from "react-bootstrap-table2-filter";
-const Results = () => {
+const Results = (props) => {
   const [access_token, setAccessToken] = useState(
     localStorage.getItem("token")
   );
