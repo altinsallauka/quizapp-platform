@@ -59,11 +59,7 @@ const NavBar = (props) => {
               </Link>
             </li>
             <li className="nav-item">
-              <Link
-                to={"/role"}
-                className="nav-link"
-                onClick={() => this.logOut()}
-              >
+              <Link to={"/role"} className="nav-link" onClick={() => logOut()}>
                 Log out
               </Link>
             </li>
