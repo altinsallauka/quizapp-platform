@@ -23,10 +23,13 @@ import ProtectedRoute from "./utils/ProtectedRoute";
 import QuizEntry from "./components/quiz/quizEntry";
 import StartExam from "./components/quiz/start-exam/startExam";
 import Results from "./components/dashboard/results/Results";
+import { useSelector } from "react-redux";
 // import deleteImgSrc from "../src/assets/delete.png";
 // Call it once in your app. At the root of your app is the best place
 toast.configure();
 function App() {
+  const state = useSelector((state) => state);
+  // console.log("rootReducer", state);
   return (
     <Router>
       <Switch>

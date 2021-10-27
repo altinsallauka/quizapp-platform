@@ -108,7 +108,9 @@ const RolesList = (props) => {
       })
       .then((res) => {
         handleModalDelete();
-        getRoles();
+        // getRoles();
+        const index = roles.findIndex((role) => role._id === id);
+        setRoles([...roles.slice(0, index), ...roles.slice(index + 1)]);
         toast.warning("Role has been deleted!");
       })
       .catch((err) => {

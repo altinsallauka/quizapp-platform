@@ -8,27 +8,38 @@ import { Button, Modal } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
+import {
+  editCategory,
+  fetchCategories,
+  toggleUpdate,
+  deleteCategory,
+} from "./actions";
+import categoriesReducer from "./reducer";
+import { connect, useDispatch, useSelector } from "react-redux";
 const CategoriesList = (props) => {
+  const dispatch = useDispatch();
+  const globalState = useSelector((state) => state);
+  let categories = globalState.categoriesData;
+  let isLoading = globalState.categoriesData.isLoading;
   const [access_token, setAccess_token] = useState(
     localStorage.getItem("token")
   );
-  const [categories, setCategories] = useState([]);
+  // const [categories, setCategories] = useState([]);
   const [categoryId, setCategoryId] = useState("");
   const [categoryName, setCategoryName] = useState("");
   const [showHideDelete, setShowHideDelete] = useState(false);
   const [showHideUpdate, setShowHideUpdate] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  // const [isLoading, setIsLoading] = useState(false);
   const [_id, setId] = useState("");
 
   const handleModalDelete = (id) => {
     setShowHideDelete(!showHideDelete);
     setCategoryId(id);
   };
-  const handleModalUpdate = (id) => {
+  const handleModalUpdate = async (id) => {
     setShowHideUpdate(!showHideUpdate);
     setCategoryId(id);
-    axios
+    await axios
       .get(`http://localhost:3001/categories/${id}`)
       .then((res) => {
         const { categoryName } = res.data;
@@ -46,58 +57,72 @@ const CategoriesList = (props) => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     // const { categoryId, categoryName } = this.state;
-    await axios
-      .put(
-        `http://localhost:3001/categories/${categoryId}`,
-        {
-          _id: categoryId,
-          categoryName,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${access_token}`,
-          },
-        }
-      )
-      .then((res) => {
-        toast.success("This category has been updated!");
-        getCategories();
-        // this.setState({ showHideUpdate: !this.state.showHideUpdate });
-        setShowHideUpdate(!showHideUpdate);
-      })
-      .catch((err) => {
-        toast.error(err.response.data.message);
-      });
+    const data = {
+      _id,
+      categoryName,
+    };
+    dispatch(editCategory(data)).then(setShowHideUpdate(!showHideUpdate));
+    // dispatch(editCategory(data));
+    // props.onEdit(data).then(setShowHideUpdate(!showHideUpdate));
+    // await axios
+    //   .put(
+    //     `http://localhost:3001/categories/${categoryId}`,
+    //     {
+    //       _id: categoryId,
+    //       categoryName,
+    //     },
+    //     {
+    //       headers: {
+    //         Authorization: `Bearer ${access_token}`,
+    //       },
+    //     }
+    //   )
+    //   .then((res) => {
+    //     toast.success("This category has been updated!");
+    //     // getCategories();
+    //     // this.setState({ showHideUpdate: !this.state.showHideUpdate });
+    //     setShowHideUpdate(!showHideUpdate);
+    //   })
+    //   .catch((err) => {
+    //     toast.error(err.response.data.message);
+    //   });
   };
-  const getCategories = () => {
-    // this.setState({ isLoading: true });
-    setIsLoading(true);
-    axios
-      .get("http://localhost:3001/categories")
-      .then((res) => {
-        // this.setState({ categories: res.data, isLoading: false });
-        setCategories(res.data);
-        setIsLoading(false);
-      })
-      .catch((err) => {
-        toast.error(err.response.data.message);
-      });
-  };
-  const deleteRow = (id) => {
-    axios
-      .delete(`http://localhost:3001/categories/${id}`, {
-        headers: {
-          Authorization: `Bearer ${access_token}`,
-        },
-      })
-      .then((res) => {
-        handleModalDelete();
-        getCategories();
-        toast.warning("This category has been deleted!");
-      })
-      .catch((err) => {
-        toast.error(err.response.data.message);
-      });
+  // const getCategories = () => {
+  //   // this.setState({ isLoading: true });
+  //   setIsLoading(true);
+  //   axios
+  //     .get("http://localhost:3001/categories")
+  //     .then((res) => {
+  //       // this.setState({ categories: res.data, isLoading: false });
+  //       setCategories(res.data);
+  //       setIsLoading(false);
+  //     })
+  //     .catch((err) => {
+  //       toast.error(err.response.data.message);
+  //     });
+  // };
+  const deleteRow = async (e, id) => {
+    e.preventDefault();
+    dispatch(deleteCategory(id));
+    handleModalDelete(id);
+
+    // axios
+    //   .delete(`http://localhost:3001/categories/${id}`, {
+    //     headers: {
+    //       Authorization: `Bearer ${access_token}`,
+    //     },
+    //   })
+    //   .then((res) => {
+    //     handleModalDelete();
+    //     // props.onFetch();
+    //     dispatch(fetchCategories());
+
+    //     // getCategories();
+    //     toast.warning("This category has been deleted!");
+    //   })
+    //   .catch((err) => {
+    //     toast.error(err.response.data.message);
+    //   });
   };
   // createCategory(ctgParameter) {
   //   axios
@@ -110,10 +135,12 @@ const CategoriesList = (props) => {
   // }
 
   useEffect(() => {
-    getCategories();
+    // getCategories();
+    // props.onFetch();
+    dispatch(fetchCategories());
   }, []);
 
-  if (isLoading) {
+  if (props.isLoading) {
     return (
       <div className="mt-4">
         <div class="spinner-border text-primary" role="status">
@@ -122,11 +149,11 @@ const CategoriesList = (props) => {
         <span class="text-primary ml-3">Loading categories...</span>
       </div>
     );
-  } else if (categories.length <= 0) {
+  } else if (props.categories.length <= 0) {
     return (
       <div className="mt-4">
         <div>
-          {isLoading && (
+          {props.isLoading && (
             <div class="spinner-border text-primary" role="status">
               <span class="visually-hidden">Loading...</span>
             </div>
@@ -144,7 +171,7 @@ const CategoriesList = (props) => {
           <div className="title-container mt-4">
             <h1>Categories</h1>
             <h1>
-              <Link to={"/create-Category"} className="nav-link">
+              <Link to={"/create-category"} className="nav-link">
                 +
               </Link>
             </h1>
@@ -153,7 +180,7 @@ const CategoriesList = (props) => {
         <div className="row">
           <caption>List of categories</caption>
           <div className="container ctg">
-            {categories.map((ctg) => (
+            {props.categories.map((ctg) => (
               <div className="categoryBox shadow-sm p-3 mb-5 bg-body rounded">
                 <span>{ctg.categoryName}</span>
                 <div className="ctgIcons">
@@ -188,7 +215,7 @@ const CategoriesList = (props) => {
             <Button variant="secondary" onClick={() => handleModalDelete()}>
               Cancel
             </Button>
-            <Button variant="danger" onClick={() => deleteRow(categoryId)}>
+            <Button variant="danger" onClick={(e) => deleteRow(e, categoryId)}>
               Delete
             </Button>
           </Modal.Footer>
@@ -233,4 +260,23 @@ const CategoriesList = (props) => {
   }
 };
 
-export default CategoriesList;
+const mapStateToProps = (state) => ({
+  categories: state.categoriesData.categories || [],
+  isLoading: state.categoriesData.isLoading,
+  showHideUpdate: state.categoriesData.showHideUpdate,
+});
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    onFetch: () => {
+      dispatch(fetchCategories());
+    },
+    onEdit: (category) => {
+      dispatch(editCategory(category));
+    },
+    onUpdate: () => {
+      dispatch(toggleUpdate());
+    },
+  };
+};
+export default connect(mapStateToProps, mapDispatchToProps)(CategoriesList);

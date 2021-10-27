@@ -68,7 +68,9 @@ const Results = (props) => {
       })
       .then((res) => {
         handleModalDelete();
-        getResults();
+        const index = results.findIndex((result) => result._id === id);
+        setResults([...results.slice(0, index), ...results.slice(index + 1)]);
+        // getResults();
         toast.warning("Result has been deleted!");
       })
       .catch((err) => {

@@ -365,3 +365,30 @@ router.delete("/results/:id", auth, async (req, res) => {
   }
 });
 module.exports = router;
+
+// get all questions by category
+router.get("/questions/:categoryId/:studentName", async (req, res) => {
+  try {
+    // const categoryId = req.params.categoryId;
+    // var query = { categoryId };
+    const questions = await Question.find(
+      { categoryId: req.params.categoryId },
+      function (err, result) {
+        if (err) throw err;
+        // console.log("Questions success.");
+      }
+    );
+    console.log(JSON.stringify(req.cookies));
+
+    shuffleArray(questions);
+    const questions10 = questions.slice(0, 10);
+    // res.cookie(
+    //   "quiz_user_data",
+    //   JSON.stringify({ user: req.params.studentName, questions: questions10 }),
+    //   { maxAge: 86400 }
+    // );
+    return res.status(200).json(questions10);
+  } catch (error) {
+    return res.status(500).json({ error: error });
+  }
+});

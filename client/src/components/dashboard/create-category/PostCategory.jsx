@@ -3,7 +3,8 @@ import "./PostCategory.scss";
 import axios from "axios";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
+import { createCategory } from "./../categories/actions";
+import { connect } from "react-redux";
 const PostCategory = (props) => {
   const [access_token, setAccess_token] = useState(
     localStorage.getItem("token")
@@ -11,26 +12,27 @@ const PostCategory = (props) => {
   const [categoryName, setCategoryName] = useState("");
   const handleSubmit = async (event) => {
     event.preventDefault();
+    props.onAdd(categoryName);
     // const { categoryName } = this.state;
-    await axios
-      .post(
-        "http://localhost:3001/categories",
-        {
-          categoryName,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${access_token}`,
-          },
-        }
-      )
-      .then((res) => {
-        toast.success("New category has been added");
-        props.history.push("/categories");
-      })
-      .catch((err) => {
-        toast.error(err.response.data.message);
-      });
+    // await axios
+    //   .post(
+    //     "http://localhost:3001/categories",
+    //     {
+    //       categoryName,
+    //     },
+    //     {
+    //       headers: {
+    //         Authorization: `Bearer ${access_token}`,
+    //       },
+    //     }
+    //   )
+    //   .then((res) => {
+    //     toast.success("New category has been added");
+    //     props.history.push("/categories");
+    //   })
+    //   .catch((err) => {
+    //     toast.error(err.response.data.message);
+    //   });
   };
   return (
     <React.Fragment>
@@ -62,4 +64,14 @@ const PostCategory = (props) => {
   );
 };
 
-export default PostCategory;
+// export default PostCategory;
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    onAdd: (category) => {
+      dispatch(createCategory(category));
+    },
+  };
+};
+
+export default connect(null, mapDispatchToProps)(PostCategory);

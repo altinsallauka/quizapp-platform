@@ -11,6 +11,8 @@ import "react-toastify/dist/ReactToastify.css";
 const NavBar = (props) => {
   const logOut = () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("quiz-data");
+    localStorage.removeItem("categoryId");
     toast.success("You have been logged out!");
     // this.props.history.push("/role");
   };

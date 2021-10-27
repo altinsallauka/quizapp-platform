@@ -642,9 +642,18 @@ const QuestionsList = (props) => {
         },
       })
       .then((res) => {
-        getQuestions();
-        // this.setState({ showHideUpdate: !this.state.showHideUpdate });
         setShowHideUpdate(!showHideUpdate);
+        console.log("res.data", res.data);
+        const updatedQuestions = [...questions];
+        const questionToUpdate = updatedQuestions.find(
+          (question) => question._id === res.data._id
+        );
+        questionToUpdate.alternatives = res.data.alternatives;
+        questionToUpdate.categoryId = res.data.categoryId;
+        questionToUpdate.description = res.data.description;
+        setQuestions(updatedQuestions);
+        // getQuestions();
+        // this.setState({ showHideUpdate: !this.state.showHideUpdate });
         toast.success("Question has been updated!");
       })
       .catch((err) => {
@@ -719,7 +728,14 @@ const QuestionsList = (props) => {
       })
       .then((res) => {
         handleModalDelete();
-        getQuestions();
+        const index = questions.findIndex((question) => question._id === id);
+        setQuestions([
+          ...questions.slice(0, index),
+          ...questions.slice(index + 1),
+        ]);
+        const questionsLength = questions.length;
+        setNumberOfQuestions(questionsLength);
+        // getQuestions();
         toast.warning("Question has been deleted!");
       })
       .catch((err) => {
@@ -781,7 +797,7 @@ const QuestionsList = (props) => {
                 <h2>Number of questions</h2>
               </div>
               <div className="col-md-4 num-bx">
-                <h1>{numberOfQuestions}</h1>
+                <h1>{questions.length}</h1>
                 <span>
                   <Link to={"/create-question"} className="nav-link">
                     Create question

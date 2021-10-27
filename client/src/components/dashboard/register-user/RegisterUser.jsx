@@ -52,7 +52,7 @@ const RegisterUser = (props) => {
     <div className="row">
       <div className="col-md-6">
         <h1>Register User</h1>
-        <form onSubmit={this.handleSubmit}>
+        <form onSubmit={handleSubmit}>
           <label className="d-flex flex-column align-items-start">
             First Name:
             <input
@@ -101,7 +101,7 @@ const RegisterUser = (props) => {
                 <option disabled selected>
                   Select one role
                 </option>
-                {this.state.roles.map((userRole) => (
+                {roles.map((userRole) => (
                   <option value={userRole._id} key={userRole._id}>
                     {userRole.role}
                   </option>
